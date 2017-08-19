@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900' rel='stylesheet' type='text/css'>
+    <title>{{title}} | Ketone</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/styles/pe-icons/pe-icon-7-stroke.css" />
+    <link rel="stylesheet" href="/static/styles/pe-icons/helper.css" />
+    <link rel="stylesheet" href="/static/styles/stroke-icons/style.css" />
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div id="mobile-menu">
+                        <div class="left-nav-toggle">
+                            <a href="#">
+                        <i class="stroke-hamburgermenu"></i>
+                        </a>
+                        </div>
+                    </div>
+                    <a class="navbar-brand" href="index.html">
+                  Ketone
+                  <span>v.0.0.1</span>
+                  </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <div class="left-nav-toggle">
+                        <a href="#">
+                            <i class="stroke-hamburgermenu"></i>
+                        </a>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="/logout">Logout</a>
+                        </li>
+                        <li class=" profil-link">
+                            <a href="login.html">
+                                <span class="profile-address">{{user}}</span>
+                                <img src="http://via.placeholder.com/50x50" class="img-circle" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <aside class="navigation">
+            <nav>
+                <ul class="nav luna-nav">
+                    <li>
+                        <a href="/">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/">Clients</a>
+                    </li>
+                    <li class="nav-info">
+                        <i class="pe pe-7s-shield text-accent"></i>
+                        <div class="m-t-xs">
+                            <span class="c-white">LUNA</span> admin theme with Dark UI style for monitoring and administration
+                            web applications.
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        {{{body}}}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script src="/static/scripts/luna.js"></script>
+</body>
+
+</html>

@@ -6,11 +6,11 @@ export class Model {
     public async findClient(clientId: string): Promise<Client> {
         return Promise.resolve(new Client(
             'Ketone',
-            '0zyrWYATtw',
-            'x3h8CTB2Cj',
-            [], [
-                'http://localhost:4200/#/callback',
-                'http://parkingapp.euromonitor.local/web/#/callback'
+            'fLTSn80KPQNOPCS2R7dq',
+            '8XjrVJiYMqPaDiJfH21X',
+            [],
+            [
+                'http://localhost:3000/auth/callback',
             ],
             true,
             true,
