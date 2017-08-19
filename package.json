@@ -1,0 +1,34 @@
+{
+  "name": "ketone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc & mocha ./src/**/*.test.js",
+    "coverage": "tsc & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js",
+    "start": "tsc & node ./src/app.js",
+    "docs": "apidoc -i src/ -o apidoc/",
+    "lint": "tslint ./src/**/*.ts --exclude ./src/**/*.d.ts",
+    "deploy": "tsc & apidoc -i src/ -o apidoc/ & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js & ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barend-erasmus/ketone.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barend-erasmus/ketone/issues"
+  },
+  "homepage": "https://github.com/barend-erasmus/ketone#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
+    "oauth2-framework": "^0.5.1",
+    "yargs": "^8.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.24"
+  }
+}
