@@ -3,7 +3,7 @@ import * as express from 'express';
 
 export class HomeRouter {
 
-    public static index(req: express.Request, res: express.Response) {
+    public static async index(req: express.Request, res: express.Response) {
         if (!req.user) {
             res.redirect('/auth/login');
             return;

@@ -70,4 +70,27 @@ export class ClientRepository extends BaseRepository {
             client.allowRegister,
         );
     }
+
+    public async listByUsername(username: string): Promise<Client[]> {
+        const clients: any[] = await BaseRepository.models.Client.findAll({
+            include: [
+                { model: BaseRepository.models.KetoneUser, required: false },
+                { model: BaseRepository.models.AllowedScope, required: false },
+                { model: BaseRepository.models.RedirectUri, required: false },
+            ],
+            where: {
+                '$ketoneUser.username$': username,
+            },
+        });
+
+        return clients.map((x) => new Client(
+            x.name,
+            x.key,
+            x.secret,
+            x.allowedScopes.map((y) => y.name),
+            x.redirectUris.map((y) => y.uri),
+            x.allowForgotPassword,
+            x.allowRegister,
+        ));
+    }
 }

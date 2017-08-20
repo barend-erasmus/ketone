@@ -17,6 +17,7 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 import { Model } from './model';
 
 // Imports routes
+import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
 
 const argv = yargs.argv;
@@ -104,6 +105,8 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
     });
 
 app.get('/', HomeRouter.index);
+
+app.get('/clients', ClientsRouter.index);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();
