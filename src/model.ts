@@ -1,19 +1,27 @@
 // Imports
 import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
+import * as yargs from 'yargs';
 
 // Import Repositories
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
 
+// Imports services
+import { EmailService } from './services/email';
+
 // Imports models
 import { Client } from './entities/client';
 import { User } from './entities/user';
+
+const argv = yargs.argv;
 
 export class Model {
 
     private clientRepository: ClientRepository = null;
     private ketoneUserRepository: KetoneUserRepository = null;
+
+    private emailService: EmailService = null;
 
     constructor() {
         const host = 'developersworkspace.co.za';
@@ -22,6 +30,8 @@ export class Model {
 
         this.clientRepository = new ClientRepository(host, username, password);
         this.ketoneUserRepository = new KetoneUserRepository(host, username, password);
+
+        this.emailService = new EmailService();
     }
 
     public async findClient(clientId: string): Promise<OAuth2FrameworkClient> {
@@ -29,8 +39,6 @@ export class Model {
     }
 
     public async register(clientId: string, emailAddress: string, username: string, password: string): Promise<boolean> {
-        const client: Client = await this.clientRepository.find(clientId);
-
         if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
             const user: User = await this.ketoneUserRepository.find(username);
 
@@ -52,21 +60,54 @@ export class Model {
     }
 
     public async resetPassword(clientId: string, username: string, password: string): Promise<boolean> {
-        return Promise.resolve(true);
+        if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
+            const user: User = await this.ketoneUserRepository.find(username);
+
+            if (!user) {
+                return false;
+            }
+
+            user.password = password;
+
+            return this.ketoneUserRepository.update(user);
+        } else {
+            return false;
+        }
     }
 
     public async sendForgotPasswordEmail(clientId: string, username: string, resetPasswordUrl: string): Promise<boolean> {
+        if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
 
-        // TODO: Send email via STMP, SendGrid or Mandrill
+            const user: User = await this.ketoneUserRepository.find(username);
 
-        return Promise.resolve(true);
+            if (!user) {
+                return false;
+            }
+
+            const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
+
+            const subject = 'Ketone - Forgot Password';
+            const html = `<div> We heard that you lost your Ketone password. Sorry about that!<br><br>But don’t worry! You can use the following link within the next day to reset your password:<br><br><a href="${domain}${resetPasswordUrl}" target="_blank">Reset Password</a><br><br>If you don’t use this link within 3 hours, it will expire.<br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
+
+            return this.emailService.sendEmail(user.emailAddress, subject, html);
+
+        } else {
+            return false;
+        }
     }
 
     public async sendVerificationEmail(clientId: string, emailAddress: string, username: string, verificationUrl: string): Promise<boolean> {
+        if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
+            const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
 
-        // TODO: Send email via STMP, SendGrid or Mandrill
+            const subject = 'Ketone - Verification';
+            const html = `<div> Thank you for registering on Ketone. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
-        return Promise.resolve(true);
+            return this.emailService.sendEmail(emailAddress, subject, html);
+
+        } else {
+            return false;
+        }
     }
 
     public async validateCredentials(clientId: string, username: string, password: string): Promise<boolean> {
@@ -88,6 +129,18 @@ export class Model {
     }
 
     public async verify(clientId: string, username: string): Promise<boolean> {
-        return Promise.resolve(true);
+        if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
+            const user: User = await this.ketoneUserRepository.find(username);
+
+            if (!user) {
+                return false;
+            }
+
+            user.verified = true;
+
+            return this.ketoneUserRepository.update(user);
+        } else {
+            return false;
+        }
     }
 }

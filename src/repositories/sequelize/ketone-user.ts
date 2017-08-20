@@ -21,6 +21,25 @@ export class KetoneUserRepository extends BaseRepository {
         return true;
     }
 
+    public async update(user: User): Promise<boolean> {
+        const existingUser: any = await BaseRepository.models.KetoneUser.find({
+            where: {
+                username: user.username,
+            },
+        });
+
+        if (!user) {
+            return false;
+        }
+
+        existingUser.password = user.password;
+        existingUser.verified = user.verified;
+
+        existingUser.save();
+
+        return true;
+    }
+
     public async find(username: string): Promise<User> {
         const user: any = await BaseRepository.models.KetoneUser.find({
             where: {

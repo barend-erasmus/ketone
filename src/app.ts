@@ -1,5 +1,3 @@
-// http://localhost:3000/auth/authorize?response_type=code&client_id=0zyrWYATtw&redirect_uri=http://localhost:3000/auth/passport/callback&state=40335
-
 // Imports
 import * as express from 'express';
 import * as path from 'path';
@@ -64,18 +62,18 @@ passport.deserializeUser((id: Error, done: (err: Error, obj: any) => void) => {
 app.use(passport.session());
 
 passport.use(new OAuth2Strategy({
-    authorizationURL: 'http://localhost:3000/auth/authorize',
-    callbackURL: "http://localhost:3000/auth/callback",
+    authorizationURL: argv.prod ? 'https://ketone.openservices.co.za/auth/authorize' : 'http://localhost:3000/auth/authorize',
+    callbackURL: argv.prod ? '' : 'http://localhost:3000/auth/callback',
     clientID: 'fLTSn80KPQNOPCS2R7dq',
     clientSecret: '8XjrVJiYMqPaDiJfH21X',
-    tokenURL: 'http://localhost:3000/auth/token',
+    tokenURL: argv.prod ? 'https://ketone.openservices.co.za/auth/token' : 'http://localhost:3000/auth/token',
 }, (accessToken: string, refreshToken: string, profile: any, cb) => {
     request({
         headers: {
             authorization: `Bearer ${accessToken}`,
         },
         json: true,
-        uri: 'http://localhost:3000/auth/user',
+        uri: argv.prod ? 'https://ketone.openservices.co.za/auth/user' : 'http://localhost:3000/auth/user',
     }).then((result: any) => {
         return cb(null, result);
     }).catch((err: Error) => {

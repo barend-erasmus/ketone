@@ -7,9 +7,8 @@
     "test": "tsc & mocha ./src/**/*.test.js",
     "coverage": "tsc & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js",
     "start": "tsc & node ./src/app.js",
-    "docs": "apidoc -i src/ -o apidoc/",
     "lint": "tslint ./src/**/*.ts --exclude ./src/**/*.d.ts",
-    "deploy": "tsc & apidoc -i src/ -o apidoc/ & istanbul cover node_modules/mocha/bin/_mocha --root ./src ./src/**/*.test.js & ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./"
+    "deploy": "tsc & ssh-deployer -f deploy.json --host developersworkspace.co.za --username username --password password --workspace ./"
   },
   "repository": {
     "type": "git",
@@ -34,6 +33,7 @@
     "pg-hstore": "^2.3.2",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
+    "sendgrid": "^5.2.2",
     "sequelize": "^4.6.0",
     "yargs": "^8.0.2"
   },

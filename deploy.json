@@ -14,12 +14,12 @@
         "mkdir /logs",
         "npm --prefix /opt/ketone install",
         "pm2 stop ketone",
-        "pm2 start /optketone/src/app.js --name ketone-- --prod --port 8080"
+        "pm2 start /opt/ketone/src/app.js --name ketone-- --prod --port 9007"
     ],
     "directories": [
         {
             "source": "$workspace/src",
-            "destination": "/opt/ketonek/src"
+            "destination": "/opt/ketone/src"
         }
     ],
     "files": [
