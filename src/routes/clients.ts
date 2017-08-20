@@ -20,9 +20,34 @@ export class ClientsRouter {
 
         const clients: Client[] = await ClientsRouter.getClientService().list(req.user);
 
-        res.render('clients', {
+        res.render('clients/index', {
             clients,
             title: 'Clients',
+            user: req.user,
+        });
+    }
+
+    public static async edit(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        if (!req.query.id) {
+            res.render('error/NotFound', { layout: false });
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().find(req.user, req.query.id);
+
+        if (!client) {
+            res.render('error/NotFound', { layout: false });
+            return;
+        }
+
+        res.render('clients/edit', {
+            client,
+            title: 'Client',
             user: req.user,
         });
     }

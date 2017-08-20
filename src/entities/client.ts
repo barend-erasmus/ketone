@@ -7,6 +7,7 @@ export class Client {
         public redirectUris: string[],
         public allowForgotPassword: boolean,
         public allowRegister: boolean,
+        public username: string,
     ) {
 
     }

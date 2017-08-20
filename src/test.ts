@@ -41,7 +41,8 @@ baseRepository.sync().then(async () => {
         ],
         true,
         true,
-    ), 'admin');
+        'admin',
+    ));
 
     baseRepository.close();
 });

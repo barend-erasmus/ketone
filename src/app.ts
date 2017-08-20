@@ -107,6 +107,7 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
 app.get('/', HomeRouter.index);
 
 app.get('/clients', ClientsRouter.index);
+app.get('/clients/edit', ClientsRouter.edit);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();

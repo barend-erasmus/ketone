@@ -9,7 +9,21 @@ export class ClientService {
 
     }
 
-    public list(username: string): Promise<Client[]> {
+    public async list(username: string): Promise<Client[]> {
         return this.clientRepository.listByUsername(username);
+    }
+
+    public async find(username: string, id: string): Promise<Client> {
+        const client: Client = await this.clientRepository.find(id);
+        
+        if (!client) {
+            return null;
+        }
+
+        if (client.username !== username) {
+            return null;
+        }
+
+        return client;
     }
 }

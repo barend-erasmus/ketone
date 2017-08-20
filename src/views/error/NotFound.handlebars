@@ -8,7 +8,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900' rel='stylesheet' type='text/css'>
 
-    <title>{{client.name}} | Forgot Password</title>
+    <title>Ketone | Not Found</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
         crossorigin="anonymous">
@@ -25,30 +25,26 @@
 <body class="blank">
     <div class="wrapper">
         <section class="content">
-            <div class="container-center animated slideInDown">
+            <div class="container-center md animated slideInDown">
                 <div class="view-header">
                     <div class="header-icon">
-                        <i class="pe page-header-icon pe-7s-id"></i>
+                        <i class="pe page-header-icon pe-7s-close-circle"></i>
                     </div>
                     <div class="header-title">
-                        <h3>{{client.name}} - Forgot Password</h3>
+                        <h3>404</h3>
+                        <small>
+                        Page Not Found
+                    </small>
                     </div>
                 </div>
                 <div class="panel panel-filled">
                     <div class="panel-body">
-                        <form method="post" id="loginForm" novalidate>
-                            <div class="form-group">
-                                <label class="control-label" for="username">Username</label>
-                                <input type="text" placeholder="username" title="Please enter your username" required="" value="" name="username" id="username"
-                                    class="form-control">
-                                <span class="help-block small">Enter your username and we will send you a link to reset your password.</span>
-                            </div>
-                            <div>
-                                <button class="btn btn-accent">Send Email</button>
-                                <a class="btn btn-default" href="authorize?response_type={{query.response_type}}&client_id={{query.client_id}}&redirect_uri={{query.redirect_uri}}&state={{query.state}}">Cancel</a>
-                            </div>
-                        </form>
+                        Sorry, but the page you are looking for has note been found. Try checking the URL for error, then hit the refresh button
+                        on your browser or try found something else in our app.
                     </div>
+                </div>
+                <div>
+                    <a href="/" class="btn btn-accent">Back to app</a>
                 </div>
             </div>
         </section>

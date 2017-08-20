@@ -10,11 +10,11 @@ export class ClientRepository extends BaseRepository {
         super(host, username, password);
     }
 
-    public async create(client: Client, ketoneUsername: string): Promise<boolean> {
+    public async create(client: Client): Promise<boolean> {
 
         const ketoneUser: any = await BaseRepository.models.KetoneUser.find({
             where: {
-                username: ketoneUsername,
+                username: client.username,
             },
         });
 
@@ -48,6 +48,7 @@ export class ClientRepository extends BaseRepository {
     public async find(id: string): Promise<Client> {
         const client: any = await BaseRepository.models.Client.find({
             include: [
+                { model: BaseRepository.models.KetoneUser, required: false },
                 { model: BaseRepository.models.AllowedScope, required: false },
                 { model: BaseRepository.models.RedirectUri, required: false },
             ],
@@ -68,6 +69,7 @@ export class ClientRepository extends BaseRepository {
             client.redirectUris.map((x) => x.uri),
             client.allowForgotPassword,
             client.allowRegister,
+            client.ketoneUser.username,
         );
     }
 
@@ -91,6 +93,7 @@ export class ClientRepository extends BaseRepository {
             x.redirectUris.map((y) => y.uri),
             x.allowForgotPassword,
             x.allowRegister,
+            x.ketoneUser.username,
         ));
     }
 }

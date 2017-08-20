@@ -9,7 +9,7 @@ export class HomeRouter {
             return;
         }
 
-        res.render('home', {
+        res.render('home/index', {
             title: 'Home',
             user: req.user,
         });
