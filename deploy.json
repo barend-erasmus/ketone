@@ -14,7 +14,7 @@
         "mkdir /logs",
         "npm --prefix /opt/ketone install",
         "pm2 stop ketone",
-        "pm2 start /opt/ketone/src/app.js --name ketone-- --prod --port 9007"
+        "pm2 start /opt/ketone/src/app.js --name ketone -- --prod --port 9007"
     ],
     "directories": [
         {

@@ -63,7 +63,7 @@ app.use(passport.session());
 
 passport.use(new OAuth2Strategy({
     authorizationURL: argv.prod ? 'https://ketone.openservices.co.za/auth/authorize' : 'http://localhost:3000/auth/authorize',
-    callbackURL: argv.prod ? '' : 'http://localhost:3000/auth/callback',
+    callbackURL: argv.prod ? 'https://ketone.openservices.co.za/auth/callback' : 'http://localhost:3000/auth/callback',
     clientID: 'fLTSn80KPQNOPCS2R7dq',
     clientSecret: '8XjrVJiYMqPaDiJfH21X',
     tokenURL: argv.prod ? 'https://ketone.openservices.co.za/auth/token' : 'http://localhost:3000/auth/token',
