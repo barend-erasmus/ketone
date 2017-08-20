@@ -9,10 +9,10 @@ import * as yargs from 'yargs';
 // Imports middleware
 import * as bodyParser from 'body-parser';
 import * as cookieSession from 'cookie-session';
-import * as passport from 'passport';
 import * as cors from 'cors';
-import * as OAuth2Strategy from 'passport-oauth2';
 import * as exphbs from 'express-handlebars';
+import * as passport from 'passport';
+import * as OAuth2Strategy from 'passport-oauth2';
 
 import { OAuth2FrameworkRouter } from 'oauth2-framework';
 
@@ -65,22 +65,22 @@ app.use(passport.session());
 
 passport.use(new OAuth2Strategy({
     authorizationURL: 'http://localhost:3000/auth/authorize',
-    tokenURL: 'http://localhost:3000/auth/token',
+    callbackURL: "http://localhost:3000/auth/callback",
     clientID: 'fLTSn80KPQNOPCS2R7dq',
     clientSecret: '8XjrVJiYMqPaDiJfH21X',
-    callbackURL: "http://localhost:3000/auth/callback"
+    tokenURL: 'http://localhost:3000/auth/token',
 }, (accessToken: string, refreshToken: string, profile: any, cb) => {
     request({
-        uri: 'http://localhost:3000/auth/user',
         headers: {
-            authorization: `Bearer ${accessToken}`
+            authorization: `Bearer ${accessToken}`,
         },
-        json: true
+        json: true,
+        uri: 'http://localhost:3000/auth/user',
     }).then((result: any) => {
         return cb(null, result);
     }).catch((err: Error) => {
         return cb(err, null);
-    })
+    });
 }));
 
 app.use('/auth', OAuth2FrameworkRouter(
