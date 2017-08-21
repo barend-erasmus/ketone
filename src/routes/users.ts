@@ -38,7 +38,7 @@ export class UsersRouter {
         });
     }
 
-    public static async edit(req: express.Request, res: express.Response) {
+    public static async editGet(req: express.Request, res: express.Response) {
         if (!req.user) {
             res.redirect('/auth/login');
             return;
@@ -57,6 +57,24 @@ export class UsersRouter {
         const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
 
         const editUser: User = await UsersRouter.getUserService().find(req.query.username, req.query.clientId);
+
+        res.render('users/edit', {
+            client,
+            editUser,
+            title: 'Users - Edit',
+            user: req.user,
+        });
+    }
+
+    public static async editPost(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await UsersRouter.getClientService().find(req.user, req.body.clientId);
+
+        const editUser: User = await UsersRouter.getUserService().update(req.body.username, req.body.clientId, req.body.enabled ? true : false);
 
         res.render('users/edit', {
             client,

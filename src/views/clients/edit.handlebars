@@ -20,32 +20,32 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>Details</h4>
-                <form>
+                <form method="post">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Name" value="{{client.name}}">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{client.name}}">
                     </div>
                     <div class="form-group">
                         <label for="id">Id</label>
-                        <input type="text" class="form-control" disabled id="id" placeholder="id" value="{{client.id}}">
+                        <input type="text" class="form-control" disabled name="id" id="id" placeholder="id" value="{{client.id}}">
                     </div>
                     <div class="form-group">
                         <label for="secret">Secret</label>
-                        <input type="text" class="form-control" disabled id="secret" placeholder="secret" value="{{client.secret}}">
+                        <input type="text" class="form-control" name="secret" disabled id="secret" placeholder="secret" value="{{client.secret}}">
                     </div>
                     <div class="form-group">
-                        <h4>Allowed Scopes <button disabled type="submit" class="btn btn-primary">Add</button></h4>
+                        <h4>Allowed Scopes <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addScopeModal"> Add</button></h4>
                         <ul>
                             {{#each client.allowedScopes as |value key|}}
-                            <li>{{value}}</li>
+                            <li>{{value}} <a class="btn btn-danger btn-xs" href="/clients/removeScope?id={{@root.client.id}}&name={{value}}"><i class="fa fa-close"></a></i></li>
                             {{/each}}
                         </ul>
                     </div>
                     <div class="form-group">
-                        <h4>Redirect Uris <button disabled type="submit" class="btn btn-primary">Add</button></h4>
+                        <h4>Redirect Uris <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRedirectUriModal"> Add</button></h4>
                         <ul>
                             {{#each client.redirectUris as |value key|}}
-                            <li>{{value}}</li>
+                            <li>{{value}} <a class="btn btn-danger btn-xs" href="/clients/removeRedirectUri?id={{@root.client.id}}&uri={{value}}"><i class="fa fa-close"></a></i></li>
                             {{/each}}
                         </ul>
                     </div>
@@ -67,7 +67,8 @@
                             {{/if}}
                         </label>
                     </div>
-                    <button disabled type="submit" class="btn btn-default">Save</button>
+                    <input type="hidden" name="id" value="{{client.id}}" />
+                    <button type="submit" class="btn btn-accent">Save</button>
                 </form>
             </div>
             <div class="col-md-6">
@@ -77,3 +78,45 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="addScopeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="/clients/addScope" class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title">Add Scope</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                </div>
+                <input type="hidden" name="id" value="{{client.id}}" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-accent">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addRedirectUriModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="/clients/addRedirectUri" class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title">Add Redirect Uri</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="uri">Uri</label>
+                    <input type="text" class="form-control" id="uri" name="uri" placeholder="Uri">
+                </div>
+                <input type="hidden" name="id" value="{{client.id}}" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-accent">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

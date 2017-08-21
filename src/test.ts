@@ -50,15 +50,8 @@ baseRepository.sync().then(async () => {
         'Demo App',
         'xu5xGBrEzAd59PaUiV0Z',
         'a9Hsankx6E9v4DQDPFCt',
-        [
-            'read',
-            'read-write',
-            'admin',
-        ],
-        [
-            'http://localhost:3000/auth/callback',
-            'https://ketone.openservices.co.za/auth/callback',
-        ],
+        [],
+        [],
         true,
         true,
         'admin',

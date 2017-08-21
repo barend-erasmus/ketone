@@ -112,10 +112,16 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
 app.get('/', HomeRouter.index);
 
 app.get('/clients', ClientsRouter.index);
-app.get('/clients/edit', ClientsRouter.edit);
+app.get('/clients/edit', ClientsRouter.editGet);
+app.post('/clients/edit', ClientsRouter.editPost);
+app.post('/clients/addScope', ClientsRouter.addScope);
+app.get('/clients/removeScope', ClientsRouter.removeScope);
+app.post('/clients/addRedirectUri', ClientsRouter.addRedirectUri);
+app.get('/clients/removeRedirectUri', ClientsRouter.removeRedirectUri);
 
 app.get('/users', UsersRouter.index);
-app.get('/users/edit', UsersRouter.edit);
+app.get('/users/edit', UsersRouter.editGet);
+app.post('/users/edit', UsersRouter.editPost);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();

@@ -130,6 +130,7 @@ export class BaseRepository {
             BaseRepository.sequelize = new Sequelize('ketone', username, password, {
                 dialect: 'postgres',
                 host,
+                logging: false,
                 pool: {
                     idle: 10000,
                     max: 5,

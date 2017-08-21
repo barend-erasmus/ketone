@@ -48,8 +48,9 @@ export class UserRepository extends BaseRepository {
 
         existingUser.password = user.password;
         existingUser.verified = user.verified;
+        existingUser.enabled = user.enabled;
 
-        existingUser.save();
+        await existingUser.save();
 
         return true;
     }

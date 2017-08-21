@@ -37,7 +37,7 @@ export class KetoneUserRepository extends BaseRepository {
         existingUser.password = user.password;
         existingUser.verified = user.verified;
 
-        existingUser.save();
+        await existingUser.save();
 
         return true;
     }

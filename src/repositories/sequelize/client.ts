@@ -73,6 +73,68 @@ export class ClientRepository extends BaseRepository {
         );
     }
 
+    public async update(client: Client): Promise<boolean> {
+        const existingClient: any = await BaseRepository.models.Client.find({
+            include: [
+                { model: BaseRepository.models.AllowedScope, required: false },
+                { model: BaseRepository.models.RedirectUri, required: false },
+            ],
+            where: {
+                key: client.id,
+            },
+        });
+
+        if (!existingClient) {
+            return null;
+        }
+
+        existingClient.name = client.name;
+        existingClient.allowForgotPassword = client.allowForgotPassword;
+        existingClient.allowRegister = client.allowRegister;
+
+        for (const scope of existingClient.allowedScopes) {
+            if (client.allowedScopes.filter((x) => x === scope.name).length === 0) {
+                await BaseRepository.models.AllowedScope.destroy({
+                    where: {
+                        id: scope.id,
+                    },
+                });
+            }
+        }
+
+        for (const scope of client.allowedScopes) {
+            if (existingClient.allowedScopes.filter((x) => x.name === scope).length === 0) {
+                await BaseRepository.models.AllowedScope.create({
+                    clientId: existingClient.id,
+                    name: scope,
+                });
+            }
+        }
+
+        for (const redirectUri of existingClient.redirectUris) {
+            if (client.redirectUris.filter((x) => x === redirectUri.uri).length === 0) {
+                await BaseRepository.models.RedirectUri.destroy({
+                    where: {
+                        id: redirectUri.id,
+                    },
+                });
+            }
+        }
+
+        for (const redirectUri of client.redirectUris) {
+            if (existingClient.redirectUris.filter((x) => x.uri === redirectUri).length === 0) {
+                await BaseRepository.models.RedirectUri.create({
+                    clientId: existingClient.id,
+                    uri: redirectUri,
+                });
+            }
+        }
+
+        await existingClient.save();
+
+        return true;
+    }
+
     public async listByUsername(username: string): Promise<Client[]> {
         const clients: any[] = await BaseRepository.models.Client.findAll({
             include: [

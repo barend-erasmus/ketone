@@ -159,7 +159,7 @@ export class Model {
                 return false;
             }
 
-            if (user.verified && user.password === password) {
+            if (user.verified && user.password === password && user.enabled) {
                 return true;
             }
 
@@ -171,7 +171,7 @@ export class Model {
                 return false;
             }
 
-            if (user.verified && user.password === password) {
+            if (user.verified && user.password === password && user.enabled) {
                 return true;
             }
 

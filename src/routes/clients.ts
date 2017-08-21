@@ -27,7 +27,7 @@ export class ClientsRouter {
         });
     }
 
-    public static async edit(req: express.Request, res: express.Response) {
+    public static async editGet(req: express.Request, res: express.Response) {
         if (!req.user) {
             res.redirect('/auth/login');
             return;
@@ -50,6 +50,70 @@ export class ClientsRouter {
             title: 'Clients - Edit',
             user: req.user,
         });
+    }
+
+    public static async editPost(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().update(req.user, req.body.id, req.body.name, req.body.allowForgotPassword ? true : false, req.body.allowRegister ? true : false);
+
+        if (!client) {
+            res.render('error/NotFound', { layout: false });
+            return;
+        }
+
+        res.render('clients/edit', {
+            client,
+            title: 'Clients - Edit',
+            user: req.user,
+        });
+    }
+
+    public static async addScope(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().addScope(req.user, req.body.id, req.body.name);
+
+        res.redirect(`/clients/edit?id=${client.id}`);
+    }
+
+    public static async removeScope(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().removeScope(req.user, req.query.id, req.query.name);
+
+        res.redirect(`/clients/edit?id=${client.id}`);
+    }
+
+    public static async addRedirectUri(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().addRedirectUri(req.user, req.body.id, req.body.uri);
+
+        res.redirect(`/clients/edit?id=${client.id}`);
+    }
+
+    public static async removeRedirectUri(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().removeRedirectUri(req.user, req.query.id, req.query.uri);
+
+        res.redirect(`/clients/edit?id=${client.id}`);
     }
 
     protected static getClientService(): ClientService {
