@@ -4,6 +4,8 @@ export class User {
         public emailAddress: string,
         public password: string,
         public verified: boolean,
+        public enabled: boolean,
+        public profileImage: string,
     ) {
 
     }

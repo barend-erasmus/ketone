@@ -54,9 +54,17 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            enabled: {
+                allowNull: false,
+                type: Sequelize.BOOLEAN,
+            },
             password: {
                 allowNull: false,
                 type: Sequelize.STRING,
+            },
+            profileImage: {
+                allowNull: true,
+                type: Sequelize.TEXT,
             },
             username: {
                 allowNull: false,
@@ -73,9 +81,17 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            enabled: {
+                allowNull: false,
+                type: Sequelize.BOOLEAN,
+            },
             password: {
                 allowNull: false,
                 type: Sequelize.STRING,
+            },
+            profileImage: {
+                allowNull: true,
+                type: Sequelize.TEXT,
             },
             username: {
                 allowNull: false,

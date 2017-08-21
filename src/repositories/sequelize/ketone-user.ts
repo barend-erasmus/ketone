@@ -13,7 +13,9 @@ export class KetoneUserRepository extends BaseRepository {
     public async create(user: User): Promise<boolean> {
         await BaseRepository.models.KetoneUser.create({
             emailAddress: user.emailAddress,
+            enabled: user.enabled,
             password: user.password,
+            profileImage: user.profileImage,
             username: user.username,
             verified: user.verified,
         });
@@ -51,6 +53,6 @@ export class KetoneUserRepository extends BaseRepository {
             return null;
         }
 
-        return new User(user.username, user.emailAddress, user.password, user.verified);
+        return new User(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage);
     }
 }

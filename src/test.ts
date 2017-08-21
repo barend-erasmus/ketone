@@ -24,12 +24,32 @@ baseRepository.sync().then(async () => {
         'developersworkspace@gmail.com',
         '123456',
         true,
+        true,
+        null,
     ));
 
     await clientRepository.create(new Client(
         'Ketone',
         'fLTSn80KPQNOPCS2R7dq',
         '8XjrVJiYMqPaDiJfH21X',
+        [
+            'read',
+            'read-write',
+            'admin',
+        ],
+        [
+            'http://localhost:3000/auth/callback',
+            'https://ketone.openservices.co.za/auth/callback',
+        ],
+        true,
+        true,
+        'admin',
+    ));
+
+    await clientRepository.create(new Client(
+        'Demo App',
+        'xu5xGBrEzAd59PaUiV0Z',
+        'a9Hsankx6E9v4DQDPFCt',
         [
             'read',
             'read-write',

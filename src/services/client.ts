@@ -5,6 +5,7 @@ import { ClientRepository } from './../repositories/sequelize/client';
 import { Client } from './../entities/client';
 
 export class ClientService {
+
     constructor(private clientRepository: ClientRepository) {
 
     }
@@ -15,7 +16,7 @@ export class ClientService {
 
     public async find(username: string, id: string): Promise<Client> {
         const client: Client = await this.clientRepository.find(id);
-        
+
         if (!client) {
             return null;
         }

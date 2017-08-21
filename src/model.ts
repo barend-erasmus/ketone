@@ -6,6 +6,7 @@ import * as yargs from 'yargs';
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
+import { UserRepository } from './repositories/sequelize/user';
 
 // Imports services
 import { EmailService } from './services/email';
@@ -20,6 +21,7 @@ export class Model {
 
     private clientRepository: ClientRepository = null;
     private ketoneUserRepository: KetoneUserRepository = null;
+    private userRepository: UserRepository = null;
 
     private emailService: EmailService = null;
 
@@ -30,6 +32,7 @@ export class Model {
 
         this.clientRepository = new ClientRepository(host, username, password);
         this.ketoneUserRepository = new KetoneUserRepository(host, username, password);
+        this.userRepository = new UserRepository(host, username, password);
 
         this.emailService = new EmailService();
     }
@@ -51,11 +54,28 @@ export class Model {
                 emailAddress,
                 password,
                 false,
+                true,
+                null,
             ));
 
             return true;
         } else {
-            return false;
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (user) {
+                return false;
+            }
+
+            await this.userRepository.create(new User(
+                username,
+                emailAddress,
+                password,
+                false,
+                true,
+                null,
+            ), clientId);
+
+            return true;
         }
     }
 
@@ -71,13 +91,20 @@ export class Model {
 
             return this.ketoneUserRepository.update(user);
         } else {
-            return false;
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                return false;
+            }
+
+            user.password = password;
+
+            return this.userRepository.update(user, clientId);
         }
     }
 
     public async sendForgotPasswordEmail(clientId: string, username: string, resetPasswordUrl: string): Promise<boolean> {
         if (clientId === 'fLTSn80KPQNOPCS2R7dq') {
-
             const user: User = await this.ketoneUserRepository.find(username);
 
             if (!user) {
@@ -90,9 +117,19 @@ export class Model {
             const html = `<div> We heard that you lost your Ketone password. Sorry about that!<br><br>But don’t worry! You can use the following link within the next day to reset your password:<br><br><a href="${domain}${resetPasswordUrl}" target="_blank">Reset Password</a><br><br>If you don’t use this link within 3 hours, it will expire.<br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
             return this.emailService.sendEmail(user.emailAddress, subject, html);
-
         } else {
-            return false;
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                return false;
+            }
+
+            const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
+
+            const subject = 'Ketone - Forgot Password';
+            const html = `<div> We heard that you lost your Ketone password. Sorry about that!<br><br>But don’t worry! You can use the following link within the next day to reset your password:<br><br><a href="${domain}${resetPasswordUrl}" target="_blank">Reset Password</a><br><br>If you don’t use this link within 3 hours, it will expire.<br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
+
+            return this.emailService.sendEmail(user.emailAddress, subject, html);
         }
     }
 
@@ -104,9 +141,13 @@ export class Model {
             const html = `<div> Thank you for registering on Ketone. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
             return this.emailService.sendEmail(emailAddress, subject, html);
-
         } else {
-            return false;
+            const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
+
+            const subject = 'Ketone - Verification';
+            const html = `<div> Thank you for registering on Ketone. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at Ketone <div class="yj6qo"></div><div class="adL"><br></div></div>`;
+
+            return this.emailService.sendEmail(emailAddress, subject, html);
         }
     }
 
@@ -124,6 +165,16 @@ export class Model {
 
             return false;
         } else {
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                return false;
+            }
+
+            if (user.verified && user.password === password) {
+                return true;
+            }
+
             return false;
         }
     }
@@ -140,7 +191,15 @@ export class Model {
 
             return this.ketoneUserRepository.update(user);
         } else {
-            return false;
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                return false;
+            }
+
+            user.verified = true;
+
+            return this.userRepository.update(user, clientId);
         }
     }
 }

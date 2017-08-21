@@ -19,6 +19,7 @@ import { Model } from './model';
 // Imports routes
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
+import { UsersRouter } from './routes/users';
 
 const argv = yargs.argv;
 const app = express();
@@ -76,7 +77,11 @@ passport.use(new OAuth2Strategy({
         json: true,
         uri: argv.prod ? 'https://ketone.openservices.co.za/auth/user' : 'http://localhost:3000/auth/user',
     }).then((result: any) => {
-        return cb(null, result);
+        if (result.client_id === 'fLTSn80KPQNOPCS2R7dq') {
+            return cb(null, result);
+        }else {
+            return cb(new Error('Invalid Client Id'), null);
+        }
     }).catch((err: Error) => {
         return cb(err, null);
     });
@@ -108,6 +113,9 @@ app.get('/', HomeRouter.index);
 
 app.get('/clients', ClientsRouter.index);
 app.get('/clients/edit', ClientsRouter.edit);
+
+app.get('/users', UsersRouter.index);
+app.get('/users/edit', UsersRouter.edit);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();

@@ -47,7 +47,7 @@ export class ClientsRouter {
 
         res.render('clients/edit', {
             client,
-            title: 'Client',
+            title: 'Clients - Edit',
             user: req.user,
         });
     }
