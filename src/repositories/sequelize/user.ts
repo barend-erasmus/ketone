@@ -60,7 +60,7 @@ export class UserRepository extends BaseRepository {
                 { model: BaseRepository.models.Client, required: false },
             ],
             where: {
-                "$client.key$": clientId,
+                '$client.key$': clientId,
                 username,
             },
         });
@@ -81,7 +81,7 @@ export class UserRepository extends BaseRepository {
                 ['username'],
             ],
             where: {
-                "$client.key$": clientId,
+                '$client.key$': clientId,
             },
         });
 
