@@ -9,6 +9,7 @@ export class BaseRepository {
         RedirectUri: Sequelize.Model<{}, {}>,
         User: Sequelize.Model<{}, {}>,
         KetoneUser: Sequelize.Model<{}, {}>,
+        Event: Sequelize.Model<{}, {}>,
     } = null;
 
     private static defineModels(): void {
@@ -103,6 +104,21 @@ export class BaseRepository {
             },
         });
 
+        const Event = BaseRepository.sequelize.define('event', {
+            clientId: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            name: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            username: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+        });
+
         Client.hasMany(AllowedScope);
         AllowedScope.belongsTo(Client);
 
@@ -118,6 +134,7 @@ export class BaseRepository {
         this.models = {
             AllowedScope,
             Client,
+            Event,
             KetoneUser,
             RedirectUri,
             User,

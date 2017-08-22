@@ -26,6 +26,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
+    "moment": "^2.18.1",
     "oauth2-framework": "^0.5.1",
     "passport": "^0.4.0",
     "passport-oauth2": "^1.4.0",

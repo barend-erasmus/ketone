@@ -17,6 +17,45 @@
                     </div>
                 </div>
                 <hr>
+                <div class="row">
+                    <div class="col-lg-2 col-xs-6">
+                        <div class="panel panel-filled">
+                            <div class="panel-body">
+                                <h2 class="m-b-none">
+                                    {{numberOfLoginsStatistic.growth}}
+                                    <span class="slight">
+                                         {{#if numberOfLoginsStatistic.hasPositiveGrowth}}
+                                        <i class="fa fa-play fa-rotate-270 text-success"></i>
+                                        {{else}}
+                                        <i class="fa fa-play fa-rotate-90 text-danger"></i>
+                                        {{/if}}
+                                        {{numberOfLoginsStatistic.growthRate}} % 
+                                    </span>
+                                </h2>
+                                <div class="small">Logins in the last 24 hours</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-xs-6">
+                        <div class="panel panel-filled">
+                            <div class="panel-body">
+                                <h2 class="m-b-none">
+                                    {{numberOfRegistersStatistic.growth}}
+                                    <span class="slight">
+                                         {{#if numberOfRegistersStatistic.hasPositiveGrowth}}
+                                        <i class="fa fa-play fa-rotate-270 text-success"></i>
+                                        {{else}}
+                                        <i class="fa fa-play fa-rotate-90 text-danger"></i>
+                                        {{/if}}
+                                        {{numberOfRegistersStatistic.growthRate}} % 
+                                    </span>
+                                </h2>
+                                <div class="small">Registers in the last 24 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
