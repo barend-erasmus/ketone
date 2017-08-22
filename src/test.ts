@@ -43,7 +43,7 @@ baseRepository.sync().then(async () => {
         ],
         true,
         true,
-        'admin',
+        'developersworkspace@gmail.com',
     ));
 
     await ketoneUserRepository.create(new User(
@@ -56,4 +56,6 @@ baseRepository.sync().then(async () => {
     ));
 
     baseRepository.close();
+}).catch((err: Error) => {
+    console.error(err);
 });
