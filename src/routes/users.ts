@@ -22,7 +22,7 @@ export class UsersRouter {
         }
 
         if (!req.query.clientId) {
-            res.render('error/NotFound', { layout: false });
+            res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
@@ -45,12 +45,12 @@ export class UsersRouter {
         }
 
         if (!req.query.username) {
-            res.render('error/NotFound', { layout: false });
+            res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
         if (!req.query.clientId) {
-            res.render('error/NotFound', { layout: false });
+            res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
@@ -84,14 +84,51 @@ export class UsersRouter {
         });
     }
 
+    public static async createGet(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        if (!req.query.clientId) {
+            res.status(404).render('error/NotFound', { layout: false });
+            return;
+        }
+
+        const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
+
+        res.render('users/create', {
+            client,
+            title: 'Users - Create',
+            user: req.user,
+        });
+    }
+
+    public static async createPost(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const user: User = await UsersRouter.getUserService().create(req.user, req.body.clientId, req.body.username, req.body.emailAddress, req.body.password, req.body.enabled);
+
+        if (!user) {
+            res.status(500).render('error/InternalServerError', { layout: false });
+            return;
+        }
+
+        res.redirect(`/users/edit?clientId=${req.body.clientId}&username=${user.username}`);
+    }
+
     protected static getUserService(): UserService {
         const host = 'developersworkspace.co.za';
         const username = 'ketone';
         const password = 'ZiLSLzrIVhCrcdN6';
 
+        const clientRepository: ClientRepository = new ClientRepository(host, username, password);
         const userRepository: UserRepository = new UserRepository(host, username, password);
 
-        const userService: UserService = new UserService(userRepository);
+        const userService: UserService = new UserService(userRepository, clientRepository);
 
         return userService;
     }

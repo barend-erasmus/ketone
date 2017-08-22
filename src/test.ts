@@ -20,7 +20,7 @@ const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(host
 baseRepository.sync().then(async () => {
 
     await ketoneUserRepository.create(new User(
-        'admin',
+        'developersworkspace@gmail.com',
         'developersworkspace@gmail.com',
         '123456',
         true,
@@ -46,15 +46,13 @@ baseRepository.sync().then(async () => {
         'admin',
     ));
 
-    await clientRepository.create(new Client(
-        'Demo App',
-        'xu5xGBrEzAd59PaUiV0Z',
-        'a9Hsankx6E9v4DQDPFCt',
-        [],
-        [],
+    await ketoneUserRepository.create(new User(
+        'demo',
+        'developersworkspace@gmail.com',
+        '123456',
         true,
         true,
-        'admin',
+        null,
     ));
 
     baseRepository.close();

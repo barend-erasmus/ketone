@@ -118,10 +118,14 @@ app.post('/clients/addScope', ClientsRouter.addScope);
 app.get('/clients/removeScope', ClientsRouter.removeScope);
 app.post('/clients/addRedirectUri', ClientsRouter.addRedirectUri);
 app.get('/clients/removeRedirectUri', ClientsRouter.removeRedirectUri);
+app.get('/clients/create', ClientsRouter.createGet);
+app.post('/clients/create', ClientsRouter.createPost);
 
 app.get('/users', UsersRouter.index);
 app.get('/users/edit', UsersRouter.editGet);
 app.post('/users/edit', UsersRouter.editPost);
+app.get('/users/create', UsersRouter.createGet);
+app.post('/users/create', UsersRouter.createPost);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();

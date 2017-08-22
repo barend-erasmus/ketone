@@ -34,14 +34,14 @@ export class ClientsRouter {
         }
 
         if (!req.query.id) {
-            res.render('error/NotFound', { layout: false });
+            res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
         const client: Client = await ClientsRouter.getClientService().find(req.user, req.query.id);
 
         if (!client) {
-            res.render('error/NotFound', { layout: false });
+            res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
@@ -61,7 +61,7 @@ export class ClientsRouter {
         const client: Client = await ClientsRouter.getClientService().update(req.user, req.body.id, req.body.name, req.body.allowForgotPassword ? true : false, req.body.allowRegister ? true : false);
 
         if (!client) {
-            res.render('error/NotFound', { layout: false });
+            res.status(500).render('error/InternalServerError', { layout: false });
             return;
         }
 
@@ -112,6 +112,29 @@ export class ClientsRouter {
         }
 
         const client: Client = await ClientsRouter.getClientService().removeRedirectUri(req.user, req.query.id, req.query.uri);
+
+        res.redirect(`/clients/edit?id=${client.id}`);
+    }
+
+    public static async createGet(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        res.render('clients/create', {
+            title: 'Clients - Create',
+            user: req.user,
+        });
+    }
+
+    public static async createPost(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        const client: Client = await ClientsRouter.getClientService().create(req.user, req.body.name);
 
         res.redirect(`/clients/edit?id=${client.id}`);
     }

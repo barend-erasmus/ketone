@@ -28,6 +28,14 @@ export class ClientService {
         return client;
     }
 
+    public async create(username: string, name: string): Promise<Client> {
+        const client: Client = new Client(name, this.generateToken(), this.generateToken(), [], [], false, false, username);
+
+        await this.clientRepository.create(client);
+
+        return client;
+    }
+
     public async update(username: string, id: string, name: string, allowForgotPassword: boolean, allowRegister: boolean): Promise<Client> {
         const client: Client = await this.clientRepository.find(id);
 
@@ -119,4 +127,16 @@ export class ClientService {
 
         return client;
     }
+
+    private generateToken() {
+        let text = "";
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (let i = 0; i < 20; i++) {
+            text += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        return text;
+    }
+
 }
