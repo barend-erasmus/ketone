@@ -12,7 +12,7 @@
                     <div class="header-title">
                         <h3 class="m-b-xs">Ketone - Dashboard</h3>
                         <small>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Some statistics for you!
                         </small>
                     </div>
                 </div>
@@ -36,7 +36,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-2 col-xs-6">
                         <div class="panel panel-filled">
                             <div class="panel-body">
@@ -51,7 +50,43 @@
                                         {{numberOfRegistersStatistic.growthRate}} % 
                                     </span>
                                 </h2>
-                                <div class="small">Registers in the last 24 hours</div>
+                                <div class="small">Registrations in the last 24 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-xs-6">
+                        <div class="panel panel-filled">
+                            <div class="panel-body">
+                                <h2 class="m-b-none">
+                                    {{numberOfVerifiesStatistic.growth}}
+                                    <span class="slight">
+                                         {{#if numberOfVerifiesStatistic.hasPositiveGrowth}}
+                                        <i class="fa fa-play fa-rotate-270 text-success"></i>
+                                        {{else}}
+                                        <i class="fa fa-play fa-rotate-90 text-danger"></i>
+                                        {{/if}}
+                                        {{numberOfVerifiesStatistic.growthRate}} % 
+                                    </span>
+                                </h2>
+                                <div class="small">Verifications in the last 24 hours</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-xs-6">
+                        <div class="panel panel-filled">
+                            <div class="panel-body">
+                                <h2 class="m-b-none">
+                                    {{numberOfResetPasswordsStatistic.growth}}
+                                    <span class="slight">
+                                         {{#if numberOfResetPasswordsStatistic.hasPositiveGrowth}}
+                                        <i class="fa fa-play fa-rotate-270 text-success"></i>
+                                        {{else}}
+                                        <i class="fa fa-play fa-rotate-90 text-danger"></i>
+                                        {{/if}}
+                                        {{numberOfResetPasswordsStatistic.growthRate}} % 
+                                    </span>
+                                </h2>
+                                <div class="small">Password resets in the last 24 hours</div>
                             </div>
                         </div>
                     </div>

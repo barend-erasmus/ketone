@@ -35,6 +35,26 @@ export class EventService {
         return new Statistic(previousValue, currentValue, previousValueTimestamp, currentValueTimestamp);
     }
 
+    public async numberOfResetPasswordsStatistic(username: string): Promise<Statistic> {
+        const previousValueTimestamp = moment().subtract(1, 'day').toDate();
+        const currentValueTimestamp = moment().toDate();
+
+        const previousValue = await this.countByUsername(username, previousValueTimestamp, 'resetPassword');
+        const currentValue = await this.countByUsername(username, currentValueTimestamp, 'resetPassword');
+
+        return new Statistic(previousValue, currentValue, previousValueTimestamp, currentValueTimestamp);
+    }
+
+    public async numberOfVerifiesStatistic(username: string): Promise<Statistic> {
+        const previousValueTimestamp = moment().subtract(1, 'day').toDate();
+        const currentValueTimestamp = moment().toDate();
+
+        const previousValue = await this.countByUsername(username, previousValueTimestamp, 'verify');
+        const currentValue = await this.countByUsername(username, currentValueTimestamp, 'verify');
+
+        return new Statistic(previousValue, currentValue, previousValueTimestamp, currentValueTimestamp);
+    }
+
     private async countByUsername(username: string, timestamp: Date, name: string): Promise<number> {
 
         const clients: Client[] = await this.clientRepository.listByUsername(username);

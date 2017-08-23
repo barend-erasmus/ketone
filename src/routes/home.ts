@@ -21,10 +21,14 @@ export class HomeRouter {
 
         const numberOfLoginsStatistic: Statistic = await HomeRouter.getEventService().numberOfLoginsStatistic(req.user);
         const numberOfRegistersStatistic: Statistic = await HomeRouter.getEventService().numberOfRegistersStatistic(req.user);
+        const numberOfResetPasswordsStatistic: Statistic = await HomeRouter.getEventService().numberOfResetPasswordsStatistic(req.user);
+        const numberOfVerifiesStatistic: Statistic = await HomeRouter.getEventService().numberOfVerifiesStatistic(req.user);
 
         res.render('home/index', {
             numberOfLoginsStatistic,
             numberOfRegistersStatistic,
+            numberOfResetPasswordsStatistic,
+            numberOfVerifiesStatistic,
             title: 'Home',
             user: req.user,
         });
