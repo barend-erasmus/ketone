@@ -11,9 +11,8 @@
                     </div>
                     <div class="header-title">
                         <h3><a href="/clients">Clients</a> - <a href="/clients/edit?id={{client.id}}">{{client.name}}</a> -
-                            <a
-                                href="/users?clientId={{client.id}}">Users</a> - Create</h3>
-                        <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                            <a href="/users?clientId={{client.id}}">Users</a> - Create</h3>
+                        <small>Manually add an user.</small>
                     </div>
                 </div>
                 <hr>
@@ -41,6 +40,9 @@
                         </label>
                     </div>
                     <input type="hidden" name="clientId" value="{{client.id}}" />
+                    <br />
+                    <br />
+                    <a href="/users?clientId={{client.id}}" class="btn btn-default">Cancel</a>
                     <button type="submit" class="btn btn-accent">Save</button>
                 </form>
             </div>

@@ -1,5 +1,5 @@
 export class Client {
-    
+
     public isKetoneClient: boolean = false;
 
     constructor(

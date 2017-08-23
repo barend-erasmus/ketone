@@ -11,7 +11,7 @@
                     </div>
                     <div class="header-title">
                         <h3><a href="/clients">Clients</a> - <a href="/clients/edit?id={{client.id}}">{{client.name}}</a> - Users</h3>
-                        <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                        <small>Controlling your users.</small>
                     </div>
                 </div>
                 <hr>
@@ -20,6 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <a href="/users/create?clientId={{client.id}}" class="btn btn-w-md btn-primary pull-right">New User</a>
+                <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
             </div>
         </div>
         <div class="row">

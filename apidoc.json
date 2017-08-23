@@ -1,0 +1,12 @@
+{
+    "name": "Ketone",
+    "version": "0.0.1",
+    "description": "",
+    "title": "Ketone",
+    "url" : "https://ketone.openservices.co.za",
+    "sampleUrl": "https://ketone.openservices.co.za",
+    "template": {
+      "withCompare": false,
+      "withGenerator": false
+    }
+  }

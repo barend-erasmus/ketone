@@ -20,6 +20,14 @@
         {
             "source": "$workspace/src",
             "destination": "/opt/ketone/src"
+        },
+        {
+            "source": "$workspace/apidoc",
+            "destination": "/opt/ketone/apidoc"
+        },
+        {
+            "source": "$workspace/coverage",
+            "destination": "/opt/ketone/coverage"
         }
     ],
     "files": [

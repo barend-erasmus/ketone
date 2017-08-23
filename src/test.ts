@@ -1,4 +1,5 @@
 // Import Repositories
+import { config } from './config';
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
@@ -9,13 +10,9 @@ import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
 import { Client } from './entities/client';
 import { User } from './entities/user';
 
-const host = 'developersworkspace.co.za';
-const username = 'ketone';
-const password = 'ZiLSLzrIVhCrcdN6';
-
-const baseRepository: BaseRepository = new BaseRepository(host, username, password);
-const clientRepository: ClientRepository = new ClientRepository(host, username, password);
-const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(host, username, password);
+const baseRepository: BaseRepository = new BaseRepository(config.database.host, config.database.username, config.database.password);
+const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
 
 baseRepository.sync().then(async () => {
 
@@ -29,9 +26,9 @@ baseRepository.sync().then(async () => {
     ));
 
     await clientRepository.create(new Client(
-        'Ketone',
-        'fLTSn80KPQNOPCS2R7dq',
-        '8XjrVJiYMqPaDiJfH21X',
+        config.client.name,
+        config.client.id,
+        config.client.secret,
         [
             'read',
             'read-write',
@@ -39,7 +36,7 @@ baseRepository.sync().then(async () => {
         ],
         [
             'http://localhost:3000/auth/callback',
-            'https://ketone.openservices.co.za/auth/callback',
+            `${config.domain}/auth/callback`,
         ],
         true,
         true,

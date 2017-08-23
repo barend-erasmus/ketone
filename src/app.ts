@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as path from 'path';
 import * as request from 'request-promise';
 import * as yargs from 'yargs';
+import { config } from './config';
 
 // Imports middleware
 import * as bodyParser from 'body-parser';
@@ -36,7 +37,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // Configures session
 app.use(cookieSession({
-    keys: ['OIdowGt3f79dGaiAXJWq'],
+    keys: [config.secrets[0]],
     maxAge: 604800000, // 7 Days
     name: 'session',
 }));
@@ -64,20 +65,20 @@ passport.deserializeUser((id: Error, done: (err: Error, obj: any) => void) => {
 app.use(passport.session());
 
 passport.use(new OAuth2Strategy({
-    authorizationURL: argv.prod ? 'https://ketone.openservices.co.za/auth/authorize' : 'http://localhost:3000/auth/authorize',
-    callbackURL: argv.prod ? 'https://ketone.openservices.co.za/auth/callback' : 'http://localhost:3000/auth/callback',
-    clientID: 'fLTSn80KPQNOPCS2R7dq',
-    clientSecret: '8XjrVJiYMqPaDiJfH21X',
-    tokenURL: argv.prod ? 'https://ketone.openservices.co.za/auth/token' : 'http://localhost:3000/auth/token',
+    authorizationURL: argv.prod ? `${config.domain}/auth/authorize` : 'http://localhost:3000/auth/authorize',
+    callbackURL: argv.prod ? `${config.domain}/auth/callback` : 'http://localhost:3000/auth/callback',
+    clientID: config.client.id,
+    clientSecret: config.client.secret,
+    tokenURL: argv.prod ? `${config.domain}/auth/token` : 'http://localhost:3000/auth/token',
 }, (accessToken: string, refreshToken: string, profile: any, cb) => {
     request({
         headers: {
             authorization: `Bearer ${accessToken}`,
         },
         json: true,
-        uri: argv.prod ? 'https://ketone.openservices.co.za/auth/user' : 'http://localhost:3000/auth/user',
+        uri: argv.prod ? `${config.domain}/auth/user` : 'http://localhost:3000/auth/user',
     }).then((result: any) => {
-        if (result.client_id === 'fLTSn80KPQNOPCS2R7dq') {
+        if (result.client_id === config.client.id) {
             return cb(null, result);
         }else {
             return cb(new Error('Invalid Client Id'), null);
@@ -86,6 +87,8 @@ passport.use(new OAuth2Strategy({
         return cb(err, null);
     });
 }));
+
+app.use('/api/docs', express.static(path.join(__dirname, './../apidoc')));
 
 app.use('/auth', OAuth2FrameworkRouter(
     new Model(),
@@ -99,7 +102,7 @@ app.use('/auth', OAuth2FrameworkRouter(
     null,
     null,
     null,
-    'j211gJtch7IFxl6mkI6i',
+    config.secrets[1],
 ));
 
 app.get('/auth/login', passport.authenticate('oauth2'));

@@ -1,5 +1,6 @@
 // Imports
 import * as express from 'express';
+import { config } from './../config';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -125,8 +126,8 @@ export class UsersRouter {
         const username = 'ketone';
         const password = 'ZiLSLzrIVhCrcdN6';
 
-        const clientRepository: ClientRepository = new ClientRepository(host, username, password);
-        const userRepository: UserRepository = new UserRepository(host, username, password);
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+        const userRepository: UserRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
 
         const userService: UserService = new UserService(userRepository, clientRepository);
 
@@ -134,11 +135,8 @@ export class UsersRouter {
     }
 
     protected static getClientService(): ClientService {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
 
-        const clientRepository: ClientRepository = new ClientRepository(host, username, password);
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
 
         const clientService: ClientService = new ClientService(clientRepository);
 

@@ -1,5 +1,6 @@
 // Imports
 import * as express from 'express';
+import { config } from './../config';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -35,12 +36,9 @@ export class HomeRouter {
     }
 
     protected static getEventService(): EventService {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
 
-        const clientRepository: ClientRepository = new ClientRepository(host, username, password);
-        const eventRepository: EventRepository = new EventRepository(host, username, password);
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+        const eventRepository: EventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
 
         const eventService: EventService = new EventService(eventRepository, clientRepository);
 

@@ -1,6 +1,7 @@
 // Imports
 import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
 import * as yargs from 'yargs';
+import { config } from './config';
 
 // Import Repositories
 import { BaseRepository } from './repositories/sequelize/base';
@@ -29,14 +30,10 @@ export class Model {
     private emailService: EmailService = null;
 
     constructor() {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
-
-        this.clientRepository = new ClientRepository(host, username, password);
-        this.ketoneUserRepository = new KetoneUserRepository(host, username, password);
-        this.userRepository = new UserRepository(host, username, password);
-        this.eventRepository = new EventRepository(host, username, password);
+        this.clientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+        this.ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
+        this.userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
+        this.eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
 
         this.emailService = new EmailService();
     }
@@ -103,7 +100,7 @@ export class Model {
             throw new Error('Username does not exist');
         }
 
-        const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
+        const domain = argv.prod ? `${config.domain}/auth` : 'http://localhost:3000/auth';
 
         const subject = `${client.name} - Forgot Password`;
         const html = `<div> We heard that you lost your ${client.name}  password. Sorry about that!<br><br>But don’t worry! You can use the following link within the next day to reset your password:<br><br><a href="${domain}${resetPasswordUrl}" target="_blank">Reset Password</a><br><br>If you don’t use this link within 3 hours, it will expire.<br><br>Thanks,<br>Your friends at ${client.name} <div class="yj6qo"></div><div class="adL"><br></div></div>`;
@@ -117,7 +114,7 @@ export class Model {
 
         const client: Client = await this.clientRepository.find(clientId);
 
-        const domain = argv.prod ? 'https://ketone.openservices.co.za/auth' : 'http://localhost:3000/auth';
+        const domain = argv.prod ? `${config.domain}/auth` : 'http://localhost:3000/auth';
 
         const subject = `${client} - Verification`;
         const html = `<div> Thank you for registering on ${client}. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at ${client} <div class="yj6qo"></div><div class="adL"><br></div></div>`;
