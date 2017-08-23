@@ -24,10 +24,6 @@
         {
             "source": "$workspace/apidoc",
             "destination": "/opt/ketone/apidoc"
-        },
-        {
-            "source": "$workspace/coverage",
-            "destination": "/opt/ketone/coverage"
         }
     ],
     "files": [
