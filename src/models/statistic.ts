@@ -7,6 +7,7 @@ export class Statistic {
         this.growth = currentValue - previousValue;
 
         this.growthRate = previousValue === 0 && currentValue === 0 ? 0 : (previousValue === 0 ? 100 : (currentValue - previousValue) / previousValue);
+        this.growthRate = Math.floor(this.growthRate * 10) / 10;
 
         this.hasPositiveGrowth = this.growthRate > 0;
     }
