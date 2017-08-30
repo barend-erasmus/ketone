@@ -88,8 +88,6 @@ passport.use(new OAuth2Strategy({
     });
 }));
 
-app.use('/api/docs', express.static(path.join(__dirname, './../apidoc')));
-
 app.use('/auth', OAuth2FrameworkRouter(
     new Model(),
     path.join(__dirname, 'views/login.handlebars'),
@@ -134,6 +132,9 @@ app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();
     res.redirect('/');
 });
+
+app.use('/api/docs', express.static(path.join(__dirname, './../apidoc')));
+app.use('/api/coverage', express.static(path.join(__dirname, './../coverage/lcov-report')));
 
 app.listen(argv.port || 3000, () => {
     console.log(`listening on port ${argv.port || 3000}`);

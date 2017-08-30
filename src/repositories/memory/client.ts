@@ -18,7 +18,10 @@ export class ClientRepository implements IClientRepository {
     }
 
     public async update(client: Client): Promise<boolean> {
-        return null;
+
+        const existingClient: Client = this.clients.find((x) => x.id === client.id);
+
+        return true;
     }
 
     public async listByUsername(username: string): Promise<Client[]> {

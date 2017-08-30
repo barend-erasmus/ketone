@@ -4,6 +4,13 @@ import * as yargs from 'yargs';
 import { config } from './config';
 import * as uuid from 'uuid';
 
+
+// Import Interfaces
+import { IClientRepository } from './repositories/client';
+import { IEventRepository } from './repositories/event';
+import { IKetoneUserRepository } from './repositories/ketone-user';
+import { IUserRepository } from './repositories/user';
+
 // Import Repositories
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
@@ -25,18 +32,18 @@ const argv = yargs.argv;
 
 export class Model {
 
-    private clientRepository: ClientRepository = null;
-    private ketoneUserRepository: KetoneUserRepository = null;
-    private userRepository: UserRepository = null;
-    private eventRepository: EventRepository = null;
-
     private emailService: EmailService = null;
 
-    constructor() {
-        this.clientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
-        this.ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
-        this.userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
-        this.eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
+    constructor(
+        private clientRepository: IClientRepository = null,
+        private ketoneUserRepository: IKetoneUserRepository = null,
+        private userRepository: IUserRepository = null,
+        private eventRepository: IEventRepository = null,
+    ) {
+        this.clientRepository = this.clientRepository || new ClientRepository(config.database.host, config.database.username, config.database.password);
+        this.ketoneUserRepository = this.ketoneUserRepository || new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
+        this.userRepository = this.userRepository || new UserRepository(config.database.host, config.database.username, config.database.password);
+        this.eventRepository = this.eventRepository || new EventRepository(config.database.host, config.database.username, config.database.password);
 
         this.emailService = new EmailService();
     }
