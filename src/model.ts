@@ -3,7 +3,7 @@ import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
 import * as yargs from 'yargs';
 import { config } from './config';
 import * as uuid from 'uuid';
-
+import * as express from 'express';
 
 // Import Interfaces
 import { IClientRepository } from './repositories/client';
@@ -48,11 +48,16 @@ export class Model {
         this.emailService = new EmailService();
     }
 
-    public async findClient(clientId: string): Promise<OAuth2FrameworkClient> {
+    public async findClient(clientId: string, request: express.Request): Promise<OAuth2FrameworkClient> {
         return this.clientRepository.find(clientId);
     }
 
-    public async register(clientId: string, emailAddress: string, username: string, password: string): Promise<boolean> {
+    public async register(
+        clientId: string,
+        emailAddress: string,
+        username: string,
+        password: string,
+        request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -89,12 +94,16 @@ export class Model {
             ), clientId);
         }
 
-        await this.eventRepository.create(new Event(clientId, username, 'register'));
+        await this.eventRepository.create(new Event(clientId, username, 'register', request? request.ip : null));
 
         return true;
     }
 
-    public async resetPassword(clientId: string, username: string, password: string): Promise<boolean> {
+    public async resetPassword(
+        clientId: string,
+        username: string,
+        password: string,
+        request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -122,12 +131,16 @@ export class Model {
             result = await this.userRepository.update(user, clientId);
         }
 
-        await this.eventRepository.create(new Event(clientId, username, 'resetPassword'));
+        await this.eventRepository.create(new Event(clientId, username, 'resetPassword', request? request.ip : null));
 
         return result;
     }
 
-    public async sendForgotPasswordEmail(clientId: string, username: string, resetPasswordUrl: string): Promise<boolean> {
+    public async sendForgotPasswordEmail(
+        clientId: string,
+        username: string,
+        resetPasswordUrl: string,
+        request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -156,12 +169,17 @@ export class Model {
         const subject = `${client.name} - Forgot Password`;
         const html = `<div> We heard that you lost your ${client.name}  password. Sorry about that!<br><br>But don’t worry! You can use the following link within the next day to reset your password:<br><br><a href="${domain}${resetPasswordUrl}" target="_blank">Reset Password</a><br><br>If you don’t use this link within 3 hours, it will expire.<br><br>Thanks,<br>Your friends at ${client.name} <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
-        await this.eventRepository.create(new Event(clientId, username, 'sendForgotPasswordEmail'));
+        await this.eventRepository.create(new Event(clientId, username, 'sendForgotPasswordEmail', request? request.ip : null));
 
         return this.emailService.sendEmail(emailAddress, subject, html);
     }
 
-    public async sendVerificationEmail(clientId: string, emailAddress: string, username: string, verificationUrl: string): Promise<boolean> {
+    public async sendVerificationEmail(
+        clientId: string,
+        emailAddress: string,
+        username: string,
+        verificationUrl: string,
+        request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -170,12 +188,16 @@ export class Model {
         const subject = `${client} - Verification`;
         const html = `<div> Thank you for registering on ${client}. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at ${client} <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
-        await this.eventRepository.create(new Event(clientId, username, 'sendVerificationEmail'));
+        await this.eventRepository.create(new Event(clientId, username, 'sendVerificationEmail', request? request.ip : null));
 
         return this.emailService.sendEmail(emailAddress, subject, html);
     }
 
-    public async validateCredentials(clientId: string, username: string, password: string): Promise<boolean> {
+    public async validateCredentials(
+        clientId: string,
+        username: string,
+        password: string,
+        request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -203,12 +225,12 @@ export class Model {
             }
         }
 
-        await this.eventRepository.create(new Event(clientId, username, 'validateCredentials'));
+        await this.eventRepository.create(new Event(clientId, username, 'validateCredentials', request? request.ip : null));
 
         return result;
     }
 
-    public async verify(clientId: string, username: string): Promise<boolean> {
+    public async verify(clientId: string, username: string, request: express.Request): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -236,7 +258,7 @@ export class Model {
             result = await this.userRepository.update(user, clientId);
         }
 
-        await this.eventRepository.create(new Event(clientId, username, 'verify'));
+        await this.eventRepository.create(new Event(clientId, username, 'verify', request? request.ip : null));
 
         return result;
     }

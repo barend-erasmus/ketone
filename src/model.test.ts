@@ -37,7 +37,7 @@ describe('Model', () => {
                 'developersworkspace@gmail.com',
             ));
 
-            const client: OAuth2FrameworkClient = await model.findClient(config.client.id);
+            const client: OAuth2FrameworkClient = await model.findClient(config.client.id, null);
 
             expect(client).to.be.not.null;
         });

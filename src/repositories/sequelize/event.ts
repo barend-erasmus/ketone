@@ -15,6 +15,7 @@ export class EventRepository extends BaseRepository implements IEventRepository 
     public async create(event: Event): Promise<boolean> {
         await BaseRepository.models.Event.create({
             clientId: event.clientId,
+            ipAddress: event.ipAddress,
             name: event.name,
             username: event.username,
         });

@@ -113,6 +113,10 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            ipAddress: {
+                allowNull: true,
+                type: Sequelize.STRING,
+            },
             name: {
                 allowNull: false,
                 type: Sequelize.STRING,
