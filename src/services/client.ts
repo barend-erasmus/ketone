@@ -1,12 +1,12 @@
 // Imports repositories
-import { ClientRepository } from './../repositories/sequelize/client';
+import { IClientRepository } from './../repositories/client';
 
 // Imports models
 import { Client } from './../entities/client';
 
 export class ClientService {
 
-    constructor(private clientRepository: ClientRepository) {
+    constructor(private clientRepository: IClientRepository) {
 
     }
 
@@ -18,11 +18,11 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
-        if (client.username !== username) {
-            return null;
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
         }
 
         return client;
@@ -40,11 +40,11 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
-        if (client.username !== username) {
-            return null;
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
         }
 
         client.name = name;
@@ -60,11 +60,11 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
-        if (client.username !== username) {
-            return null;
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
         }
 
         client.allowedScopes.push(name);
@@ -81,7 +81,7 @@ export class ClientService {
             return null;
         }
 
-        if (client.username !== username) {
+        if (!client.isOwner(username)) {
             return null;
         }
 
@@ -96,11 +96,11 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
-        if (client.username !== username) {
-            return null;
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
         }
 
         client.redirectUris.push(uri);
@@ -114,11 +114,11 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
-        if (client.username !== username) {
-            return null;
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
         }
 
         client.redirectUris.splice(client.redirectUris.indexOf(uri), 1);

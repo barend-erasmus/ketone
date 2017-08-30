@@ -78,6 +78,10 @@ export class BaseRepository {
         });
 
         const KetoneUser = BaseRepository.sequelize.define('ketoneUser', {
+            apiKey: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
             emailAddress: {
                 allowNull: false,
                 type: Sequelize.STRING,

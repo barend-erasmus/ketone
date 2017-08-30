@@ -29,7 +29,7 @@ export class UsersRouter {
 
         const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
 
-        const users: User[] = await UsersRouter.getUserService().list(req.query.clientId);
+        const users: User[] = await UsersRouter.getUserService().list(req.user, req.query.clientId);
 
         res.render('users/index', {
             client,
@@ -57,7 +57,7 @@ export class UsersRouter {
 
         const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
 
-        const editUser: User = await UsersRouter.getUserService().find(req.query.username, req.query.clientId);
+        const editUser: User = await UsersRouter.getUserService().find(req.user, req.query.username, req.query.clientId);
 
         res.render('users/edit', {
             client,
@@ -75,7 +75,7 @@ export class UsersRouter {
 
         const client: Client = await UsersRouter.getClientService().find(req.user, req.body.clientId);
 
-        const editUser: User = await UsersRouter.getUserService().update(req.body.username, req.body.clientId, req.body.enabled ? true : false);
+        const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false);
 
         res.render('users/edit', {
             client,

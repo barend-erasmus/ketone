@@ -1,11 +1,12 @@
 // Imports
 import * as Sequelize from 'sequelize';
 import { BaseRepository } from './base';
+import { IEventRepository } from './../event';
 
 // Imports models
 import { Event } from './../../entities/event';
 
-export class EventRepository extends BaseRepository {
+export class EventRepository extends BaseRepository implements IEventRepository {
 
     constructor(host: string, username: string, password: string) {
         super(host, username, password);

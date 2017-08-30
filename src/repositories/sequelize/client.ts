@@ -1,10 +1,11 @@
 // Imports
 import { BaseRepository } from './base';
+import { IClientRepository } from './../client';
 
 // Imports models
 import { Client } from './../../entities/client';
 
-export class ClientRepository extends BaseRepository {
+export class ClientRepository extends BaseRepository implements IClientRepository {
 
     constructor(host: string, username: string, password: string) {
         super(host, username, password);

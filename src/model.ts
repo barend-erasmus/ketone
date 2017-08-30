@@ -2,6 +2,7 @@
 import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
 import * as yargs from 'yargs';
 import { config } from './config';
+import * as uuid from 'uuid';
 
 // Import Repositories
 import { BaseRepository } from './repositories/sequelize/base';
@@ -16,7 +17,9 @@ import { EmailService } from './services/email';
 // Imports models
 import { Client } from './entities/client';
 import { Event } from './entities/event';
+
 import { User } from './entities/user';
+import { KetoneUser } from './entities/ketone-user';
 
 const argv = yargs.argv;
 
@@ -46,27 +49,38 @@ export class Model {
 
         const client: Client = await this.clientRepository.find(clientId);
 
-        const user: User = client.isKetoneClient ? await this.ketoneUserRepository.find(username) : await this.userRepository.find(username, clientId);
+        if (client.isKetoneClient) {
+            const user: User = await this.ketoneUserRepository.find(username);
 
-        if (user) {
-            throw new Error('Username already exist');
+            if (user) {
+                throw new Error('Username already exist');
+            }
+
+            await this.ketoneUserRepository.create(new KetoneUser(
+                username,
+                emailAddress,
+                password,
+                false,
+                true,
+                null,
+                this.generateApiKey(),
+            ));
+        } else {
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (user) {
+                throw new Error('Username already exist');
+            }
+
+            await this.userRepository.create(new User(
+                username,
+                emailAddress,
+                password,
+                false,
+                true,
+                null,
+            ), clientId);
         }
-
-        client.isKetoneClient ? await this.ketoneUserRepository.create(new User(
-            username,
-            emailAddress,
-            password,
-            false,
-            true,
-            null,
-        )) : await this.userRepository.create(new User(
-            username,
-            emailAddress,
-            password,
-            false,
-            true,
-            null,
-        ), clientId);
 
         await this.eventRepository.create(new Event(clientId, username, 'register'));
 
@@ -77,27 +91,57 @@ export class Model {
 
         const client: Client = await this.clientRepository.find(clientId);
 
-        const user: User = client.isKetoneClient ? await this.ketoneUserRepository.find(username) : await this.userRepository.find(username, clientId);
+        let result: boolean;
 
-        if (!user) {
-            throw new Error('Username does not exist');
+        if (client.isKetoneClient) {
+            const user: KetoneUser = await this.ketoneUserRepository.find(username);
+
+            if (!user) {
+                throw new Error('Username does not exist');
+            }
+
+            user.password = password;
+
+            result = await this.ketoneUserRepository.update(user);
+        } else {
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                throw new Error('Username does not exist');
+            }
+
+            user.password = password;
+
+            result = await this.userRepository.update(user, clientId);
         }
-
-        user.password = password;
 
         await this.eventRepository.create(new Event(clientId, username, 'resetPassword'));
 
-        return client.isKetoneClient ? this.ketoneUserRepository.update(user) : this.userRepository.update(user, clientId);
+        return result;
     }
 
     public async sendForgotPasswordEmail(clientId: string, username: string, resetPasswordUrl: string): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
-        const user: User = client.isKetoneClient ? await this.ketoneUserRepository.find(username) : await this.userRepository.find(username, clientId);
+        let emailAddress: string;
 
-        if (!user) {
-            throw new Error('Username does not exist');
+        if (client.isKetoneClient) {
+            const user: KetoneUser = await this.ketoneUserRepository.find(username);
+
+            if (!user) {
+                throw new Error('Username does not exist');
+            }
+
+            emailAddress = user.emailAddress;
+        } else {
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                throw new Error('Username does not exist');
+            }
+
+            emailAddress = user.emailAddress;
         }
 
         const domain = argv.prod ? `${config.domain}/auth` : 'http://localhost:3000/auth';
@@ -107,7 +151,7 @@ export class Model {
 
         await this.eventRepository.create(new Event(clientId, username, 'sendForgotPasswordEmail'));
 
-        return this.emailService.sendEmail(user.emailAddress, subject, html);
+        return this.emailService.sendEmail(emailAddress, subject, html);
     }
 
     public async sendVerificationEmail(clientId: string, emailAddress: string, username: string, verificationUrl: string): Promise<boolean> {
@@ -128,6 +172,8 @@ export class Model {
 
         const client: Client = await this.clientRepository.find(clientId);
 
+        let result: boolean = false;
+
         if (client.isKetoneClient) {
             const user: User = await this.ketoneUserRepository.find(username);
 
@@ -135,13 +181,9 @@ export class Model {
                 return false;
             }
 
-            await this.eventRepository.create(new Event(clientId, username, 'validateCredentials'));
-
             if (user.verified && user.password === password && user.enabled) {
-                return true;
+                result = true;
             }
-
-            return false;
         } else {
             const user: User = await this.userRepository.find(username, clientId);
 
@@ -149,30 +191,50 @@ export class Model {
                 return false;
             }
 
-            await this.eventRepository.create(new Event(clientId, username, 'validateCredentials'));
-
             if (user.password === password && user.enabled) {
-                return true;
+                result = true;
             }
-
-            return false;
         }
+
+        await this.eventRepository.create(new Event(clientId, username, 'validateCredentials'));
+
+        return result;
     }
 
     public async verify(clientId: string, username: string): Promise<boolean> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
-        const user: User = client.isKetoneClient ? await this.ketoneUserRepository.find(username) : await this.userRepository.find(username, clientId);
+        let result: boolean;
 
-        if (!user) {
-            return false;
+        if (client.isKetoneClient) {
+            const user: KetoneUser = await this.ketoneUserRepository.find(username);
+
+            if (!user) {
+                return false;
+            }
+
+            user.verified = true;
+
+            result = await this.ketoneUserRepository.update(user);
+        } else {
+            const user: User = await this.userRepository.find(username, clientId);
+
+            if (!user) {
+                return false;
+            }
+
+            user.verified = true;
+
+            result = await this.userRepository.update(user, clientId);
         }
 
         await this.eventRepository.create(new Event(clientId, username, 'verify'));
 
-        user.verified = true;
+        return result;
+    }
 
-        return client.isKetoneClient ? this.ketoneUserRepository.update(user) : this.userRepository.update(user, clientId);
+    private generateApiKey(): string {
+        return uuid.v4();
     }
 }

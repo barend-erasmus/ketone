@@ -14,4 +14,8 @@ export class Client {
     ) {
         this.isKetoneClient = this.id === 'fLTSn80KPQNOPCS2R7dq';
     }
+
+    public isOwner(username: string) {
+        return this.username === username;
+    }
 }

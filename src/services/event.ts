@@ -2,8 +2,8 @@
 import * as moment from 'moment';
 
 // Imports repositories
-import { ClientRepository } from './../repositories/sequelize/client';
-import { EventRepository } from './../repositories/sequelize/event';
+import { IClientRepository } from './../repositories/client';
+import { IEventRepository } from './../repositories/event';
 
 // Imports models
 import { Client } from './../entities/client';
@@ -11,7 +11,7 @@ import { Statistic } from './../models/statistic';
 
 export class EventService {
 
-    constructor(private eventRepository: EventRepository, private clientRepository: ClientRepository) {
+    constructor(private eventRepository: IEventRepository, private clientRepository: IClientRepository) {
 
     }
 

@@ -1,10 +1,11 @@
 // Imports
 import { BaseRepository } from './base';
+import { IUserRepository } from './../user';
 
 // Imports models
 import { User } from './../../entities/user';
 
-export class UserRepository extends BaseRepository {
+export class UserRepository extends BaseRepository implements IUserRepository {
 
     constructor(host: string, username: string, password: string) {
         super(host, username, password);
