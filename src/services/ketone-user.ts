@@ -14,4 +14,8 @@ export class KetoneUserService {
     public async findByAPIKey(apiKey: string): Promise<KetoneUser> {
         return this.userRepository.findByAPIKey(apiKey);
     }
+
+    public async find(username: string): Promise<KetoneUser> {
+        return this.userRepository.find(username);
+    }
 }

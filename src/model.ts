@@ -4,6 +4,7 @@ import * as yargs from 'yargs';
 import { config } from './config';
 import * as uuid from 'uuid';
 import * as express from 'express';
+import * as crypto from 'crypto';
 
 // Import Interfaces
 import { IClientRepository } from './repositories/client';
@@ -59,6 +60,8 @@ export class Model {
         password: string,
         request: express.Request): Promise<boolean> {
 
+        password = crypto.createHash('md5').update(`${config.salt}_${password}_${config.salt}`).digest("hex");
+
         const client: Client = await this.clientRepository.find(clientId);
 
         if (client.isKetoneClient) {
@@ -104,6 +107,8 @@ export class Model {
         username: string,
         password: string,
         request: express.Request): Promise<boolean> {
+
+        password = crypto.createHash('md5').update(`${config.salt}_${password}_${config.salt}`).digest("hex");
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -198,6 +203,8 @@ export class Model {
         username: string,
         password: string,
         request: express.Request): Promise<boolean> {
+
+        password = crypto.createHash('md5').update(`${config.salt}_${password}_${config.salt}`).digest("hex");
 
         const client: Client = await this.clientRepository.find(clientId);
 

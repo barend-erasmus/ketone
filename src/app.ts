@@ -21,6 +21,7 @@ import { Model } from './model';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
 import { UsersRouter } from './routes/users';
+import { ProfileRouter } from './routes/profile';
 import { APIUsersRouter } from './routes/api/users';
 
 const argv = yargs.argv;
@@ -128,6 +129,8 @@ app.get('/users/edit', UsersRouter.editGet);
 app.post('/users/edit', UsersRouter.editPost);
 app.get('/users/create', UsersRouter.createGet);
 app.post('/users/create', UsersRouter.createPost);
+
+app.get('/profile/edit', ProfileRouter.editGet);
 
 app.get('/api/users', APIUsersRouter.get);
 

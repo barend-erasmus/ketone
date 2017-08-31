@@ -19,7 +19,7 @@ baseRepository.sync().then(async () => {
     await ketoneUserRepository.create(new KetoneUser(
         'developersworkspace@gmail.com',
         'developersworkspace@gmail.com',
-        '123456',
+        '6df0e8bca3a739f89b866f42d218a081', // 123456
         true,
         true,
         null,
@@ -47,7 +47,7 @@ baseRepository.sync().then(async () => {
     await ketoneUserRepository.create(new KetoneUser(
         'demo',
         'developersworkspace@gmail.com',
-        '123456',
+        '6df0e8bca3a739f89b866f42d218a081', // 123456
         true,
         true,
         null,

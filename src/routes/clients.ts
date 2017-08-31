@@ -29,28 +29,33 @@ export class ClientsRouter {
     }
 
     public static async editGet(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect('/auth/login');
-            return;
+        try {
+            if (!req.user) {
+                res.redirect('/auth/login');
+                return;
+            }
+
+            if (!req.query.id) {
+                res.status(404).render('error/NotFound', { layout: false });
+                return;
+            }
+
+            const client: Client = await ClientsRouter.getClientService().find(req.user, req.query.id);
+
+            if (!client) {
+                res.status(404).render('error/NotFound', { layout: false });
+                return;
+            }
+
+            res.render('clients/edit', {
+                client,
+                title: 'Clients - Edit',
+                user: req.user,
+            });
+
+        } catch (err) {
+            res.status(500).render('error/InternalServerError', { layout: false, message: err.message });
         }
-
-        if (!req.query.id) {
-            res.status(404).render('error/NotFound', { layout: false });
-            return;
-        }
-
-        const client: Client = await ClientsRouter.getClientService().find(req.user, req.query.id);
-
-        if (!client) {
-            res.status(404).render('error/NotFound', { layout: false });
-            return;
-        }
-
-        res.render('clients/edit', {
-            client,
-            title: 'Clients - Edit',
-            user: req.user,
-        });
     }
 
     public static async editPost(req: express.Request, res: express.Response) {

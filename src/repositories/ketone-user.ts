@@ -10,4 +10,6 @@ export interface IKetoneUserRepository {
     find(username: string): Promise<KetoneUser>;
 
     findByAPIKey(apiKey: string): Promise<KetoneUser>;
+
+    find(username: string): Promise<KetoneUser>;
 }

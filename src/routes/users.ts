@@ -122,10 +122,7 @@ export class UsersRouter {
     }
 
     protected static getUserService(): UserService {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
-
+        
         const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
         const userRepository: UserRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
 
