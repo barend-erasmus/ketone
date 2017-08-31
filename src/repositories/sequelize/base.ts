@@ -7,9 +7,11 @@ export class BaseRepository {
         Client: Sequelize.Model<{}, {}>,
         AllowedScope: Sequelize.Model<{}, {}>,
         RedirectUri: Sequelize.Model<{}, {}>,
+        Roles: Sequelize.Model<{}, {}>,
         User: Sequelize.Model<{}, {}>,
         KetoneUser: Sequelize.Model<{}, {}>,
         Event: Sequelize.Model<{}, {}>,
+        Permissions: Sequelize.Model<{}, {}>,
     } = null;
 
     private static defineModels(): void {
@@ -48,6 +50,24 @@ export class BaseRepository {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+        });
+
+        const Roles = BaseRepository.sequelize.define('role', {
+            name: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+        });
+
+        const Permissions = BaseRepository.sequelize.define('permission', {
+            name: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+        });
+
+        const RolePermissions = BaseRepository.sequelize.define('rolePermission', {
+
         });
 
         const User = BaseRepository.sequelize.define('user', {
@@ -133,6 +153,26 @@ export class BaseRepository {
         Client.hasMany(RedirectUri);
         RedirectUri.belongsTo(Client);
 
+        Client.hasMany(Roles);
+        Roles.belongsTo(Client);
+
+        Client.hasMany(Permissions);
+        Permissions.belongsTo(Client);
+
+        Permissions.belongsToMany(Roles, {
+            through: {
+                model: RolePermissions,
+                unique: true,
+            }
+        });
+
+        Roles.belongsToMany(Permissions, {
+            through: {
+                model: RolePermissions,
+                unique: true,
+            }
+        });
+
         Client.hasMany(User);
         User.belongsTo(Client);
 
@@ -144,7 +184,9 @@ export class BaseRepository {
             Client,
             Event,
             KetoneUser,
+            Permissions,
             RedirectUri,
+            Roles,
             User,
         };
     }
