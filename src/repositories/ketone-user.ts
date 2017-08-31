@@ -8,4 +8,6 @@ export interface IKetoneUserRepository {
     update(user: KetoneUser): Promise<boolean>;
 
     find(username: string): Promise<KetoneUser>;
+
+    findByAPIKey(apiKey: string): Promise<KetoneUser>;
 }

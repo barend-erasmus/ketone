@@ -44,6 +44,20 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
         return true;
     }
 
+    public async findByAPIKey(apiKey: string): Promise<KetoneUser> {
+        const user: any = await BaseRepository.models.KetoneUser.find({
+            where: {
+                apiKey,
+            },
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        return new KetoneUser(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, user.apiKey);
+    }
+
     public async find(username: string): Promise<KetoneUser> {
         const user: any = await BaseRepository.models.KetoneUser.find({
             where: {

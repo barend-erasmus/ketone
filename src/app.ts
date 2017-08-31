@@ -21,6 +21,7 @@ import { Model } from './model';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
 import { UsersRouter } from './routes/users';
+import { APIUsersRouter } from './routes/api/users';
 
 const argv = yargs.argv;
 const app = express();
@@ -127,6 +128,8 @@ app.get('/users/edit', UsersRouter.editGet);
 app.post('/users/edit', UsersRouter.editPost);
 app.get('/users/create', UsersRouter.createGet);
 app.post('/users/create', UsersRouter.createPost);
+
+app.get('/api/users', APIUsersRouter.get);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();
