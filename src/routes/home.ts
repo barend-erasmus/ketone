@@ -10,6 +10,7 @@ import { EventRepository } from './../repositories/sequelize/event';
 import { EventService } from './../services/event';
 
 // Imports models
+import { Event } from './../entities/event';
 import { Statistic } from './../models/statistic';
 
 export class HomeRouter {
@@ -25,7 +26,10 @@ export class HomeRouter {
         const numberOfResetPasswordsStatistic: Statistic = await HomeRouter.getEventService().numberOfResetPasswordsStatistic(req.user);
         const numberOfVerifiesStatistic: Statistic = await HomeRouter.getEventService().numberOfVerifiesStatistic(req.user);
 
+        const events: Event[] = await HomeRouter.getEventService().list(req.user);
+
         res.render('home/index', {
+            events,
             numberOfLoginsStatistic,
             numberOfRegistersStatistic,
             numberOfResetPasswordsStatistic,

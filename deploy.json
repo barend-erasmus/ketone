@@ -14,7 +14,8 @@
         "mkdir /logs",
         "npm --prefix /opt/ketone install",
         "pm2 stop ketone",
-        "pm2 start /opt/ketone/src/app.js --name ketone -- --prod --port 9007"
+        "pm2 start /opt/ketone/src/app.js --name ketone -- --prod --port 9007",
+        "sudo service nginx reload"
     ],
     "directories": [
         {
@@ -34,6 +35,10 @@
         {
             "source": "$workspace/package.json",
             "destination": "/opt/ketone/package.json"
+        },
+        {
+            "source": "$workspace/nginx.conf",
+            "destination": "/etc/nginx/sites-enabled/ketone"
         }
     ]
 }

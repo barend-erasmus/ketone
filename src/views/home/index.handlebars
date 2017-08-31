@@ -93,5 +93,36 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Events</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Client Id</th>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>IP Address</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each events as |value key|}}
+                            <tr>
+                                <td>
+                                    <a href="/clients/edit?id={{value.clientId}}">{{value.clientId}}</a>
+                                </td>
+                                <td>{{value.username}}</td>
+                                <td>{{value.name}}</td>
+                                <td>{{value.ipAddress}}</td>
+                                <td>{{value.timestamp}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

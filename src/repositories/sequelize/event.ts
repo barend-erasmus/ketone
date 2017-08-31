@@ -23,6 +23,18 @@ export class EventRepository extends BaseRepository implements IEventRepository 
         return true;
     }
 
+    public async list(clientId: string): Promise<Event[]> {
+        const result: any[] = await BaseRepository.models.Event.findAll({
+            limit: 10,
+            order: [['createdAt', 'DESC']],
+            where: {
+                clientId,
+            },
+        });
+
+        return result.map((x) => new Event(x.clientId, x.username, x.name, x.ipAddress, x.createdAt));
+    }
+
     public async count(clientId: string, name: string, timestamp: Date): Promise<number> {
         const result: any = await BaseRepository.models.Event.findAll({
             attributes: [[Sequelize.fn('COUNT', Sequelize.col('name')), 'count']],

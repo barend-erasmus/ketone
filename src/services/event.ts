@@ -7,6 +7,7 @@ import { IEventRepository } from './../repositories/event';
 
 // Imports models
 import { Client } from './../entities/client';
+import { Event } from './../entities/event';
 import { Statistic } from './../models/statistic';
 
 export class EventService {
@@ -53,6 +54,25 @@ export class EventService {
         const currentValue = await this.countByUsername(username, currentValueTimestamp, 'verify');
 
         return new Statistic(previousValue, currentValue, previousValueTimestamp, currentValueTimestamp);
+    }
+
+    public async list(username: string): Promise<Event[]> {
+
+        const clients: Client[] = await this.clientRepository.listByUsername(username);
+
+        const clientEvents: Event[][] = await Promise.all(clients.map((x) => this.eventRepository.list(x.id)));
+
+        const events: Event[] = [];
+
+        clientEvents.forEach((x: Event[]) => {
+            x.forEach((y) => {
+                events.push(y);
+            });
+        })
+
+        return events.sort((a: Event, b: Event) => {
+            return b.timestamp.getTime() - a.timestamp.getTime();
+        }).slice(0, 10);
     }
 
     private async countByUsername(username: string, timestamp: Date, name: string): Promise<number> {
