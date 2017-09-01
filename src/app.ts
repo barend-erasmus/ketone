@@ -22,6 +22,7 @@ import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
 import { ProfileRouter } from './routes/profile';
+import { RolesRouter } from './routes/roles';
 import { UsersRouter } from './routes/users';
 
 const argv = yargs.argv;
@@ -131,6 +132,8 @@ app.get('/users/create', UsersRouter.createGet);
 app.post('/users/create', UsersRouter.createPost);
 
 app.get('/profile/edit', ProfileRouter.editGet);
+
+app.get('/roles', RolesRouter.index);
 
 app.get('/api/users', APIUsersRouter.get);
 
