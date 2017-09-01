@@ -1,14 +1,23 @@
+// Imports
+import * as uuid from 'uuid';
+import * as crypto from 'crypto';
+import { config } from './../config';
+
 // Imports repositories
 import { IClientRepository } from './../repositories/client';
 import { IUserRepository } from './../repositories/user';
+import { IKetoneUserRepository } from './../repositories/ketone-user';
 
 // Imports models
 import { Client } from './../entities/client';
 import { User } from './../entities/user';
+import { KetoneUser } from './../entities/ketone-user';
 
 export class UserService {
 
-    constructor(private userRepository: IUserRepository, private clientRepository: IClientRepository) {
+    constructor(private userRepository: IUserRepository,
+        private ketoneUserRepository: IKetoneUserRepository,
+        private clientRepository: IClientRepository) {
 
     }
 
@@ -23,6 +32,10 @@ export class UserService {
             throw new Error('You are not the owner of this Client Id');
         }
 
+        if (client.isKetoneClient) {
+            return this.ketoneUserRepository.list();
+        }
+
         return this.userRepository.list(clientId);
     }
 
@@ -35,6 +48,10 @@ export class UserService {
 
         if (!client.isOwner(username)) {
             throw new Error('You are not the owner of this Client Id');
+        }
+
+        if (client.isKetoneClient) {
+            return this.ketoneUserRepository.find(userUsername);
         }
 
         return this.userRepository.find(userUsername, clientId);
@@ -52,17 +69,36 @@ export class UserService {
             throw new Error('You are not the owner of this Client Id');
         }
 
-        const user: User = await this.userRepository.find(userUsername, clientId);
+        password = crypto.createHash('md5').update(`${config.salt}_${password}_${config.salt}`).digest("hex");
 
-        if (user) {
-            return null;
+        if (client.isKetoneClient) {
+
+            const user: KetoneUser = await this.ketoneUserRepository.find(userUsername);
+
+            if (user) {
+                return null;
+            }
+
+            const newUser: KetoneUser = new KetoneUser(userUsername, emailAdress, password, false, enabled, null, this.generateApiKey());
+
+            await this.ketoneUserRepository.create(newUser);
+
+            return newUser;
+
+        } else {
+
+            const user: User = await this.userRepository.find(userUsername, clientId);
+
+            if (user) {
+                return null;
+            }
+
+            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null);
+
+            await this.userRepository.create(newUser, clientId);
+
+            return newUser;
         }
-
-        const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null);
-
-        await this.userRepository.create(newUser, clientId);
-
-        return newUser;
     }
 
     public async update(username: string, userUsername: string, clientId: string, enabled: boolean): Promise<User> {
@@ -77,16 +113,37 @@ export class UserService {
             throw new Error('You are not the owner of this Client Id');
         }
 
-        const user: User = await this.userRepository.find(userUsername, clientId);
+        if (client.isKetoneClient) {
 
-        if (!user) {
-            return null;
+            const user: KetoneUser = await this.ketoneUserRepository.find(userUsername);
+
+            if (!user) {
+                return null;
+            }
+
+            user.enabled = enabled;
+
+            await this.ketoneUserRepository.update(user);
+
+            return user;
+
+        } else {
+
+            const user: User = await this.userRepository.find(userUsername, clientId);
+
+            if (!user) {
+                return null;
+            }
+
+            user.enabled = enabled;
+
+            await this.userRepository.update(user, clientId);
+
+            return user;
         }
+    }
 
-        user.enabled = enabled;
-
-        await this.userRepository.update(user, clientId);
-
-        return user;
+    private generateApiKey(): string {
+        return uuid.v4();
     }
 }

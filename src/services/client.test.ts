@@ -52,7 +52,7 @@ describe('ClientService', () => {
             const client: Client = await clientService.create('username', 'client-name');
 
             try {
-                await clientService.find('non-existing-username', client.id);
+                await clientService.find('other-username', client.id);
                 throw new Error('Expected Error');
             } catch (err) {
                 expect(err.message).to.be.eq('You are not the owner of this Client Id');
@@ -104,7 +104,7 @@ describe('ClientService', () => {
             const client: Client = await clientService.create('username', 'client-name');
 
             try {
-                await clientService.update('non-existing-username', client.id, 'client-name', true, true);
+                await clientService.update('other-username', client.id, 'client-name', true, true);
                 throw new Error('Expected Error');
             } catch (err) {
                 expect(err.message).to.be.eq('You are not the owner of this Client Id');
@@ -131,6 +131,56 @@ describe('ClientService', () => {
             const clients: Client[] = await clientService.list('username');
 
             expect(clients.length).to.be.eq(0);
+        });
+    });
+
+    describe('addScope', () => {
+        it('should return client', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            let client: Client = await clientService.create('username', 'client-name');
+
+            client = await clientService.addScope('username', client.id, 'scope');
+
+            expect(client).to.be.not.null;
+        });
+
+        it('should add a scope', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            let client: Client = await clientService.create('username', 'client-name');
+
+            client = await clientService.addScope('username', client.id, 'scope');
+
+            expect(client.allowedScopes.length).to.be.eq(1);
+        });
+
+        it('should throw error given client id does not exist', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            try {
+                await clientService.addScope('username', 'client-id', 'scope');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Client Id');
+            }
+        });
+
+        it('should throw error given user does not own client', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            const client: Client = await clientService.create('username', 'client-name');
+
+            try {
+                await clientService.addScope('other-username', client.id, 'scope');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('You are not the owner of this Client Id');
+            }
         });
     });
 });

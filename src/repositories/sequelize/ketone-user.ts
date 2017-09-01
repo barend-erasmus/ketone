@@ -38,6 +38,7 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
 
         existingUser.password = user.password;
         existingUser.verified = user.verified;
+        existingUser.enabled = user.enabled;
 
         await existingUser.save();
 
@@ -70,5 +71,15 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
         }
 
         return new KetoneUser(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, user.apiKey);
+    }
+
+    public async list(): Promise<KetoneUser[]> {
+        const users: any[] = await BaseRepository.models.KetoneUser.findAll({
+            order: [
+                ['username'],
+            ]
+        });
+
+        return users.map((x) => new KetoneUser(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, x.apiKey));
     }
 }

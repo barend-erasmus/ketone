@@ -68,23 +68,16 @@ export class APIUsersRouter {
     }
 
     protected static getUserService(): UserService {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
-
         const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
         const userRepository: UserRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
+        const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
 
-        const userService: UserService = new UserService(userRepository, clientRepository);
+        const userService: UserService = new UserService(userRepository, ketoneUserRepository, clientRepository);
 
         return userService;
     }
 
     protected static getKetoneUserService(): KetoneUserService {
-        const host = 'developersworkspace.co.za';
-        const username = 'ketone';
-        const password = 'ZiLSLzrIVhCrcdN6';
-
         const userRepository: KetoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
 
         const userService: KetoneUserService = new KetoneUserService(userRepository);
