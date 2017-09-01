@@ -1,6 +1,7 @@
 // Imports
 import * as express from 'express';
 import { config } from './../config';
+import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -32,6 +33,7 @@ export class RolesRouter {
         const roles: Role[] = await RolesRouter.getRoleService().listByClientId(req.user, req.query.clientId);
 
         res.render('roles/index', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             roles,
             title: 'Roles',

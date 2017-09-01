@@ -5,6 +5,7 @@ import { BaseRepository } from './base';
 // Imports models
 import { Permission } from './../../entities/permission';
 import { Role } from './../../entities/role';
+import { RoleGroup } from './../../entities/role-group';
 
 export class RoleRepository extends BaseRepository implements IRoleRepository {
 
@@ -13,15 +14,19 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     }
 
     public async create(role: Role, clientId: string): Promise<boolean> {
-        const client: any = await BaseRepository.models.Client.find({
+        const roleGroup: any = await BaseRepository.models.RoleGroups.find({
+            include: [
+                { model: BaseRepository.models.Client, required: false },
+            ],
             where: {
-                key: clientId,
+                '$client.key$': clientId,
+                'name': role.group.name,
             },
         });
 
         await BaseRepository.models.Roles.create({
-            clientId: client.id,
             name: role.name,
+            roleGroupId: roleGroup.id,
         });
 
         return true;
@@ -34,14 +39,20 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     public async listByClientId(clientId: string): Promise<Role[]> {
         const roles: any[] = await BaseRepository.models.Roles.findAll({
             include: [
-                { model: BaseRepository.models.Client, required: false },
+                {
+                    include: [
+                        { model: BaseRepository.models.Client, required: false },
+                    ],
+                    model: BaseRepository.models.RoleGroups,
+                    required: false,
+                },
             ],
             where: {
-                '$client.key$': clientId,
+                '$roleGroup.client.key$': clientId,
             },
         });
 
-        return roles.map((x) => new Role(x.name, []));
+        return roles.map((x) => new Role(x.name, new RoleGroup(x.roleGroup.name), []));
     }
 
     public async listByUsername(username: string, clientId: string): Promise<Role[]> {

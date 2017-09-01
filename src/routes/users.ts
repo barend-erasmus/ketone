@@ -1,6 +1,7 @@
 // Imports
 import * as express from 'express';
 import { config } from './../config';
+import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -33,6 +34,7 @@ export class UsersRouter {
         const users: User[] = await UsersRouter.getUserService().list(req.user, req.query.clientId);
 
         res.render('users/index', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             title: 'Users',
             user: req.user,
@@ -61,6 +63,7 @@ export class UsersRouter {
         const editUser: User = await UsersRouter.getUserService().find(req.user, req.query.username, req.query.clientId);
 
         res.render('users/edit', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             editUser,
             title: 'Users - Edit',
@@ -79,6 +82,7 @@ export class UsersRouter {
         const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false);
 
         res.render('users/edit', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             editUser,
             title: 'Users - Edit',
@@ -100,6 +104,7 @@ export class UsersRouter {
         const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
 
         res.render('users/create', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             title: 'Users - Create',
             user: req.user,

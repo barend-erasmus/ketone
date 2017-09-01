@@ -1,6 +1,7 @@
 // Imports
 import * as express from 'express';
 import { config } from './../config';
+import { BaseRouter } from './base';
 
 // Imports repositories
 import { KetoneUserRepository } from './../repositories/sequelize/ketone-user';
@@ -22,29 +23,12 @@ export class ProfileRouter {
         const editUser: KetoneUser = await ProfileRouter.getUserService().find(req.user);
 
         res.render('profile/edit', {
+            baseModel: BaseRouter.getBaseModel(),
             editUser,
             title: 'Profile - Edit',
             user: req.user,
         });
     }
-
-    // public static async editPost(req: express.Request, res: express.Response) {
-    //     if (!req.user) {
-    //         res.redirect('/auth/login');
-    //         return;
-    //     }
-
-    //     const client: Client = await UsersRouter.getClientService().find(req.user, req.body.clientId);
-
-    //     const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false);
-
-    //     res.render('users/edit', {
-    //         client,
-    //         editUser,
-    //         title: 'Users - Edit',
-    //         user: req.user,
-    //     });
-    // }
 
     protected static getUserService(): KetoneUserService {
 

@@ -1,6 +1,7 @@
 // Imports
 import * as express from 'express';
 import { config } from './../config';
+import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -29,6 +30,7 @@ export class HomeRouter {
         const events: Event[] = await HomeRouter.getEventService().list(req.user);
 
         res.render('home/index', {
+            baseModel: BaseRouter.getBaseModel(),
             events,
             numberOfLoginsStatistic,
             numberOfRegistersStatistic,

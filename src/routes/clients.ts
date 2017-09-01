@@ -1,6 +1,7 @@
 // Imports
 import * as express from 'express';
 import { config } from './../config';
+import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
@@ -22,6 +23,7 @@ export class ClientsRouter {
         const clients: Client[] = await ClientsRouter.getClientService().list(req.user);
 
         res.render('clients/index', {
+            baseModel: BaseRouter.getBaseModel(),
             clients,
             title: 'Clients',
             user: req.user,
@@ -48,6 +50,7 @@ export class ClientsRouter {
             }
 
             res.render('clients/edit', {
+                baseModel: BaseRouter.getBaseModel(),
                 client,
                 title: 'Clients - Edit',
                 user: req.user,
@@ -72,6 +75,7 @@ export class ClientsRouter {
         }
 
         res.render('clients/edit', {
+            baseModel: BaseRouter.getBaseModel(),
             client,
             title: 'Clients - Edit',
             user: req.user,
@@ -129,6 +133,7 @@ export class ClientsRouter {
         }
 
         res.render('clients/create', {
+            baseModel: BaseRouter.getBaseModel(),
             title: 'Clients - Create',
             user: req.user,
         });
