@@ -7,9 +7,9 @@ import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
 import { Model } from './model';
 
 import { ClientRepository } from './repositories/memory/client';
-import { UserRepository } from './repositories/memory/user';
 import { EventRepository } from './repositories/memory/event';
 import { KetoneUserRepository } from './repositories/memory/ketone-user';
+import { UserRepository } from './repositories/memory/user';
 
 import { Client } from './entities/client';
 import { Event } from './entities/event';
@@ -115,7 +115,7 @@ describe('Model', () => {
             try {
                 await model.register('client-id', 'user@example.com', 'user', '123456', null);
                 throw new Error('Expected Error');
-            }catch(err) {
+            }catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
             }
         });
@@ -165,7 +165,7 @@ describe('Model', () => {
 
             await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
 
-            const events: Event[] = await eventRepository.list(config.client.id,);
+            const events: Event[] = await eventRepository.list(config.client.id);
 
             expect(events.length).to.be.eq(1);
         });
@@ -193,7 +193,7 @@ describe('Model', () => {
             try {
                 await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
                 throw new Error('Expected Error');
-            }catch(err) {
+            }catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
             }
         });

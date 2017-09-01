@@ -68,7 +68,7 @@ export class EventService {
             x.forEach((y) => {
                 events.push(y);
             });
-        })
+        });
 
         return events.sort((a: Event, b: Event) => {
             return b.timestamp.getTime() - a.timestamp.getTime();

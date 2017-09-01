@@ -20,7 +20,7 @@ export class UserRepository implements IUserRepository {
     }
 
     public async update(user: User, clientId: string): Promise<boolean> {
-        const existingUser: User = this.users[clientId].find((x) => x.username === user.username);;
+        const existingUser: User = this.users[clientId].find((x) => x.username === user.username);
 
         return true;
     }

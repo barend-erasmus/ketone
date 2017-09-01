@@ -1,6 +1,6 @@
 // Imports
-import { BaseRepository } from './base';
 import { IUserRepository } from './../user';
+import { BaseRepository } from './base';
 
 // Imports models
 import { User } from './../../entities/user';

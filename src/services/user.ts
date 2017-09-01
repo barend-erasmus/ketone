@@ -1,23 +1,23 @@
 // Imports
-import * as uuid from 'uuid';
 import * as crypto from 'crypto';
+import * as uuid from 'uuid';
 import { config } from './../config';
 
 // Imports repositories
 import { IClientRepository } from './../repositories/client';
-import { IUserRepository } from './../repositories/user';
 import { IKetoneUserRepository } from './../repositories/ketone-user';
+import { IUserRepository } from './../repositories/user';
 
 // Imports models
 import { Client } from './../entities/client';
-import { User } from './../entities/user';
 import { KetoneUser } from './../entities/ketone-user';
+import { User } from './../entities/user';
 
 export class UserService {
 
     constructor(private userRepository: IUserRepository,
-        private ketoneUserRepository: IKetoneUserRepository,
-        private clientRepository: IClientRepository) {
+                private ketoneUserRepository: IKetoneUserRepository,
+                private clientRepository: IClientRepository) {
 
     }
 

@@ -16,7 +16,7 @@ export class KetoneUserRepository implements IKetoneUserRepository {
     }
 
     public async update(user: KetoneUser): Promise<boolean> {
-        const existingUser: KetoneUser = this.users.find((x) => x.username === user.username);;
+        const existingUser: KetoneUser = this.users.find((x) => x.username === user.username);
 
         return true;
     }

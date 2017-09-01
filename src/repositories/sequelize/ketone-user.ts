@@ -1,6 +1,6 @@
 // Imports
-import { BaseRepository } from './base';
 import { IKetoneUserRepository } from './../ketone-user';
+import { BaseRepository } from './base';
 
 // Imports models
 import { KetoneUser } from './../../entities/ketone-user';
@@ -77,7 +77,7 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
         const users: any[] = await BaseRepository.models.KetoneUser.findAll({
             order: [
                 ['username'],
-            ]
+            ],
         });
 
         return users.map((x) => new KetoneUser(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, x.apiKey));

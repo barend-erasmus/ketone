@@ -163,14 +163,14 @@ export class BaseRepository {
             through: {
                 model: RolePermissions,
                 unique: true,
-            }
+            },
         });
 
         Roles.belongsToMany(Permissions, {
             through: {
                 model: RolePermissions,
                 unique: true,
-            }
+            },
         });
 
         Client.hasMany(User);

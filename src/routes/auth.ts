@@ -11,7 +11,6 @@
  *
  */
 
-
 /**
  * @api {post} /token Access Token Request
  * @apiName AccessTokenRequest

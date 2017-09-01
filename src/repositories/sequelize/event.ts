@@ -1,7 +1,7 @@
 // Imports
 import * as Sequelize from 'sequelize';
-import { BaseRepository } from './base';
 import { IEventRepository } from './../event';
+import { BaseRepository } from './base';
 
 // Imports models
 import { Event } from './../../entities/event';

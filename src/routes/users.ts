@@ -4,8 +4,8 @@ import { config } from './../config';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
-import { UserRepository } from './../repositories/sequelize/user';
 import { KetoneUserRepository } from './../repositories/sequelize/ketone-user';
+import { UserRepository } from './../repositories/sequelize/user';
 
 // Imports services
 import { ClientService } from './../services/client';
@@ -123,7 +123,7 @@ export class UsersRouter {
     }
 
     protected static getUserService(): UserService {
-        
+
         const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
         const userRepository: UserRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
         const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
 
-import { ClientService } from './client';
 import { ClientRepository } from './../repositories/memory/client';
+import { ClientService } from './client';
 
 import { Client } from './../entities/client';
 

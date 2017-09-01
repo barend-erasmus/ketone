@@ -18,11 +18,11 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 import { Model } from './model';
 
 // Imports routes
+import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
-import { UsersRouter } from './routes/users';
 import { ProfileRouter } from './routes/profile';
-import { APIUsersRouter } from './routes/api/users';
+import { UsersRouter } from './routes/users';
 
 const argv = yargs.argv;
 const app = express();

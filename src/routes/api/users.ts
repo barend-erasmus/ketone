@@ -4,16 +4,16 @@ import { config } from './../../config';
 
 // Imports repositories
 import { ClientRepository } from './../../repositories/sequelize/client';
-import { UserRepository } from './../../repositories/sequelize/user';
 import { KetoneUserRepository } from './../../repositories/sequelize/ketone-user';
+import { UserRepository } from './../../repositories/sequelize/user';
 
 // Imports services
-import { UserService } from './../../services/user';
 import { KetoneUserService } from './../../services/ketone-user';
+import { UserService } from './../../services/user';
 
 // Imports models
-import { User } from './../../entities/user';
 import { KetoneUser } from './../../entities/ketone-user';
+import { User } from './../../entities/user';
 
 export class APIUsersRouter {
 
@@ -23,13 +23,13 @@ export class APIUsersRouter {
      * @apiGroup Users
      *
      * @apiParam {string} clientId Client Id
-     * 
-     * 
-     @apiHeaderExample {json} Header-Example:
+     *
+     *
+     * @apiHeaderExample {json} Header-Example:
      *      {
      *          "Authorization": "<api-key>"
      *      }
-     * 
+     *
      * @apiSuccessExample {json} Success-Response:
      *      HTTP/1.1 200 OK
      *      [
@@ -62,7 +62,7 @@ export class APIUsersRouter {
             res.json(users);
         } catch (err) {
             res.status(500).json({
-                message: err.message
+                message: err.message,
             });
         }
     }

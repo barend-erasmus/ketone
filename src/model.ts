@@ -1,10 +1,10 @@
 // Imports
+import * as crypto from 'crypto';
+import * as express from 'express';
 import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
+import * as uuid from 'uuid';
 import * as yargs from 'yargs';
 import { config } from './config';
-import * as uuid from 'uuid';
-import * as express from 'express';
-import * as crypto from 'crypto';
 
 // Import Interfaces
 import { IClientRepository } from './repositories/client';
@@ -26,8 +26,8 @@ import { EmailService } from './services/email';
 import { Client } from './entities/client';
 import { Event } from './entities/event';
 
-import { User } from './entities/user';
 import { KetoneUser } from './entities/ketone-user';
+import { User } from './entities/user';
 
 const argv = yargs.argv;
 
