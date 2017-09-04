@@ -17,11 +17,13 @@
                 <hr>
             </div>
         </div>
+        {{#hasPermission user 'CreateClient'}}
         <div class="row">
             <div class="col-md-12">
                 <a href="/clients/create" class="btn btn-w-md btn-primary pull-right">New Client</a>
             </div>
         </div>
+        {{/hasPermission}}
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">

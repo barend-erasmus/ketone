@@ -19,7 +19,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="#" disabled class="btn btn-w-md btn-primary pull-right">New Role <span class="label label-success">Coming Soon</span></a>
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newRoleModal">New Role</button>
                 <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
             </div>
         </div>
@@ -53,3 +53,33 @@
         </div>
     </div>
 </section>
+
+
+<div class="modal fade" id="newRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="/roles/create" class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title">New Role</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+                </div>
+                <div class="form-group">
+                    <label for="group">Group</label>
+                    <select class="form-control" id="group" name="group">
+                        {{#each roleGroups as |value key|}}
+                            <option value="{{value.name}}">{{value.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <input type="hidden" name="clientId" value="{{client.id}}" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-accent">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

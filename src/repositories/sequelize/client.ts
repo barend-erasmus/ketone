@@ -4,6 +4,9 @@ import { BaseRepository } from './base';
 
 // Imports models
 import { Client } from './../../entities/client';
+import { Role } from './../../entities/role';
+import { RoleGroup } from './../../entities/role-group';
+import { Permission } from './../../entities/permission';
 
 export class ClientRepository extends BaseRepository implements IClientRepository {
 
@@ -52,6 +55,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                 { model: BaseRepository.models.KetoneUser, required: false },
                 { model: BaseRepository.models.AllowedScope, required: false },
                 { model: BaseRepository.models.RedirectUri, required: false },
+                { as: 'defaultRole', model: BaseRepository.models.Role, required: false },
             ],
             where: {
                 key: id,
@@ -71,6 +75,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
             client.allowForgotPassword,
             client.allowRegister,
             client.ketoneUser.username,
+            client.defaultRole ? new Role(client.defaultRole.name, new RoleGroup(client.defaultRole.roleGroup.name), []) : null
         );
     }
 
@@ -89,9 +94,27 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
             return null;
         }
 
+        const role: any = client.role ? await BaseRepository.models.Role.find({
+            include: [
+                {
+                    include: [
+                        { model: BaseRepository.models.Client, required: false },
+                    ],
+                    model: BaseRepository.models.RoleGroup,
+                    required: false
+                },
+            ],
+            where: {
+                'name': client.role.name,
+                '$roleGroup.name$': client.role.group.name,
+                '$roleGroup.client.key$': client.id,
+            },
+        }) : null;
+
         existingClient.name = client.name;
         existingClient.allowForgotPassword = client.allowForgotPassword;
         existingClient.allowRegister = client.allowRegister;
+        existingClient.roleId = role ? role.id : null;
 
         for (const scope of existingClient.allowedScopes) {
             if (client.allowedScopes.filter((x) => x === scope.name).length === 0) {
@@ -142,6 +165,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                 { model: BaseRepository.models.KetoneUser, required: false },
                 { model: BaseRepository.models.AllowedScope, required: false },
                 { model: BaseRepository.models.RedirectUri, required: false },
+                { as: 'defaultRole', model: BaseRepository.models.Role, required: false },
             ],
             where: {
                 '$ketoneUser.username$': username,
@@ -157,6 +181,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
             x.allowForgotPassword,
             x.allowRegister,
             x.ketoneUser.username,
+            x.defaultRole ? new Role(x.defaultRole.name, new RoleGroup(x.defaultRole.roleGroup.name), []) : null,
         ));
     }
 }

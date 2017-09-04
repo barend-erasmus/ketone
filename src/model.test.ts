@@ -35,6 +35,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             const client: OAuth2FrameworkClient = await model.findClient('client-id', null);
@@ -60,6 +61,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             const result: boolean = await model.register('client-id', 'user@example.com', 'user', '123456', null);
@@ -83,6 +85,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             await model.register('client-id', 'user@example.com', 'user', '123456', null);
@@ -108,6 +111,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             await model.register('client-id', 'user@example.com', 'user', '123456', null);
@@ -138,6 +142,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             const result: boolean = await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
@@ -161,6 +166,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
@@ -186,6 +192,7 @@ describe('Model', () => {
                 true,
                 true,
                 'developersworkspace@gmail.com',
+                null,
             ));
 
             await model.register(config.client.id, 'user@example.com', 'user', '123456', null);

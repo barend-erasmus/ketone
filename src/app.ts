@@ -48,6 +48,11 @@ app.use(cookieSession({
 // Configures view engine
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
+    helpers: {
+        hasPermission: (user, permission, options) => {
+            return options.fn(this);
+        }
+    },
     layoutsDir: path.join(__dirname, 'views/layouts'),
 }));
 
@@ -134,6 +139,7 @@ app.post('/users/create', UsersRouter.createPost);
 app.get('/profile/edit', ProfileRouter.editGet);
 
 app.get('/roles', RolesRouter.index);
+app.post('/roles/create', RolesRouter.create);
 
 app.get('/api/users', APIUsersRouter.get);
 

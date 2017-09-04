@@ -29,7 +29,7 @@ export class ClientService {
     }
 
     public async create(username: string, name: string): Promise<Client> {
-        const client: Client = new Client(name, this.generateToken(), this.generateToken(), [], [], false, false, username);
+        const client: Client = new Client(name, this.generateToken(), this.generateToken(), [], [], false, false, username, null);
 
         await this.clientRepository.create(client);
 

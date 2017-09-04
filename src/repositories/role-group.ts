@@ -5,5 +5,7 @@ export interface IRoleGroupRepository {
 
     create(roleGroup: RoleGroup, clientId: string): Promise<boolean>;
 
+    list(clientId: string): Promise<RoleGroup[]>;
+
     update(roleGroup: RoleGroup, clientId: string): Promise<boolean>;
 }

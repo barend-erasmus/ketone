@@ -1,3 +1,6 @@
+// Imports models
+import { Role } from './role';
+
 export class Client {
 
     public isKetoneClient: boolean = false;
@@ -11,6 +14,7 @@ export class Client {
         public allowForgotPassword: boolean,
         public allowRegister: boolean,
         public username: string,
+        public role: Role,
     ) {
         this.isKetoneClient = this.id === 'fLTSn80KPQNOPCS2R7dq';
     }

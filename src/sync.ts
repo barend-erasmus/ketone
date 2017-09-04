@@ -54,6 +54,7 @@ baseRepository.sync().then(async () => {
         true,
         true,
         'developersworkspace@gmail.com',
+        null,
     ));
 
     await ketoneUserRepository.create(new KetoneUser(
@@ -75,6 +76,7 @@ baseRepository.sync().then(async () => {
         true,
         true,
         'demo',
+        null,
     ));
 
     await roleGroupRepository.create(new RoleGroup('Common'), '7Ewz5a32gnkQz9iCvyk5');
