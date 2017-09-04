@@ -26,6 +26,34 @@ export class PermissionRepository extends BaseRepository implements IPermissionR
         return true;
     }
 
+    public async find(name: string, clientId: string): Promise<Permission> {
+        const permission: any = await BaseRepository.models.Permission.find({
+            include: [
+                { model: BaseRepository.models.Client, required: false },
+            ],
+            where: {
+                '$client.key$': clientId,
+                'name': name,
+            },
+        });
+
+        return new Permission(permission.name);
+    }
+
+    public async listByClientId(clientId: string): Promise<Permission[]> {
+        const permissions: any[] = await BaseRepository.models.Permission.findAll({
+            include: [
+                { model: BaseRepository.models.Client, required: false },
+            ],
+            where: {
+                '$client.key$': clientId,
+            },
+        });
+
+
+        return permissions.map((x) => new Permission(x.name));
+    }
+
     public async update(permission: Permission, clientId: string): Promise<boolean> {
         return null;
     }

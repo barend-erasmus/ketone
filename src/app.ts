@@ -23,6 +23,7 @@ import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
 import { ProfileRouter } from './routes/profile';
 import { RolesRouter } from './routes/roles';
+import { PermissionsRouter } from './routes/permission';
 import { UsersRouter } from './routes/users';
 import { RoleGroupRouter } from './routes/role-group';
 
@@ -143,6 +144,9 @@ app.get('/roles', RolesRouter.index);
 app.post('/roles/create', RolesRouter.create);
 
 app.post('/roleGroups/create', RoleGroupRouter.create);
+
+app.get('/permissions', PermissionsRouter.index);
+app.post('/permissions/create', PermissionsRouter.create);
 
 app.get('/api/users', APIUsersRouter.get);
 

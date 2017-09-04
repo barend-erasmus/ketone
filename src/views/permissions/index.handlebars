@@ -1,0 +1,73 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="view-header">
+                    <div class="pull-right text-right" style="line-height: 14px">
+                        <small>Ketone<br>Permissions<br><span class="c-white">{{baseModel.version}}</span></small>
+                    </div>
+                    <div class="header-icon">
+                        <i class="pe page-header-icon pe-7s-menu"></i>
+                    </div>
+                    <div class="header-title">
+                        <h3><a href="/clients">Clients</a> - <a href="/clients/edit?id={{client.id}}">{{client.name}}</a> - Permissions</h3>
+                        <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newPermissionModal">New Permission</button>
+                <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each permissions as |value key|}}
+                            <tr>
+                                <td>{{value.name}}</td>
+                                <td>
+                                    <a href="#" disabled class="btn btn-w-md btn-info">Edit <span class="label label-success">Coming Soon</span></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="newPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="/permissions/create" class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title">New Permission</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+                </div>
+                <input type="hidden" name="clientId" value="{{client.id}}" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-accent">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
