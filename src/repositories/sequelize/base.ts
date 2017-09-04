@@ -7,12 +7,13 @@ export class BaseRepository {
         Client: Sequelize.Model<{}, {}>,
         AllowedScope: Sequelize.Model<{}, {}>,
         RedirectUri: Sequelize.Model<{}, {}>,
-        Roles: Sequelize.Model<{}, {}>,
+        Role: Sequelize.Model<{}, {}>,
         User: Sequelize.Model<{}, {}>,
         KetoneUser: Sequelize.Model<{}, {}>,
         Event: Sequelize.Model<{}, {}>,
-        Permissions: Sequelize.Model<{}, {}>,
-        RoleGroups: Sequelize.Model<{}, {}>,
+        Permission: Sequelize.Model<{}, {}>,
+        RoleGroup: Sequelize.Model<{}, {}>,
+        RolePermissions: Sequelize.Model<{}, {}>,
     } = null;
 
     private static defineModels(): void {
@@ -53,21 +54,21 @@ export class BaseRepository {
             },
         });
 
-        const RoleGroups = BaseRepository.sequelize.define('roleGroup', {
+        const RoleGroup = BaseRepository.sequelize.define('roleGroup', {
             name: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
         });
 
-        const Roles = BaseRepository.sequelize.define('role', {
+        const Role = BaseRepository.sequelize.define('role', {
             name: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
         });
 
-        const Permissions = BaseRepository.sequelize.define('permission', {
+        const Permission = BaseRepository.sequelize.define('permission', {
             name: {
                 allowNull: false,
                 type: Sequelize.STRING,
@@ -161,16 +162,16 @@ export class BaseRepository {
         Client.hasMany(RedirectUri, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
         RedirectUri.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-        Client.hasMany(RoleGroups, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-        RoleGroups.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Client.hasMany(RoleGroup, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        RoleGroup.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-        RoleGroups.hasMany(Roles, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-        Roles.belongsTo(RoleGroups, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        RoleGroup.hasMany(Role, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Role.belongsTo(RoleGroup, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-        Client.hasMany(Permissions, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
-        Permissions.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Client.hasMany(Permission, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
+        Permission.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-        Permissions.belongsToMany(Roles, {
+        Permission.belongsToMany(Role, {
             foreignKey: { allowNull: false },
             onDelete: 'CASCADE',
             through: {
@@ -179,7 +180,7 @@ export class BaseRepository {
             },
         });
 
-        Roles.belongsToMany(Permissions, {
+        Role.belongsToMany(Permission, {
             foreignKey: { allowNull: false },
             onDelete: 'CASCADE',
             through: {
@@ -187,6 +188,12 @@ export class BaseRepository {
                 unique: true,
             },
         });
+
+        Role.hasMany(RolePermissions);
+        RolePermissions.belongsTo(Role);
+
+        Permission.hasMany(RolePermissions);
+        RolePermissions.belongsTo(Permission);
 
         Client.hasMany(User, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
         User.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
@@ -194,15 +201,22 @@ export class BaseRepository {
         KetoneUser.hasMany(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
         Client.belongsTo(KetoneUser, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
+        Role.hasOne(User, { foreignKey: { allowNull: true }, onDelete: 'CASCADE' });
+        User.belongsTo(Role, { foreignKey: { allowNull: true }, onDelete: 'CASCADE' });
+
+        Role.hasOne(Client, { as: 'defaultRole', constraints: false, foreignKey: { allowNull: true } });
+        Client.belongsTo(Role, { as: 'defaultRole', constraints: false, foreignKey: { allowNull: true } });
+
         this.models = {
             AllowedScope,
             Client,
             Event,
             KetoneUser,
-            Permissions,
+            Permission,
             RedirectUri,
-            RoleGroups,
-            Roles,
+            RolePermissions,
+            RoleGroup,
+            Role,
             User,
         };
     }

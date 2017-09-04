@@ -14,7 +14,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     }
 
     public async create(role: Role, clientId: string): Promise<boolean> {
-        const roleGroup: any = await BaseRepository.models.RoleGroups.find({
+        const roleGroup: any = await BaseRepository.models.RoleGroup.find({
             include: [
                 { model: BaseRepository.models.Client, required: false },
             ],
@@ -24,10 +24,28 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             },
         });
 
-        await BaseRepository.models.Roles.create({
+        const existingRole: any =await BaseRepository.models.Role.create({
             name: role.name,
             roleGroupId: roleGroup.id,
         });
+
+        for (const permission of role.permissions) {
+
+            const existingPermission: any = await BaseRepository.models.Permission.find({
+                include: [
+                    { model: BaseRepository.models.Client, required: false },
+                ],
+                where: {
+                    '$client.key$': clientId,
+                    'name': permission.name,
+                },
+            });
+
+            await BaseRepository.models.RolePermissions.create({
+                roleId: existingRole.id,
+                permissionId: existingPermission.id, 
+            });
+        }
 
         return true;
     }
@@ -37,13 +55,13 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     }
 
     public async listByClientId(clientId: string): Promise<Role[]> {
-        const roles: any[] = await BaseRepository.models.Roles.findAll({
+        const roles: any[] = await BaseRepository.models.Role.findAll({
             include: [
                 {
                     include: [
                         { model: BaseRepository.models.Client, required: false },
                     ],
-                    model: BaseRepository.models.RoleGroups,
+                    model: BaseRepository.models.RoleGroup,
                     required: false,
                 },
             ],

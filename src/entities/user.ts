@@ -1,3 +1,6 @@
+// Imports models
+import { Role } from './role';
+
 export class User {
     constructor(
         public username: string,
@@ -6,6 +9,7 @@ export class User {
         public verified: boolean,
         public enabled: boolean,
         public profileImage: string,
+        public role: Role,
     ) {
 
     }

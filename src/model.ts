@@ -65,7 +65,7 @@ export class Model {
         const client: Client = await this.clientRepository.find(clientId);
 
         if (client.isKetoneClient) {
-            const user: User = await this.ketoneUserRepository.find(username);
+            const user: KetoneUser = await this.ketoneUserRepository.find(username);
 
             if (user) {
                 throw new Error('Username already exist');
@@ -93,6 +93,7 @@ export class Model {
                 password,
                 false,
                 true,
+                null,
                 null,
             ), clientId);
         }
@@ -211,7 +212,7 @@ export class Model {
         let result: boolean = false;
 
         if (client.isKetoneClient) {
-            const user: User = await this.ketoneUserRepository.find(username);
+            const user: KetoneUser = await this.ketoneUserRepository.find(username);
 
             if (!user) {
                 return false;

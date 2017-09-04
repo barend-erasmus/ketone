@@ -18,7 +18,7 @@ export class RoleGroupRepository extends BaseRepository implements IRoleGroupRep
             },
         });
 
-        await BaseRepository.models.RoleGroups.create({
+        await BaseRepository.models.RoleGroup.create({
             clientId: client.id,
             name: roleGroup.name,
         });

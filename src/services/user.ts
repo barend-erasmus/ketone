@@ -33,7 +33,8 @@ export class UserService {
         }
 
         if (client.isKetoneClient) {
-            return this.ketoneUserRepository.list();
+            const users: KetoneUser[] = await this.ketoneUserRepository.list();
+            return users.map((x) => new User(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, null));
         }
 
         return this.userRepository.list(clientId);
@@ -51,7 +52,8 @@ export class UserService {
         }
 
         if (client.isKetoneClient) {
-            return this.ketoneUserRepository.find(userUsername);
+            const user: KetoneUser = await this.ketoneUserRepository.find(userUsername);
+            return new User(user.username, user.emailAddress, user.apiKey, user.verified, user.enabled, user.profileImage, null);
         }
 
         return this.userRepository.find(userUsername, clientId);
@@ -83,7 +85,7 @@ export class UserService {
 
             await this.ketoneUserRepository.create(newUser);
 
-            return newUser;
+            return new User(newUser.username, newUser.emailAddress, newUser.password, newUser.verified, newUser.enabled, newUser.profileImage, null);
 
         } else {
 
@@ -93,7 +95,7 @@ export class UserService {
                 return null;
             }
 
-            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null);
+            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, null);
 
             await this.userRepository.create(newUser, clientId);
 
@@ -125,7 +127,7 @@ export class UserService {
 
             await this.ketoneUserRepository.update(user);
 
-            return user;
+            return new User(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, null);
 
         } else {
 
