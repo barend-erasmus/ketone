@@ -89,7 +89,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     }
 
     private async loadPermissions(role: Role, clientId: string): Promise<Role> {
-        const permissions: any[] = await BaseRepository.models.RolePermissions.findAll({
+        const rolePermissions: any[] = await BaseRepository.models.RolePermissions.findAll({
             include: [
                 {
                     include: [
@@ -112,7 +112,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             },
         });
 
-        role.permissions = permissions.map((x) => new Permission(x.name));
+        role.permissions = rolePermissions.map((x) => new Permission(x.permission.name));
 
         return role;
 
