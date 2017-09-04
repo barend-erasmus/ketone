@@ -24,7 +24,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             },
         });
 
-        const existingRole: any =await BaseRepository.models.Role.create({
+        const existingRole: any = await BaseRepository.models.Role.create({
             name: role.name,
             roleGroupId: roleGroup.id,
         });
@@ -43,7 +43,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
 
             await BaseRepository.models.RolePermissions.create({
                 roleId: existingRole.id,
-                permissionId: existingPermission.id, 
+                permissionId: existingPermission.id,
             });
         }
 
@@ -70,7 +70,14 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             },
         });
 
-        return roles.map((x) => new Role(x.name, new RoleGroup(x.roleGroup.name), []));
+        const result: Role[] = [];
+
+        for (let role of roles) {
+            const loadedRole: Role = await this.loadPermissions(new Role(role.name, new RoleGroup(role.roleGroup.name), null), clientId);
+            result.push(loadedRole);
+        }
+
+        return result;
     }
 
     public async listByUsername(username: string, clientId: string): Promise<Role[]> {
@@ -79,5 +86,35 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
 
     public async listPermissions(username: string, clientId: string): Promise<Permission[]> {
         return null;
+    }
+
+    private async loadPermissions(role: Role, clientId: string): Promise<Role> {
+        const permissions: any[] = await BaseRepository.models.RolePermissions.findAll({
+            include: [
+                {
+                    include: [
+                        {
+                            include: [
+                                { model: BaseRepository.models.Client, required: false },
+                            ],
+                            model: BaseRepository.models.RoleGroup,
+                            required: false
+                        },
+                    ],
+                    model: BaseRepository.models.Role,
+                    required: false
+                },
+                { model: BaseRepository.models.Permission, required: false },
+            ],
+            where: {
+                '$role.roleGroup.client.key$': clientId,
+                '$role.name$': role.name,
+            },
+        });
+
+        role.permissions = permissions.map((x) => new Permission(x.name));
+
+        return role;
+
     }
 }

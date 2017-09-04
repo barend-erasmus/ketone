@@ -6,6 +6,7 @@ import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
 import { RoleRepository } from './repositories/sequelize/role';
 import { RoleGroupRepository } from './repositories/sequelize/role-group';
 import { UserRepository } from './repositories/sequelize/user';
+import { PermissionRepository } from './repositories/sequelize/permission';
 
 // Imports services
 
@@ -15,6 +16,7 @@ import { KetoneUser } from './entities/ketone-user';
 import { Role } from './entities/role';
 import { RoleGroup } from './entities/role-group';
 import { User } from './entities/user';
+import { Permission } from './entities/permission';
 
 const baseRepository: BaseRepository = new BaseRepository(config.database.host, config.database.username, config.database.password);
 const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
@@ -22,6 +24,7 @@ const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository(conf
 const roleRepository: RoleRepository = new RoleRepository(config.database.host, config.database.username, config.database.password);
 const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository(config.database.host, config.database.username, config.database.password);
 const userRepository: UserRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
+const permissionRepository: PermissionRepository = new PermissionRepository(config.database.host, config.database.username, config.database.password);
 
 baseRepository.sync().then(async () => {
 
@@ -76,7 +79,9 @@ baseRepository.sync().then(async () => {
 
     await roleGroupRepository.create(new RoleGroup('Common'), '7Ewz5a32gnkQz9iCvyk5');
 
-    await roleRepository.create(new Role('Basic User', new RoleGroup('Common'), []), '7Ewz5a32gnkQz9iCvyk5');
+    await permissionRepository.create(new Permission('Allow To Create Client'), '7Ewz5a32gnkQz9iCvyk5')
+
+    await roleRepository.create(new Role('Basic User', new RoleGroup('Common'), [new Permission('Allow To Create Client')]), '7Ewz5a32gnkQz9iCvyk5');
 
     await userRepository.create(new User('TestUser', 'testuser@example.com', '6df0e8bca3a739f89b866f42d218a081', false, true, null, new Role('Basic User', new RoleGroup('Common'), [])), '7Ewz5a32gnkQz9iCvyk5');
 

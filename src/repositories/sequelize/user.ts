@@ -120,7 +120,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             return null;
         }
 
-        const permissions: any[] = await BaseRepository.models.RolePermissions.findAll({
+        const rolePermission: any[] = await BaseRepository.models.RolePermissions.findAll({
             include: [
                 { model: BaseRepository.models.Permission, required: false }
             ],
@@ -136,7 +136,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             user.verified,
             user.enabled,
             user.profileImage,
-            user.role ? new Role(user.role.name, new RoleGroup(user.role.roleGroup.name), permissions.map((x) => new Permission(x.name))) : null,
+            user.role ? new Role(user.role.name, new RoleGroup(user.role.roleGroup.name), rolePermission.map((x) => new Permission(x.permission.name))) : null,
         );
     }
 

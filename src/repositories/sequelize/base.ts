@@ -171,23 +171,23 @@ export class BaseRepository {
         Client.hasMany(Permission, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
         Permission.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
-        Permission.belongsToMany(Role, {
-            foreignKey: { allowNull: false },
-            onDelete: 'CASCADE',
-            through: {
-                model: RolePermissions,
-                unique: true,
-            },
-        });
+        // Permission.belongsToMany(Role, {
+        //     foreignKey: { allowNull: false },
+        //     onDelete: 'CASCADE',
+        //     through: {
+        //         model: RolePermissions,
+        //         unique: true,
+        //     },
+        // });
 
-        Role.belongsToMany(Permission, {
-            foreignKey: { allowNull: false },
-            onDelete: 'CASCADE',
-            through: {
-                model: RolePermissions,
-                unique: true,
-            },
-        });
+        // Role.belongsToMany(Permission, {
+        //     foreignKey: { allowNull: false },
+        //     onDelete: 'CASCADE',
+        //     through: {
+        //         model: RolePermissions,
+        //         unique: true,
+        //     },
+        // });
 
         Role.hasMany(RolePermissions);
         RolePermissions.belongsTo(Role);
