@@ -42,8 +42,8 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             });
 
             await BaseRepository.models.RolePermissions.create({
-                roleId: existingRole.id,
                 permissionId: existingPermission.id,
+                roleId: existingRole.id,
             });
         }
 
@@ -72,7 +72,7 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
 
         const result: Role[] = [];
 
-        for (let role of roles) {
+        for (const role of roles) {
             const loadedRole: Role = await this.loadPermissions(new Role(role.name, new RoleGroup(role.roleGroup.name), null), clientId);
             result.push(loadedRole);
         }
@@ -98,17 +98,17 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
                                 { model: BaseRepository.models.Client, required: false },
                             ],
                             model: BaseRepository.models.RoleGroup,
-                            required: false
+                            required: false,
                         },
                     ],
                     model: BaseRepository.models.Role,
-                    required: false
+                    required: false,
                 },
                 { model: BaseRepository.models.Permission, required: false },
             ],
             where: {
-                '$role.roleGroup.client.key$': clientId,
                 '$role.name$': role.name,
+                '$role.roleGroup.client.key$': clientId,
             },
         });
 

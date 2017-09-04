@@ -3,20 +3,20 @@ import { config } from './config';
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
+import { PermissionRepository } from './repositories/sequelize/permission';
 import { RoleRepository } from './repositories/sequelize/role';
 import { RoleGroupRepository } from './repositories/sequelize/role-group';
 import { UserRepository } from './repositories/sequelize/user';
-import { PermissionRepository } from './repositories/sequelize/permission';
 
 // Imports services
 
 // Imports models
 import { Client } from './entities/client';
 import { KetoneUser } from './entities/ketone-user';
+import { Permission } from './entities/permission';
 import { Role } from './entities/role';
 import { RoleGroup } from './entities/role-group';
 import { User } from './entities/user';
-import { Permission } from './entities/permission';
 
 const baseRepository: BaseRepository = new BaseRepository(config.database.host, config.database.username, config.database.password);
 const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
@@ -81,7 +81,7 @@ baseRepository.sync().then(async () => {
 
     await roleGroupRepository.create(new RoleGroup('Common'), '7Ewz5a32gnkQz9iCvyk5');
 
-    await permissionRepository.create(new Permission('Allow To Create Client'), '7Ewz5a32gnkQz9iCvyk5')
+    await permissionRepository.create(new Permission('Allow To Create Client'), '7Ewz5a32gnkQz9iCvyk5');
 
     await roleRepository.create(new Role('Basic User', new RoleGroup('Common'), [new Permission('Allow To Create Client')]), '7Ewz5a32gnkQz9iCvyk5');
 

@@ -4,9 +4,9 @@ import { BaseRepository } from './base';
 
 // Imports models
 import { Client } from './../../entities/client';
+import { Permission } from './../../entities/permission';
 import { Role } from './../../entities/role';
 import { RoleGroup } from './../../entities/role-group';
-import { Permission } from './../../entities/permission';
 
 export class ClientRepository extends BaseRepository implements IClientRepository {
 
@@ -75,7 +75,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
             client.allowForgotPassword,
             client.allowRegister,
             client.ketoneUser.username,
-            client.defaultRole ? new Role(client.defaultRole.name, new RoleGroup(client.defaultRole.roleGroup.name), []) : null
+            client.defaultRole ? new Role(client.defaultRole.name, new RoleGroup(client.defaultRole.roleGroup.name), []) : null,
         );
     }
 
@@ -101,13 +101,13 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                         { model: BaseRepository.models.Client, required: false },
                     ],
                     model: BaseRepository.models.RoleGroup,
-                    required: false
+                    required: false,
                 },
             ],
             where: {
-                'name': client.role.name,
-                '$roleGroup.name$': client.role.group.name,
                 '$roleGroup.client.key$': client.id,
+                '$roleGroup.name$': client.role.group.name,
+                'name': client.role.name,
             },
         }) : null;
 

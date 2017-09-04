@@ -39,15 +39,15 @@ export class RolesRouter {
         res.render('roles/index', {
             baseModel: BaseRouter.getBaseModel(),
             client,
-            roles,
             roleGroups,
+            roles,
             title: 'Roles',
             user: req.user,
         });
     }
 
     public static async create(req: express.Request, res: express.Response) {
-        
+
         if (!req.user) {
             res.redirect('/auth/login');
             return;

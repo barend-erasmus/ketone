@@ -51,7 +51,7 @@ app.engine('handlebars', exphbs({
     helpers: {
         hasPermission: (user, permission, options) => {
             return options.fn(this);
-        }
+        },
     },
     layoutsDir: path.join(__dirname, 'views/layouts'),
 }));

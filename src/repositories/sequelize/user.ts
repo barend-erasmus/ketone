@@ -3,10 +3,10 @@ import { IUserRepository } from './../user';
 import { BaseRepository } from './base';
 
 // Imports models
-import { User } from './../../entities/user';
-import { Role } from './../../entities/role';
 import { Permission } from './../../entities/permission';
+import { Role } from './../../entities/role';
 import { RoleGroup } from './../../entities/role-group';
+import { User } from './../../entities/user';
 
 export class UserRepository extends BaseRepository implements IUserRepository {
 
@@ -29,13 +29,13 @@ export class UserRepository extends BaseRepository implements IUserRepository {
                         { model: BaseRepository.models.Client, required: false },
                     ],
                     model: BaseRepository.models.RoleGroup,
-                    required: false
+                    required: false,
                 },
             ],
             where: {
-                'name': user.role.name,
-                '$roleGroup.name$': user.role.group.name,
                 '$roleGroup.client.key$': clientId,
+                '$roleGroup.name$': user.role.group.name,
+                'name': user.role.name,
             },
         }) : null;
 
@@ -45,9 +45,9 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             enabled: user.enabled,
             password: user.password,
             profileImage: user.profileImage,
+            roleId: role ? role.id : null,
             username: user.username,
             verified: user.verified,
-            roleId: role ? role.id : null,
         });
 
         return true;
@@ -75,13 +75,13 @@ export class UserRepository extends BaseRepository implements IUserRepository {
                         { model: BaseRepository.models.Client, required: false },
                     ],
                     model: BaseRepository.models.RoleGroup,
-                    required: false
+                    required: false,
                 },
             ],
             where: {
-                'name': user.role.name,
-                '$roleGroup.name$': user.role.group.name,
                 '$roleGroup.client.key$': clientId,
+                '$roleGroup.name$': user.role.group.name,
+                'name': user.role.name,
             },
         }) : null;
 
@@ -103,11 +103,11 @@ export class UserRepository extends BaseRepository implements IUserRepository {
                     include: [
                         {
                             model: BaseRepository.models.RoleGroup,
-                            required: false
-                        }
+                            required: false,
+                        },
                     ],
                     model: BaseRepository.models.Role,
-                    required: false
+                    required: false,
                 },
             ],
             where: {
@@ -122,10 +122,10 @@ export class UserRepository extends BaseRepository implements IUserRepository {
 
         const rolePermission: any[] = await BaseRepository.models.RolePermissions.findAll({
             include: [
-                { model: BaseRepository.models.Permission, required: false }
+                { model: BaseRepository.models.Permission, required: false },
             ],
             where: {
-                roleId: user.role.id
+                roleId: user.role.id,
             },
         });
 

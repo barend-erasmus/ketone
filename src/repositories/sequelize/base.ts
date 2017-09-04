@@ -214,9 +214,9 @@ export class BaseRepository {
             KetoneUser,
             Permission,
             RedirectUri,
-            RolePermissions,
-            RoleGroup,
             Role,
+            RoleGroup,
+            RolePermissions,
             User,
         };
     }

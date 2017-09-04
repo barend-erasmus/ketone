@@ -16,8 +16,8 @@ import { RoleGroup } from './../entities/role-group';
 export class RoleService {
 
     constructor(private roleRepository: IRoleRepository,
-        private roleGroupRepository: IRoleGroupRepository,
-        private clientRepository: IClientRepository) {
+                private roleGroupRepository: IRoleGroupRepository,
+                private clientRepository: IClientRepository) {
 
     }
 
