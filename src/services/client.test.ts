@@ -19,6 +19,18 @@ describe('ClientService', () => {
 
             expect(client).to.be.not.null;
         });
+
+        it('should throw error given null client name', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            try {
+                await clientService.create('username', null);
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Client Name');
+            }
+        });
     });
 
     describe('find', () => {

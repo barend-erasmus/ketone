@@ -10,6 +10,8 @@ export interface IRoleRepository {
 
     listByClientId(clientId: string): Promise<Role[]>;
 
+    find(name: string, group: string, clientId: string): Promise<Role>;
+
     listByUsername(username: string, clientId: string): Promise<Role[]>;
 
     listPermissions(username: string, clientId: string): Promise<Permission[]>;

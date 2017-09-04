@@ -24,6 +24,7 @@ import { HomeRouter } from './routes/home';
 import { ProfileRouter } from './routes/profile';
 import { RolesRouter } from './routes/roles';
 import { UsersRouter } from './routes/users';
+import { RoleGroupRouter } from './routes/role-group';
 
 const argv = yargs.argv;
 const app = express();
@@ -140,6 +141,8 @@ app.get('/profile/edit', ProfileRouter.editGet);
 
 app.get('/roles', RolesRouter.index);
 app.post('/roles/create', RolesRouter.create);
+
+app.post('/roleGroups/create', RoleGroupRouter.create);
 
 app.get('/api/users', APIUsersRouter.get);
 

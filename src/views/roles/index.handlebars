@@ -20,6 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newRoleModal">New Role</button>
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newRoleGroupModal">New Role Group</button>
                 <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
             </div>
         </div>
@@ -73,6 +74,28 @@
                             <option value="{{value.name}}">{{value.name}}</option>
                         {{/each}}
                     </select>
+                </div>
+                <input type="hidden" name="clientId" value="{{client.id}}" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-accent">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="newRoleGroupModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post" action="/roleGroups/create" class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title">New Role Group</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
                 </div>
                 <input type="hidden" name="clientId" value="{{client.id}}" />
             </div>

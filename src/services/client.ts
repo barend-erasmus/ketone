@@ -29,6 +29,11 @@ export class ClientService {
     }
 
     public async create(username: string, name: string): Promise<Client> {
+
+        if (!name) {
+            throw new Error('Invalid Client Name');
+        }
+
         const client: Client = new Client(name, this.generateToken(), this.generateToken(), [], [], false, false, username, null);
 
         await this.clientRepository.create(client);

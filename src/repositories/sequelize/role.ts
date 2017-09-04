@@ -80,6 +80,29 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
         return result;
     }
 
+    public async find(name: string, group: string, clientId: string): Promise<Role> {
+        const role: any = await BaseRepository.models.Role.find({
+            include: [
+                {
+                    include: [
+                        { model: BaseRepository.models.Client, required: false },
+                    ],
+                    model: BaseRepository.models.RoleGroup,
+                    required: false,
+                },
+            ],
+            where: {
+                '$roleGroup.client.key$': clientId,
+                '$roleGroup.name$': group,
+                'name': name,
+            },
+        });
+
+        const loadedRole: Role = await this.loadPermissions(new Role(role.name, new RoleGroup(role.roleGroup.name), null), clientId);
+
+        return loadedRole;
+    }
+
     public async listByUsername(username: string, clientId: string): Promise<Role[]> {
         return null;
     }

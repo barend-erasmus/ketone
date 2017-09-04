@@ -16,8 +16,8 @@ import { RoleGroup } from './../entities/role-group';
 export class RoleService {
 
     constructor(private roleRepository: IRoleRepository,
-                private roleGroupRepository: IRoleGroupRepository,
-                private clientRepository: IClientRepository) {
+        private roleGroupRepository: IRoleGroupRepository,
+        private clientRepository: IClientRepository) {
 
     }
 
@@ -27,6 +27,14 @@ export class RoleService {
         await this.roleRepository.create(role, clientId);
 
         return role;
+    }
+
+    public async createGroup(username: string, name: string, clientId: string): Promise<RoleGroup> {
+        const roleGroup: RoleGroup = new RoleGroup(name);
+
+        await this.roleGroupRepository.create(roleGroup, clientId);
+
+        return roleGroup;
     }
 
     public async listGroups(username: string, clientId: string): Promise<RoleGroup[]> {
@@ -42,6 +50,20 @@ export class RoleService {
         }
 
         return this.roleGroupRepository.list(clientId);
+    }
+
+    public async find(username: string, name: string, group: string, clientId: string): Promise<Role> {
+        const client: Client = await this.clientRepository.find(clientId);
+
+        if (!client) {
+            throw new Error('Invalid Client Id');
+        }
+
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
+        }
+
+        return this.roleRepository.find(name, group, clientId);
     }
 
     public async listByClientId(username: string, clientId: string): Promise<Role[]> {

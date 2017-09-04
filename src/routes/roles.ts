@@ -46,6 +46,40 @@ export class RolesRouter {
         });
     }
 
+    public static async edit(req: express.Request, res: express.Response) {
+        if (!req.user) {
+            res.redirect('/auth/login');
+            return;
+        }
+
+        if (!req.query.name) {
+            res.status(404).render('error/NotFound', { layout: false });
+            return;
+        }
+
+        if (!req.query.group) {
+            res.status(404).render('error/NotFound', { layout: false });
+            return;
+        }
+
+        if (!req.query.clientId) {
+            res.status(404).render('error/NotFound', { layout: false });
+            return;
+        }
+
+        const client: Client = await RolesRouter.getClientService().find(req.user, req.query.clientId);
+
+        const role: Role = await RolesRouter.getRoleService().find(req.user, req.query.name, req.query.group, req.query.clientId);
+
+        res.render('roles/edit', {
+            baseModel: BaseRouter.getBaseModel(),
+            client,
+            role,
+            title: 'Roles - Edit',
+            user: req.user,
+        });
+    }
+
     public static async create(req: express.Request, res: express.Response) {
 
         if (!req.user) {
