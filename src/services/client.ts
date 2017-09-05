@@ -57,7 +57,7 @@ export class ClientService {
         client.name = name;
         client.allowForgotPassword = allowForgotPassword;
         client.allowRegister = allowRegister;
-        client.role = roleName? new Role(roleName, new RoleGroup(roleGroupName), []) : null;
+        client.role = roleName ? new Role(roleName, new RoleGroup(roleGroupName), []) : null;
 
         await this.clientRepository.update(client);
 

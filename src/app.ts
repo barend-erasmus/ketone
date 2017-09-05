@@ -21,11 +21,11 @@ import { Model } from './model';
 import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
-import { ProfileRouter } from './routes/profile';
-import { RolesRouter } from './routes/roles';
 import { PermissionsRouter } from './routes/permission';
-import { UsersRouter } from './routes/users';
+import { ProfileRouter } from './routes/profile';
 import { RoleGroupRouter } from './routes/role-group';
+import { RolesRouter } from './routes/roles';
+import { UsersRouter } from './routes/users';
 
 const argv = yargs.argv;
 const app = express();
@@ -51,17 +51,30 @@ app.use(cookieSession({
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers: {
+        hasPermission: (user, permission, options) => {
+            return options.fn(this);
+        },
+        ifEqual: (a, b, options) => {
+            if (a === b) {
+                return options.fn(this);
+            }
+        },
         ifEqualRole: (a, b, options) => {
 
-            let result: boolean = false;
+                        let result: boolean = false;
 
-            if (a && b) {
-                if (a.name === b.name && a.group.name === b.group.name) {
-                    result = true;
-                }
-            }
+                        if (a && b) {
+                            if (a.name === b.name && a.group.name === b.group.name) {
+                                result = true;
+                            }
+                        }
 
-            if (result) {
+                        if (result) {
+                            return options.fn(this);
+                        }
+                    },
+        ifNotEqual: (a, b, options) => {
+            if (a !== b) {
                 return options.fn(this);
             }
         },
@@ -78,19 +91,6 @@ app.engine('handlebars', exphbs({
             if (result) {
                 return options.fn(this);
             }
-        },
-        ifEqual: (a, b, options) => {
-            if (a === b) {
-                return options.fn(this);
-            }
-        },
-        ifNotEqual: (a, b, options) => {
-            if (a !== b) {
-                return options.fn(this);
-            }
-        },
-        hasPermission: (user, permission, options) => {
-            return options.fn(this);
         },
     },
     layoutsDir: path.join(__dirname, 'views/layouts'),

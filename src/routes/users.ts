@@ -6,19 +6,19 @@ import { BaseRouter } from './base';
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
 import { KetoneUserRepository } from './../repositories/sequelize/ketone-user';
-import { UserRepository } from './../repositories/sequelize/user';
 import { RoleRepository } from './../repositories/sequelize/role';
 import { RoleGroupRepository } from './../repositories/sequelize/role-group';
+import { UserRepository } from './../repositories/sequelize/user';
 
 // Imports services
 import { ClientService } from './../services/client';
-import { UserService } from './../services/user';
 import { RoleService } from './../services/role';
+import { UserService } from './../services/user';
 
 // Imports models
 import { Client } from './../entities/client';
-import { User } from './../entities/user';
 import { Role } from './../entities/role';
+import { User } from './../entities/user';
 
 export class UsersRouter {
 
@@ -89,7 +89,7 @@ export class UsersRouter {
         const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false, req.body.roleName, req.body.roleGroupName);
 
         const roles: Role[] = await UsersRouter.getRoleService().listByClientId(req.user, req.query.clientId);
-        
+
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
             client,

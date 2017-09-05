@@ -11,9 +11,9 @@ import { IUserRepository } from './../repositories/user';
 // Imports models
 import { Client } from './../entities/client';
 import { KetoneUser } from './../entities/ketone-user';
-import { User } from './../entities/user';
 import { Role } from './../entities/role';
 import { RoleGroup } from './../entities/role-group';
+import { User } from './../entities/user';
 
 export class UserService {
 

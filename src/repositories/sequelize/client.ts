@@ -61,7 +61,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                         { model: BaseRepository.models.RoleGroup, required: false },
                     ],
                     model: BaseRepository.models.Role,
-                    required: false
+                    required: false,
                 },
             ],
             where: {

@@ -50,7 +50,6 @@ export class PermissionRepository extends BaseRepository implements IPermissionR
             },
         });
 
-
         return permissions.map((x) => new Permission(x.name));
     }
 
