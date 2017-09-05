@@ -4,13 +4,13 @@
             <div class="col-lg-12">
                 <div class="view-header">
                     <div class="pull-right text-right" style="line-height: 14px">
-                        <small>Ketone<br>Client - Permissions<br><span class="c-white">{{baseModel.version}}</span></small>
+                        <small>Ketone<br>Client - Roles - Edit<br><span class="c-white">{{baseModel.version}}</span></small>
                     </div>
                     <div class="header-icon">
                         <i class="pe page-header-icon pe-7s-menu"></i>
                     </div>
                     <div class="header-title">
-                        <h3><a href="/clients">Clients</a> - <a href="/clients/edit?id={{client.id}}">{{client.name}}</a> - Permissions</h3>
+                        <h3><a href="/clients">Clients</a> - <a href="/clients/edit?id={{client.id}}">{{client.name}}</a> - <a href="/roles?clientId={{client.id}}">Roles</a> - {{role.group.name}} - {{role.name}}</h3>
                         <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
                     </div>
                 </div>
@@ -19,8 +19,8 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newPermissionModal">New Permission</button>
-                <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addPermissionModal">Add Permission <span class="label label-success">Coming Soon</span></button>
+                <a href="/roles?clientId={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client Roles</a>
             </div>
         </div>
         <div class="row">
@@ -34,11 +34,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each permissions as |value key|}}
+                            {{#each role.permissions as |value key|}}
                             <tr>
                                 <td>{{value.name}}</td>
                                 <td>
-                                    <a href="#" disabled class="btn btn-w-md btn-info">Edit <span class="label label-success">Coming Soon</span></a>
+                                    <a href="#" disabled class="btn btn-w-md btn-danger">Remove <span class="label label-success">Coming Soon</span></a>
                                 </td>
                             </tr>
                             {{/each}}
@@ -51,7 +51,7 @@
 </section>
 
 
-<div class="modal fade" id="newPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="addPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <form method="post" action="/permissions/create" class="modal-content">
             <div class="modal-header text-center">

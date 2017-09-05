@@ -51,7 +51,70 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
     }
 
     public async update(role: Role, clientId: string): Promise<boolean> {
-        return null;
+        const existingRole: any = await BaseRepository.models.Role.find({
+            include: [
+                {
+                    include: [
+                        { model: BaseRepository.models.Client, required: false },
+                    ],
+                    model: BaseRepository.models.RoleGroup,
+                    required: false,
+                },
+            ],
+            where: {
+                '$roleGroup.client.key$': clientId,
+                '$roleGroup.name$': role.group,
+                'name': name,
+            },
+        });
+
+        const rolePermissions: any[] = await BaseRepository.models.RolePermissions.findAll({
+            include: [
+                {
+                    include: [
+                        {
+                            include: [
+                                { model: BaseRepository.models.Client, required: false },
+                            ],
+                            model: BaseRepository.models.RoleGroup,
+                            required: false,
+                        },
+                    ],
+                    model: BaseRepository.models.Role,
+                    required: false,
+                },
+                { model: BaseRepository.models.Permission, required: false },
+            ],
+            where: {
+                '$role.name$': role.name,
+                '$role.roleGroup.client.key$': clientId,
+            },
+        });
+        
+
+        for (const permission of role.permissions) {
+
+            if (rolePermissions.find((x) => x.permission.name === permission.name)) {
+                continue;
+            }
+
+            const existingPermission: any = await BaseRepository.models.Permission.find({
+                include: [
+                    { model: BaseRepository.models.Client, required: false },
+                ],
+                where: {
+                    '$client.key$': clientId,
+                    'name': permission.name,
+                },
+            });
+
+            await BaseRepository.models.RolePermissions.create({
+                permissionId: existingPermission.id,
+                roleId: existingRole.id,
+            });
+        }
+
+        return true;
     }
 
     public async listByClientId(clientId: string): Promise<Role[]> {

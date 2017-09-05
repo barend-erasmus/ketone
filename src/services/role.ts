@@ -12,6 +12,7 @@ import { IRoleGroupRepository } from './../repositories/role-group';
 import { Client } from './../entities/client';
 import { Role } from './../entities/role';
 import { RoleGroup } from './../entities/role-group';
+import { Permission } from './../entities/permission';
 
 export class RoleService {
 
@@ -78,5 +79,25 @@ export class RoleService {
         }
 
         return this.roleRepository.listByClientId(clientId);
+    }
+
+    public async addPermission(username: string, name: string, group: string, permissionName: string, clientId: string): Promise<Role> {
+        const client: Client = await this.clientRepository.find(clientId);
+
+        if (!client) {
+            throw new Error('Invalid Client Id');
+        }
+
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
+        }
+
+        const role: Role = await this.roleRepository.find(name, group, clientId);
+
+        role.permissions.push(new Permission(permissionName));
+
+        await this.roleRepository.update(role, clientId);
+        
+        return role;
     }
 }

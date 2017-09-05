@@ -192,6 +192,7 @@ app.get('/profile/edit', ProfileRouter.editGet);
 
 app.get('/roles', RolesRouter.index);
 app.post('/roles/create', RolesRouter.create);
+app.get('/roles/edit', RolesRouter.edit);
 
 app.post('/roleGroups/create', RoleGroupRouter.create);
 
