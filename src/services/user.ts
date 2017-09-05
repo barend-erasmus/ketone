@@ -18,8 +18,8 @@ import { User } from './../entities/user';
 export class UserService {
 
     constructor(private userRepository: IUserRepository,
-                private ketoneUserRepository: IKetoneUserRepository,
-                private clientRepository: IClientRepository) {
+        private ketoneUserRepository: IKetoneUserRepository,
+        private clientRepository: IClientRepository) {
 
     }
 
@@ -36,7 +36,7 @@ export class UserService {
 
         if (client.isKetoneClient) {
             const users: KetoneUser[] = await this.ketoneUserRepository.list();
-            return users.map((x) => new User(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, null));
+            return users.map((x) => new User(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, x.role));
         }
 
         return this.userRepository.list(clientId);
@@ -55,7 +55,7 @@ export class UserService {
 
         if (client.isKetoneClient) {
             const user: KetoneUser = await this.ketoneUserRepository.find(userUsername);
-            return new User(user.username, user.emailAddress, user.apiKey, user.verified, user.enabled, user.profileImage, null);
+            return new User(user.username, user.emailAddress, user.apiKey, user.verified, user.enabled, user.profileImage, user.role);
         }
 
         return this.userRepository.find(userUsername, clientId);
@@ -83,11 +83,11 @@ export class UserService {
                 return null;
             }
 
-            const newUser: KetoneUser = new KetoneUser(userUsername, emailAdress, password, false, enabled, null, this.generateApiKey());
+            const newUser: KetoneUser = new KetoneUser(userUsername, emailAdress, password, false, enabled, null, this.generateApiKey(), client.role ? client.role : null);
 
             await this.ketoneUserRepository.create(newUser);
 
-            return new User(newUser.username, newUser.emailAddress, newUser.password, newUser.verified, newUser.enabled, newUser.profileImage, null);
+            return new User(newUser.username, newUser.emailAddress, newUser.password, newUser.verified, newUser.enabled, newUser.profileImage, newUser.role);
 
         } else {
 
@@ -97,7 +97,7 @@ export class UserService {
                 return null;
             }
 
-            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, client.role);
+            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, client.role? client.role : null);
 
             await this.userRepository.create(newUser, clientId);
 
@@ -129,7 +129,7 @@ export class UserService {
 
             await this.ketoneUserRepository.update(user);
 
-            return new User(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, null);
+            return new User(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, user.role);
 
         } else {
 

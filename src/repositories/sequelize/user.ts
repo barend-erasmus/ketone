@@ -88,7 +88,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         existingUser.password = user.password;
         existingUser.verified = user.verified;
         existingUser.enabled = user.enabled;
-        existingUser.roleId = role.id;
+        existingUser.roleId = role ? role.id : null;
 
         await existingUser.save();
 
@@ -120,14 +120,14 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             return null;
         }
 
-        const rolePermission: any[] = await BaseRepository.models.RolePermissions.findAll({
+        const rolePermission: any[] = user.role? await BaseRepository.models.RolePermissions.findAll({
             include: [
                 { model: BaseRepository.models.Permission, required: false },
             ],
             where: {
                 roleId: user.role.id,
             },
-        });
+        }) : null;
 
         return new User(
             user.username,

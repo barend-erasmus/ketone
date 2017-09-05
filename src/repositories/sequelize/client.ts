@@ -172,7 +172,14 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                 { model: BaseRepository.models.KetoneUser, required: false },
                 { model: BaseRepository.models.AllowedScope, required: false },
                 { model: BaseRepository.models.RedirectUri, required: false },
-                { as: 'defaultRole', model: BaseRepository.models.Role, required: false },
+                {
+                    as: 'defaultRole',
+                    include: [
+                        { model: BaseRepository.models.RoleGroup, required: false },
+                    ],
+                    model: BaseRepository.models.Role,
+                    required: false,
+                },
             ],
             where: {
                 '$ketoneUser.username$': username,

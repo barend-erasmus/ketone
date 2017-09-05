@@ -1,3 +1,6 @@
+// Imports models
+import { Role } from './role';
+
 export class KetoneUser {
     constructor(
         public username: string,
@@ -7,6 +10,7 @@ export class KetoneUser {
         public enabled: boolean,
         public profileImage: string,
         public apiKey: string,
+        public role: Role,
     ) {
 
     }

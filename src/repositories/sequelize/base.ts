@@ -204,6 +204,9 @@ export class BaseRepository {
         Role.hasOne(User, { foreignKey: { allowNull: true }, onDelete: 'CASCADE' });
         User.belongsTo(Role, { foreignKey: { allowNull: true }, onDelete: 'CASCADE' });
 
+        Role.hasOne(KetoneUser, { constraints: false, foreignKey: { allowNull: true } });
+        KetoneUser.belongsTo(Role, { constraints: false, foreignKey: { allowNull: true } });
+
         Role.hasOne(Client, { as: 'defaultRole', constraints: false, foreignKey: { allowNull: true } });
         Client.belongsTo(Role, { as: 'defaultRole', constraints: false, foreignKey: { allowNull: true } });
 

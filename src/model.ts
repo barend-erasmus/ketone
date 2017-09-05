@@ -79,6 +79,7 @@ export class Model {
                 true,
                 null,
                 this.generateApiKey(),
+                null,
             ));
         } else {
             const user: User = await this.userRepository.find(username, clientId);

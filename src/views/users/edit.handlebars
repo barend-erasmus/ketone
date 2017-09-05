@@ -29,6 +29,20 @@
                         <label for="emailAddress">Email Address</label>
                         <input disabled type="text" class="form-control" id="emailAddress" placeholder="Email Address" value="{{editUser.emailAddress}}" />
                     </div>
+                    <div class="form-group">
+                        <label for="roleName">Role</label>
+                        <select class="form-control" id="roleName" name="roleName">
+                            <option value="">None</option>
+                            {{#each roles as |value key|}}
+                                {{#ifEqualRole value @root.editUser.role}}
+                                    <option selected value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                {{/ifEqualRole}}
+                                {{#ifNotEqualRole value @root.editUser.role}}
+                                    <option value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                {{/ifNotEqualRole}}
+                            {{/each}}
+                        </select>
+                    </div>
                     <div>
                         <label>
                             {{#if editUser.verified}}

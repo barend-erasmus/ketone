@@ -28,6 +28,7 @@ const permissionRepository: PermissionRepository = new PermissionRepository(conf
 
 baseRepository.sync().then(async () => {
 
+    // Start
     await ketoneUserRepository.create(new KetoneUser(
         'developersworkspace@gmail.com',
         'developersworkspace@gmail.com',
@@ -35,7 +36,8 @@ baseRepository.sync().then(async () => {
         true,
         true,
         null,
-        'XYZ',
+        'tJuBB5WJNDjRYbQDxBTG',
+        null,
     ));
 
     await clientRepository.create(new Client(
@@ -57,6 +59,58 @@ baseRepository.sync().then(async () => {
         null,
     ));
 
+    await roleGroupRepository.create(new RoleGroup('Admin'), config.client.id);
+    
+    await permissionRepository.create(new Permission('View Client'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client User'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client User'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client User'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client User'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client User'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client User'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client Scope'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client Scope'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client Scope'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client Redirect Uri'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client Redirect Uri'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client Redirect Uri'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client Role Group'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client Role Group'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client Role Group'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client Role'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client Role'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client Role'), config.client.id);
+
+    await permissionRepository.create(new Permission('View Client Permission'), config.client.id);
+    await permissionRepository.create(new Permission('Create Client Permission'), config.client.id);
+    await permissionRepository.create(new Permission('Update Client Permission'), config.client.id);
+
+    await roleRepository.create(new Role('Super User', new RoleGroup('Admin'), [
+        new Permission('View Client'),
+        new Permission('Create Client'),
+        new Permission('Update Client'),
+    ]), config.client.id);
+
+    await roleRepository.create(new Role('Standard User', new RoleGroup('Admin'), [
+        new Permission('View Client'),
+        new Permission('Create Client'),
+        new Permission('Update Client'),
+    ]), config.client.id);
+
+    const user: KetoneUser = await ketoneUserRepository.find('developersworkspace@gmail.com');
+    user.role = new Role('Super User', new RoleGroup('Admin'), []);
+    await ketoneUserRepository.update(user);
+
+    // END
+
     await ketoneUserRepository.create(new KetoneUser(
         'demo',
         'developersworkspace@gmail.com',
@@ -64,7 +118,8 @@ baseRepository.sync().then(async () => {
         true,
         true,
         null,
-        'ABC',
+        '0oms48rWZNJhuEreMKJs',
+        null,
     ));
 
     await clientRepository.create(new Client(
@@ -79,16 +134,7 @@ baseRepository.sync().then(async () => {
         null,
     ));
 
-    await roleGroupRepository.create(new RoleGroup('Common'), '7Ewz5a32gnkQz9iCvyk5');
-
-    await permissionRepository.create(new Permission('Allow To Create Client'), '7Ewz5a32gnkQz9iCvyk5');
-
-    await roleRepository.create(new Role('Basic User', new RoleGroup('Common'), [new Permission('Allow To Create Client')]), '7Ewz5a32gnkQz9iCvyk5');
-
-    await userRepository.create(new User('TestUser', 'testuser@example.com', '6df0e8bca3a739f89b866f42d218a081', false, true, null, new Role('Basic User', new RoleGroup('Common'), [])), '7Ewz5a32gnkQz9iCvyk5');
-
-    const user: User = await userRepository.find('TestUser', '7Ewz5a32gnkQz9iCvyk5');
-    console.log(user);
+    await userRepository.create(new User('TestUser', 'testuser@example.com', '6df0e8bca3a739f89b866f42d218a081', false, true, null, new Role('Standard User', new RoleGroup('Admin'), [])), '7Ewz5a32gnkQz9iCvyk5');
 
     baseRepository.close();
 }).catch((err: Error) => {
