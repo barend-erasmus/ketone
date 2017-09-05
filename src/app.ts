@@ -5,6 +5,13 @@ import * as request from 'request-promise';
 import * as yargs from 'yargs';
 import { config } from './config';
 
+// Import Repositories
+import { BaseRepository } from './repositories/sequelize/base';
+import { ClientRepository } from './repositories/sequelize/client';
+import { EventRepository } from './repositories/sequelize/event';
+import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
+import { UserRepository } from './repositories/sequelize/user';
+
 // Imports middleware
 import * as bodyParser from 'body-parser';
 import * as cookieSession from 'cookie-session';
@@ -136,8 +143,13 @@ passport.use(new OAuth2Strategy({
     });
 }));
 
+const clientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+const ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
+const userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
+const eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
+
 app.use('/auth', OAuth2FrameworkRouter(
-    new Model(),
+    new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository),
     path.join(__dirname, 'views/login.handlebars'),
     path.join(__dirname, 'views/forgot-password.handlebars'),
     path.join(__dirname, 'views/forgot-password-success.handlebars'),

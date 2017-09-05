@@ -12,13 +12,6 @@ import { IEventRepository } from './repositories/event';
 import { IKetoneUserRepository } from './repositories/ketone-user';
 import { IUserRepository } from './repositories/user';
 
-// Import Repositories
-import { BaseRepository } from './repositories/sequelize/base';
-import { ClientRepository } from './repositories/sequelize/client';
-import { EventRepository } from './repositories/sequelize/event';
-import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
-import { UserRepository } from './repositories/sequelize/user';
-
 // Imports services
 import { EmailService } from './services/email';
 
@@ -36,16 +29,11 @@ export class Model {
     private emailService: EmailService = null;
 
     constructor(
-        private clientRepository: IClientRepository = null,
-        private ketoneUserRepository: IKetoneUserRepository = null,
-        private userRepository: IUserRepository = null,
-        private eventRepository: IEventRepository = null,
+        private clientRepository: IClientRepository,
+        private ketoneUserRepository: IKetoneUserRepository,
+        private userRepository: IUserRepository,
+        private eventRepository: IEventRepository,
     ) {
-        this.clientRepository = this.clientRepository || new ClientRepository(config.database.host, config.database.username, config.database.password);
-        this.ketoneUserRepository = this.ketoneUserRepository || new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
-        this.userRepository = this.userRepository || new UserRepository(config.database.host, config.database.username, config.database.password);
-        this.eventRepository = this.eventRepository || new EventRepository(config.database.host, config.database.username, config.database.password);
-
         this.emailService = new EmailService();
     }
 
@@ -79,7 +67,7 @@ export class Model {
                 true,
                 null,
                 this.generateApiKey(),
-                null,
+                client.role? client.role : null,
             ));
         } else {
             const user: User = await this.userRepository.find(username, clientId);
@@ -95,7 +83,7 @@ export class Model {
                 false,
                 true,
                 null,
-                null,
+                client.role? client.role : null,
             ), clientId);
         }
 

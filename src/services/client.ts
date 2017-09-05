@@ -54,6 +54,10 @@ export class ClientService {
             throw new Error('You are not the owner of this Client Id');
         }
 
+        if (roleName && !roleGroupName) {
+            throw new Error('Invalid Role');
+        }
+
         client.name = name;
         client.allowForgotPassword = allowForgotPassword;
         client.allowRegister = allowRegister;

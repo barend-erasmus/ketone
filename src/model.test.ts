@@ -64,7 +64,7 @@ describe('Model', () => {
                 null,
             ));
 
-            const result: boolean = await model.register('client-id', 'user@example.com', 'user', '123456', null);
+            const result: boolean = await model.register('client-id', 'user@example.com', 'user', 'password', null);
 
             expect(result).to.be.true;
         });
@@ -88,7 +88,7 @@ describe('Model', () => {
                 null,
             ));
 
-            await model.register('client-id', 'user@example.com', 'user', '123456', null);
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
 
             const events: Event[] = await eventRepository.list('client-id');
 
@@ -114,10 +114,10 @@ describe('Model', () => {
                 null,
             ));
 
-            await model.register('client-id', 'user@example.com', 'user', '123456', null);
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
 
             try {
-                await model.register('client-id', 'user@example.com', 'user', '123456', null);
+                await model.register('client-id', 'user@example.com', 'user', 'password', null);
                 throw new Error('Expected Error');
             }catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
@@ -145,7 +145,7 @@ describe('Model', () => {
                 null,
             ));
 
-            const result: boolean = await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
+            const result: boolean = await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
 
             expect(result).to.be.true;
         });
@@ -169,7 +169,7 @@ describe('Model', () => {
                 null,
             ));
 
-            await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
 
             const events: Event[] = await eventRepository.list(config.client.id);
 
@@ -195,13 +195,179 @@ describe('Model', () => {
                 null,
             ));
 
-            await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
 
             try {
-                await model.register(config.client.id, 'user@example.com', 'user', '123456', null);
+                await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
                 throw new Error('Expected Error');
             }catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
+            }
+        });
+    });
+
+    describe('resetPassword', () => {
+        it('should return true', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
+
+            const result: boolean = await model.resetPassword('client-id', 'user', 'password', null);
+
+            expect(result).to.be.true;
+        });
+
+        it('should log event', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
+
+            await model.resetPassword('client-id', 'user', 'password', null);
+
+            const events: Event[] = await eventRepository.list('client-id');
+
+            expect(events.length).to.be.eq(2);
+        });
+
+        it('should throw error given username does not exist', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            try {
+                await model.resetPassword('client-id', 'user', 'password', null);
+                throw new Error('Expected Error');
+            }catch (err) {
+                expect(err.message).to.be.eq('Username does not exist');
+            }
+        });
+    });
+
+    describe('resetPassword as ketone client', () => {
+        it('should return true', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
+
+            const result: boolean = await model.resetPassword(config.client.id, 'user', 'password', null);
+
+            expect(result).to.be.true;
+        });
+
+        it('should log event', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
+
+            await model.resetPassword(config.client.id, 'user', 'password', null);
+
+            const events: Event[] = await eventRepository.list(config.client.id);
+
+            expect(events.length).to.be.eq(2);
+        });
+
+        it('should throw error given username does not exist', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            try {
+                await model.resetPassword(config.client.id, 'user', 'password', null);
+                throw new Error('Expected Error');
+            }catch (err) {
+                expect(err.message).to.be.eq('Username does not exist');
             }
         });
     });

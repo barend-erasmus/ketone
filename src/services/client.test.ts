@@ -98,6 +98,20 @@ describe('ClientService', () => {
             expect(client.role).to.be.not.null;
         });
 
+        it('should throw error given role and null role group', async () => {
+            const clientRepository: ClientRepository = new ClientRepository();
+            clientService = new ClientService(clientRepository);
+
+            let client: Client = await clientService.create('username', 'client-name');
+
+            try {
+                await clientService.update('username', client.id, 'client-name', true, true, 'role', null);
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Role');
+            }
+        });
+
         it('should throw error given client id does not exist', async () => {
             const clientRepository: ClientRepository = new ClientRepository();
             clientService = new ClientService(clientRepository);
