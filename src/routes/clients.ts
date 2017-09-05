@@ -5,12 +5,17 @@ import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
+import { RoleRepository } from './../repositories/sequelize/role';
+import { RoleGroupRepository } from './../repositories/sequelize/role-group';
 
 // Imports services
 import { ClientService } from './../services/client';
+import { RoleService } from './../services/role';
 
 // Imports models
 import { Client } from './../entities/client';
+import { Role } from './../entities/role';
+import { RoleGroup } from './../entities/role-group';
 
 export class ClientsRouter {
 
@@ -49,9 +54,12 @@ export class ClientsRouter {
                 return;
             }
 
+            const roles: Role[] = await ClientsRouter.getRoleService().listByClientId(req.user, req.query.id);
+
             res.render('clients/edit', {
                 baseModel: BaseRouter.getBaseModel(),
                 client,
+                roles,
                 title: 'Clients - Edit',
                 user: req.user,
             });
@@ -62,24 +70,31 @@ export class ClientsRouter {
     }
 
     public static async editPost(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect('/auth/login');
-            return;
+        try {
+            if (!req.user) {
+                res.redirect('/auth/login');
+                return;
+            }
+
+            const client: Client = await ClientsRouter.getClientService().update(req.user, req.body.id, req.body.name, req.body.allowForgotPassword ? true : false, req.body.allowRegister ? true : false, req.body.roleName.split('|')[1], req.body.roleName.split('|')[0]);
+
+            if (!client) {
+                res.status(500).render('error/InternalServerError', { layout: false });
+                return;
+            }
+
+            const roles: Role[] = await ClientsRouter.getRoleService().listByClientId(req.user, req.body.id);
+
+            res.render('clients/edit', {
+                baseModel: BaseRouter.getBaseModel(),
+                client,
+                roles,
+                title: 'Clients - Edit',
+                user: req.user,
+            });
+        } catch (err) {
+            res.status(500).render('error/InternalServerError', { layout: false, message: err.message });
         }
-
-        const client: Client = await ClientsRouter.getClientService().update(req.user, req.body.id, req.body.name, req.body.allowForgotPassword ? true : false, req.body.allowRegister ? true : false);
-
-        if (!client) {
-            res.status(500).render('error/InternalServerError', { layout: false });
-            return;
-        }
-
-        res.render('clients/edit', {
-            baseModel: BaseRouter.getBaseModel(),
-            client,
-            title: 'Clients - Edit',
-            user: req.user,
-        });
     }
 
     public static async addScope(req: express.Request, res: express.Response) {
@@ -148,6 +163,17 @@ export class ClientsRouter {
         const client: Client = await ClientsRouter.getClientService().create(req.user, req.body.name);
 
         res.redirect(`/clients/edit?id=${client.id}`);
+    }
+
+    protected static getRoleService(): RoleService {
+
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+        const roleRepository: RoleRepository = new RoleRepository(config.database.host, config.database.username, config.database.password);
+        const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository(config.database.host, config.database.username, config.database.password);
+
+        const roleService: RoleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
+
+        return roleService;
     }
 
     protected static getClientService(): ClientService {

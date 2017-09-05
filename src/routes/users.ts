@@ -7,14 +7,18 @@ import { BaseRouter } from './base';
 import { ClientRepository } from './../repositories/sequelize/client';
 import { KetoneUserRepository } from './../repositories/sequelize/ketone-user';
 import { UserRepository } from './../repositories/sequelize/user';
+import { RoleRepository } from './../repositories/sequelize/role';
+import { RoleGroupRepository } from './../repositories/sequelize/role-group';
 
 // Imports services
 import { ClientService } from './../services/client';
 import { UserService } from './../services/user';
+import { RoleService } from './../services/role';
 
 // Imports models
 import { Client } from './../entities/client';
 import { User } from './../entities/user';
+import { Role } from './../entities/role';
 
 export class UsersRouter {
 
@@ -62,10 +66,13 @@ export class UsersRouter {
 
         const editUser: User = await UsersRouter.getUserService().find(req.user, req.query.username, req.query.clientId);
 
+        const roles: Role[] = await UsersRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
             client,
             editUser,
+            roles,
             title: 'Users - Edit',
             user: req.user,
         });
@@ -79,12 +86,15 @@ export class UsersRouter {
 
         const client: Client = await UsersRouter.getClientService().find(req.user, req.body.clientId);
 
-        const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false);
+        const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false, req.body.roleName, req.body.roleGroupName);
 
+        const roles: Role[] = await UsersRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+        
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
             client,
             editUser,
+            roles,
             title: 'Users - Edit',
             user: req.user,
         });
@@ -136,6 +146,17 @@ export class UsersRouter {
         const userService: UserService = new UserService(userRepository, ketoneUserRepository, clientRepository);
 
         return userService;
+    }
+
+    protected static getRoleService(): RoleService {
+
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+        const roleRepository: RoleRepository = new RoleRepository(config.database.host, config.database.username, config.database.password);
+        const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository(config.database.host, config.database.username, config.database.password);
+
+        const roleService: RoleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
+
+        return roleService;
     }
 
     protected static getClientService(): ClientService {

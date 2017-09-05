@@ -51,6 +51,44 @@ app.use(cookieSession({
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers: {
+        ifEqualRole: (a, b, options) => {
+
+            let result: boolean = false;
+
+            if (a && b) {
+                if (a.name === b.name && a.group.name === b.group.name) {
+                    result = true;
+                }
+            }
+
+            if (result) {
+                return options.fn(this);
+            }
+        },
+        ifNotEqualRole: (a, b, options) => {
+
+            let result: boolean = true;
+
+            if (a && b) {
+                if (a.name === b.name && a.group.name === b.group.name) {
+                    result = false;
+                }
+            }
+
+            if (result) {
+                return options.fn(this);
+            }
+        },
+        ifEqual: (a, b, options) => {
+            if (a === b) {
+                return options.fn(this);
+            }
+        },
+        ifNotEqual: (a, b, options) => {
+            if (a !== b) {
+                return options.fn(this);
+            }
+        },
         hasPermission: (user, permission, options) => {
             return options.fn(this);
         },
@@ -90,7 +128,7 @@ passport.use(new OAuth2Strategy({
     }).then((result: any) => {
         if (result.client_id === config.client.id) {
             return cb(null, result);
-        }else {
+        } else {
             return cb(new Error('Invalid Client Id'), null);
         }
     }).catch((err: Error) => {

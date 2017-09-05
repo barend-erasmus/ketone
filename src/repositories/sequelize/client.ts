@@ -55,7 +55,14 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
                 { model: BaseRepository.models.KetoneUser, required: false },
                 { model: BaseRepository.models.AllowedScope, required: false },
                 { model: BaseRepository.models.RedirectUri, required: false },
-                { as: 'defaultRole', model: BaseRepository.models.Role, required: false },
+                {
+                    as: 'defaultRole',
+                    include: [
+                        { model: BaseRepository.models.RoleGroup, required: false },
+                    ],
+                    model: BaseRepository.models.Role,
+                    required: false
+                },
             ],
             where: {
                 key: id,
@@ -114,7 +121,7 @@ export class ClientRepository extends BaseRepository implements IClientRepositor
         existingClient.name = client.name;
         existingClient.allowForgotPassword = client.allowForgotPassword;
         existingClient.allowRegister = client.allowRegister;
-        existingClient.roleId = role ? role.id : null;
+        existingClient.defaultRoleId = role ? role.id : null;
 
         for (const scope of existingClient.allowedScopes) {
             if (client.allowedScopes.filter((x) => x === scope.name).length === 0) {

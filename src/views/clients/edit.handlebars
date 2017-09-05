@@ -88,6 +88,20 @@
                         <input type="text" class="form-control" name="secret" disabled id="secret" placeholder="secret" value="{{client.secret}}"
                         />
                     </div>
+                    <div class="form-group">
+                        <label for="roleName">Default Role</label>
+                        <select class="form-control" id="roleName" name="roleName">
+                            <option value="">None</option>
+                            {{#each roles as |value key|}}
+                                {{#ifEqualRole value @root.client.role}}
+                                    <option selected value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                {{/ifEqualRole}}
+                                {{#ifNotEqualRole value @root.client.role}}
+                                    <option value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                {{/ifNotEqualRole}}
+                            {{/each}}
+                        </select>
+                    </div>
                     <div>
                         <label>
                             {{#if client.allowForgotPassword}}

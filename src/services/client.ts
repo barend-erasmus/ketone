@@ -3,6 +3,8 @@ import { IClientRepository } from './../repositories/client';
 
 // Imports models
 import { Client } from './../entities/client';
+import { Role } from './../entities/role';
+import { RoleGroup } from './../entities/role-group';
 
 export class ClientService {
 
@@ -41,7 +43,7 @@ export class ClientService {
         return client;
     }
 
-    public async update(username: string, id: string, name: string, allowForgotPassword: boolean, allowRegister: boolean): Promise<Client> {
+    public async update(username: string, id: string, name: string, allowForgotPassword: boolean, allowRegister: boolean, roleName: string, roleGroupName: string): Promise<Client> {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
@@ -55,6 +57,7 @@ export class ClientService {
         client.name = name;
         client.allowForgotPassword = allowForgotPassword;
         client.allowRegister = allowRegister;
+        client.role = roleName? new Role(roleName, new RoleGroup(roleGroupName), []) : null;
 
         await this.clientRepository.update(client);
 

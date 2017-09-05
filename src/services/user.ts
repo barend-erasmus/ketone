@@ -12,6 +12,8 @@ import { IUserRepository } from './../repositories/user';
 import { Client } from './../entities/client';
 import { KetoneUser } from './../entities/ketone-user';
 import { User } from './../entities/user';
+import { Role } from './../entities/role';
+import { RoleGroup } from './../entities/role-group';
 
 export class UserService {
 
@@ -95,7 +97,7 @@ export class UserService {
                 return null;
             }
 
-            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, null);
+            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, client.role);
 
             await this.userRepository.create(newUser, clientId);
 
@@ -103,7 +105,7 @@ export class UserService {
         }
     }
 
-    public async update(username: string, userUsername: string, clientId: string, enabled: boolean): Promise<User> {
+    public async update(username: string, userUsername: string, clientId: string, enabled: boolean, roleName: string, roleGroupName: string): Promise<User> {
 
         const client: Client = await this.clientRepository.find(clientId);
 
@@ -138,6 +140,7 @@ export class UserService {
             }
 
             user.enabled = enabled;
+            user.role = new Role(roleName, new RoleGroup(roleGroupName), []);
 
             await this.userRepository.update(user, clientId);
 

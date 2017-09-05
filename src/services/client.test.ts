@@ -79,7 +79,7 @@ describe('ClientService', () => {
 
             let client: Client = await clientService.create('username', 'client-name');
 
-            client = await clientService.update('username', client.id, 'client-name', true, true);
+            client = await clientService.update('username', client.id, 'client-name', true, true, null, null);
 
             expect(client).to.be.not.null;
         });
@@ -90,11 +90,12 @@ describe('ClientService', () => {
 
             let client: Client = await clientService.create('username', 'client-name');
 
-            client = await clientService.update('username', client.id, 'client-name-updated', true, true);
+            client = await clientService.update('username', client.id, 'client-name-updated', true, true, 'role', 'role-group');
 
             expect(client.name).to.be.eq('client-name-updated');
             expect(client.allowForgotPassword).to.be.true;
             expect(client.allowRegister).to.be.true;
+            expect(client.role).to.be.not.null;
         });
 
         it('should throw error given client id does not exist', async () => {
@@ -102,7 +103,7 @@ describe('ClientService', () => {
             clientService = new ClientService(clientRepository);
 
             try {
-                await clientService.update('username', 'client-id', 'client-name', true, true);
+                await clientService.update('username', 'client-id', 'client-name', true, true, null, null);
                 throw new Error('Expected Error');
             } catch (err) {
                 expect(err.message).to.be.eq('Invalid Client Id');
@@ -116,7 +117,7 @@ describe('ClientService', () => {
             const client: Client = await clientService.create('username', 'client-name');
 
             try {
-                await clientService.update('other-username', client.id, 'client-name', true, true);
+                await clientService.update('other-username', client.id, 'client-name', true, true, null, null);
                 throw new Error('Expected Error');
             } catch (err) {
                 expect(err.message).to.be.eq('You are not the owner of this Client Id');
