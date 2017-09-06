@@ -13,6 +13,7 @@ import { UserRepository } from './repositories/memory/user';
 
 import { Client } from './entities/client';
 import { Event } from './entities/event';
+import { User } from './entities/user';
 
 describe('Model', () => {
 
@@ -371,4 +372,85 @@ describe('Model', () => {
             }
         });
     });
+
+    describe('verify', () => {
+        it('should return true', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
+
+            const result: boolean = await model.verify('client-id', 'user', null);
+
+            expect(result).to.be.true;
+        });
+
+        it('should update user', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register('client-id', 'user@example.com', 'user', 'password', null);
+
+            await model.verify('client-id', 'user', null);
+
+            const user: User = await userRepository.find('user', 'client-id');
+
+            expect(user.verified).to.be.true;
+        });
+
+        it('should return false given username does not exist', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            const result: boolean = await model.verify('client-id', 'user', null);
+
+            expect(result).to.be.false;
+        });
+    });
+
 });
