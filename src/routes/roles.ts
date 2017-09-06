@@ -7,15 +7,18 @@ import { BaseRouter } from './base';
 import { ClientRepository } from './../repositories/sequelize/client';
 import { RoleRepository } from './../repositories/sequelize/role';
 import { RoleGroupRepository } from './../repositories/sequelize/role-group';
+import { PermissionRepository } from './../repositories/sequelize/permission';
 
 // Imports services
 import { ClientService } from './../services/client';
 import { RoleService } from './../services/role';
+import { PermissionService } from './../services/permission';
 
 // Imports models
 import { Client } from './../entities/client';
 import { Role } from './../entities/role';
 import { RoleGroup } from './../entities/role-group';
+import { Permission } from './../entities/permission';
 
 export class RolesRouter {
 
@@ -71,9 +74,12 @@ export class RolesRouter {
 
         const role: Role = await RolesRouter.getRoleService().find(req.user, req.query.name, req.query.group, req.query.clientId);
 
+        const permissions: Permission[] = await RolesRouter.getPermissionService().listByClientId(req.user, req.query.clientId);
+
         res.render('roles/edit', {
             baseModel: BaseRouter.getBaseModel(),
             client,
+            permissions,
             role,
             title: 'Roles - Edit',
             user: req.user,
@@ -101,6 +107,16 @@ export class RolesRouter {
         const roleService: RoleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
 
         return roleService;
+    }
+
+    protected static getPermissionService(): PermissionService {
+
+        const permissionRepository: PermissionRepository = new PermissionRepository(config.database.host, config.database.username, config.database.password);
+        const clientRepository: ClientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+
+        const permissionService: PermissionService = new PermissionService(permissionRepository, clientRepository);
+
+        return permissionService;
     }
 
     protected static getClientService(): ClientService {

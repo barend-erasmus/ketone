@@ -69,6 +69,11 @@ export class ClientService {
     }
 
     public async addScope(username: string, id: string, name: string): Promise<Client> {
+
+        if (!name) {
+            throw new Error('Invalid Scope Name');
+        }
+
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
@@ -77,6 +82,10 @@ export class ClientService {
 
         if (!client.isOwner(username)) {
             throw new Error('You are not the owner of this Client Id');
+        }
+
+        if (client.allowedScopes.find((x) => x === name)) {
+            throw new Error('Scope already exist');
         }
 
         client.allowedScopes.push(name);
@@ -90,11 +99,15 @@ export class ClientService {
         const client: Client = await this.clientRepository.find(id);
 
         if (!client) {
-            return null;
+            throw new Error('Invalid Client Id');
         }
 
         if (!client.isOwner(username)) {
-            return null;
+            throw new Error('You are not the owner of this Client Id');
+        }
+
+        if (!client.allowedScopes.find((x) => x === name)) {
+            throw new Error('Scope does not exist');
         }
 
         client.allowedScopes.splice(client.allowedScopes.indexOf(name), 1);
