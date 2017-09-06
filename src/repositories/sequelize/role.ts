@@ -90,7 +90,6 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
                 '$role.roleGroup.client.key$': clientId,
             },
         });
-        
 
         for (const permission of role.permissions) {
 

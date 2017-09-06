@@ -1,13 +1,13 @@
 // Imports
+import { config } from './../../config';
 import { IKetoneUserRepository } from './../ketone-user';
 import { BaseRepository } from './base';
-import { config } from './../../config';
 
 // Imports models
 import { KetoneUser } from './../../entities/ketone-user';
+import { Permission } from './../../entities/permission';
 import { Role } from './../../entities/role';
 import { RoleGroup } from './../../entities/role-group';
-import { Permission } from './../../entities/permission';
 
 export class KetoneUserRepository extends BaseRepository implements IKetoneUserRepository {
 
@@ -76,11 +76,10 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
             },
         }) : null;
 
-
         existingUser.password = user.password;
         existingUser.verified = user.verified;
         existingUser.enabled = user.enabled;
-        existingUser.roleId = role? role.id : null;
+        existingUser.roleId = role ? role.id : null;
 
         await existingUser.save();
 
@@ -110,7 +109,7 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
             return null;
         }
 
-        const rolePermission: any[] = user.role? await BaseRepository.models.RolePermissions.findAll({
+        const rolePermission: any[] = user.role ? await BaseRepository.models.RolePermissions.findAll({
             include: [
                 { model: BaseRepository.models.Permission, required: false },
             ],
@@ -118,7 +117,6 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
                 roleId: user.role.id,
             },
         }) : null;
-
 
         return new KetoneUser(
             user.username,
@@ -155,14 +153,14 @@ export class KetoneUserRepository extends BaseRepository implements IKetoneUserR
             return null;
         }
 
-        const rolePermission: any[] = user.role? await BaseRepository.models.RolePermissions.findAll({
+        const rolePermission: any[] = user.role ? await BaseRepository.models.RolePermissions.findAll({
             include: [
                 { model: BaseRepository.models.Permission, required: false },
             ],
             where: {
                 roleId: user.role.id,
             },
-        }) : null
+        }) : null;
 
         return new KetoneUser(
             user.username,

@@ -102,7 +102,7 @@ describe('ClientService', () => {
             const clientRepository: ClientRepository = new ClientRepository();
             clientService = new ClientService(clientRepository);
 
-            let client: Client = await clientService.create('username', 'client-name');
+            const client: Client = await clientService.create('username', 'client-name');
 
             try {
                 await clientService.update('username', client.id, 'client-name', true, true, 'role', null);

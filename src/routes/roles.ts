@@ -5,20 +5,20 @@ import { BaseRouter } from './base';
 
 // Imports repositories
 import { ClientRepository } from './../repositories/sequelize/client';
+import { PermissionRepository } from './../repositories/sequelize/permission';
 import { RoleRepository } from './../repositories/sequelize/role';
 import { RoleGroupRepository } from './../repositories/sequelize/role-group';
-import { PermissionRepository } from './../repositories/sequelize/permission';
 
 // Imports services
 import { ClientService } from './../services/client';
-import { RoleService } from './../services/role';
 import { PermissionService } from './../services/permission';
+import { RoleService } from './../services/role';
 
 // Imports models
 import { Client } from './../entities/client';
+import { Permission } from './../entities/permission';
 import { Role } from './../entities/role';
 import { RoleGroup } from './../entities/role-group';
-import { Permission } from './../entities/permission';
 
 export class RolesRouter {
 

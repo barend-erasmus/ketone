@@ -120,7 +120,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             return null;
         }
 
-        const rolePermission: any[] = user.role? await BaseRepository.models.RolePermissions.findAll({
+        const rolePermission: any[] = user.role ? await BaseRepository.models.RolePermissions.findAll({
             include: [
                 { model: BaseRepository.models.Permission, required: false },
             ],

@@ -60,7 +60,7 @@ baseRepository.sync().then(async () => {
     ));
 
     await roleGroupRepository.create(new RoleGroup('Admin'), config.client.id);
-    
+
     await permissionRepository.create(new Permission('View Client'), config.client.id);
     await permissionRepository.create(new Permission('Create Client'), config.client.id);
     await permissionRepository.create(new Permission('Update Client'), config.client.id);

@@ -18,8 +18,8 @@ import { User } from './../entities/user';
 export class UserService {
 
     constructor(private userRepository: IUserRepository,
-        private ketoneUserRepository: IKetoneUserRepository,
-        private clientRepository: IClientRepository) {
+                private ketoneUserRepository: IKetoneUserRepository,
+                private clientRepository: IClientRepository) {
 
     }
 
@@ -97,7 +97,7 @@ export class UserService {
                 return null;
             }
 
-            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, client.role? client.role : null);
+            const newUser: User = new User(userUsername, emailAdress, password, false, enabled, null, client.role ? client.role : null);
 
             await this.userRepository.create(newUser, clientId);
 

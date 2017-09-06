@@ -67,7 +67,7 @@ export class Model {
                 true,
                 null,
                 this.generateApiKey(),
-                client.role? client.role : null,
+                client.role ? client.role : null,
             ));
         } else {
             const user: User = await this.userRepository.find(username, clientId);
@@ -83,7 +83,7 @@ export class Model {
                 false,
                 true,
                 null,
-                client.role? client.role : null,
+                client.role ? client.role : null,
             ), clientId);
         }
 

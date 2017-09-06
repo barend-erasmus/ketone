@@ -10,9 +10,9 @@ import { IRoleGroupRepository } from './../repositories/role-group';
 
 // Imports models
 import { Client } from './../entities/client';
+import { Permission } from './../entities/permission';
 import { Role } from './../entities/role';
 import { RoleGroup } from './../entities/role-group';
-import { Permission } from './../entities/permission';
 
 export class RoleService {
 
@@ -97,7 +97,7 @@ export class RoleService {
         role.permissions.push(new Permission(permissionName));
 
         await this.roleRepository.update(role, clientId);
-        
+
         return role;
     }
 }
