@@ -17,6 +17,6 @@ export class EventRepository {
     }
 
     public async count(clientId: string, name: string, timestamp: Date): Promise<number> {
-        return 0;
+        return this.events.filter((x) => x.clientId === clientId && x.name === name && x.timestamp.getTime() <= timestamp.getTime()).length;
     }
 }
