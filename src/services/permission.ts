@@ -14,7 +14,7 @@ import { Permission } from './../entities/permission';
 export class PermissionService {
 
     constructor(private permissionRepository: IPermissionRepository,
-        private clientRepository: IClientRepository) {
+                private clientRepository: IClientRepository) {
 
     }
 

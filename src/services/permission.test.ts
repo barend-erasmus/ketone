@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import 'mocha';
 
-import { PermissionRepository } from './../repositories/memory/permission';
 import { ClientRepository } from './../repositories/memory/client';
+import { PermissionRepository } from './../repositories/memory/permission';
 import { PermissionService } from './permission';
 
-import { Permission } from './../entities/permission';
 import { Client } from './../entities/client';
+import { Permission } from './../entities/permission';
 
 describe('PermissionService', () => {
 
@@ -31,7 +31,7 @@ describe('PermissionService', () => {
             permissionService = new PermissionService(permissionRepository, clientRepository);
 
             await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
-            
+
             await permissionService.create('user', 'permission', 'client-id');
 
             try {
