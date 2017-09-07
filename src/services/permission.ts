@@ -14,11 +14,28 @@ import { Permission } from './../entities/permission';
 export class PermissionService {
 
     constructor(private permissionRepository: IPermissionRepository,
-                private clientRepository: IClientRepository) {
+        private clientRepository: IClientRepository) {
 
     }
 
     public async create(username: string, name: string, clientId: string): Promise<Permission> {
+
+        const client: Client = await this.clientRepository.find(clientId);
+
+        if (!client) {
+            throw new Error('Invalid Client Id');
+        }
+
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
+        }
+
+        const existingPermission: Permission = await this.permissionRepository.find(name, clientId);
+
+        if (existingPermission) {
+            throw new Error('Permission already exist');
+        }
+
         const permission: Permission = new Permission(name);
 
         await this.permissionRepository.create(permission, clientId);

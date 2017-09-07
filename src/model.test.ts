@@ -120,7 +120,7 @@ describe('Model', () => {
             try {
                 await model.register('client-id', 'user@example.com', 'user', 'password', null);
                 throw new Error('Expected Error');
-            }catch (err) {
+            } catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
             }
         });
@@ -201,7 +201,7 @@ describe('Model', () => {
             try {
                 await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
                 throw new Error('Expected Error');
-            }catch (err) {
+            } catch (err) {
                 expect(err.message).to.be.eq('Username already exist');
             }
         });
@@ -284,7 +284,7 @@ describe('Model', () => {
             try {
                 await model.resetPassword('client-id', 'user', 'password', null);
                 throw new Error('Expected Error');
-            }catch (err) {
+            } catch (err) {
                 expect(err.message).to.be.eq('Username does not exist');
             }
         });
@@ -367,9 +367,61 @@ describe('Model', () => {
             try {
                 await model.resetPassword(config.client.id, 'user', 'password', null);
                 throw new Error('Expected Error');
-            }catch (err) {
+            } catch (err) {
                 expect(err.message).to.be.eq('Username does not exist');
             }
+        });
+    });
+
+    describe('sendVerificationEmail', () => {
+        it('should return false given invalid email address', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            const result: boolean = await model.sendVerificationEmail('client-id', 'invalid-email-address', 'user', 'http://example.com', null);
+
+            expect(result).to.be.false;
+        });
+
+        it('should log event', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                'client-name',
+                'client-id',
+                'client-secret',
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.sendVerificationEmail('client-id', 'invalid-email-address', 'user', 'http://example.com', null);
+
+            const events: Event[] = await eventRepository.list('client-id');
+
+            expect(events.length).to.be.eq(1);
         });
     });
 
@@ -453,4 +505,83 @@ describe('Model', () => {
         });
     });
 
+    describe('verify as ketone client', () => {
+        it('should return true', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
+
+            const result: boolean = await model.verify(config.client.id, 'user', null);
+
+            expect(result).to.be.true;
+        });
+
+        it('should update user', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            await model.register(config.client.id, 'user@example.com', 'user', 'password', null);
+
+            await model.verify(config.client.id, 'user', null);
+
+            const user: User = await ketoneUserRepository.find('user');
+
+            expect(user.verified).to.be.true;
+        });
+
+        it('should return false given username does not exist', async () => {
+            const clientRepository = new ClientRepository();
+            const userRepository: UserRepository = new UserRepository();
+            const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
+            const eventRepository: EventRepository = new EventRepository();
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+
+            await clientRepository.create(new Client(
+                config.client.name,
+                config.client.id,
+                config.client.secret,
+                [],
+                [],
+                true,
+                true,
+                'developersworkspace@gmail.com',
+                null,
+            ));
+
+            const result: boolean = await model.verify(config.client.id, 'user', null);
+
+            expect(result).to.be.false;
+        });
+    });
 });
