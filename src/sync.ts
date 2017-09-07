@@ -176,7 +176,19 @@ baseRepository.sync().then(async () => {
         null,
     ));
 
-    await userRepository.create(new User('TestUser', 'testuser@example.com', '6df0e8bca3a739f89b866f42d218a081', false, true, null, new Role('Standard User', new RoleGroup('Admin'), [])), '7Ewz5a32gnkQz9iCvyk5');
+    await roleGroupRepository.create(new RoleGroup('Common'), '7Ewz5a32gnkQz9iCvyk5');
+
+    await permissionRepository.create(new Permission('View'), '7Ewz5a32gnkQz9iCvyk5');
+    await permissionRepository.create(new Permission('Create'), '7Ewz5a32gnkQz9iCvyk5');
+    await permissionRepository.create(new Permission('Update'), '7Ewz5a32gnkQz9iCvyk5');
+
+    await roleRepository.create(new Role('Standard User', new RoleGroup('Common'), [
+        new Permission('View'),
+        new Permission('Create'),
+        new Permission('Update'),
+    ]), '7Ewz5a32gnkQz9iCvyk5');
+
+    await userRepository.create(new User('TestUser', 'testuser@example.com', '6df0e8bca3a739f89b866f42d218a081', false, true, null, new Role('Standard User', new RoleGroup('Common'), [])), '7Ewz5a32gnkQz9iCvyk5');
 
     baseRepository.close();
 }).catch((err: Error) => {

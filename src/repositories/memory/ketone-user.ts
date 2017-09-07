@@ -22,7 +22,9 @@ export class KetoneUserRepository implements IKetoneUserRepository {
     }
 
     public async find(username: string): Promise<KetoneUser> {
-        return this.users.find((x) => x.username === username);
+        const user = this.users.find((x) => x.username === username);
+
+        return user ? user : null;
     }
 
     public async list(): Promise<KetoneUser[]> {
@@ -30,6 +32,8 @@ export class KetoneUserRepository implements IKetoneUserRepository {
     }
 
     public async findByAPIKey(apiKey: string): Promise<KetoneUser> {
-        return null;
+        const user = this.users.find((x) => x.apiKey === apiKey);
+
+        return user ? user : null;
     }
 }

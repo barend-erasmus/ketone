@@ -144,6 +144,16 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         const users: any[] = await BaseRepository.models.User.findAll({
             include: [
                 { model: BaseRepository.models.Client, required: false },
+                {
+                    include: [
+                        {
+                            model: BaseRepository.models.RoleGroup,
+                            required: false,
+                        },
+                    ],
+                    model: BaseRepository.models.Role,
+                    required: false,
+                },
             ],
             order: [
                 ['username'],
@@ -153,6 +163,35 @@ export class UserRepository extends BaseRepository implements IUserRepository {
             },
         });
 
-        return users.map((x) => new User(x.username, x.emailAddress, x.password, x.verified, x.enabled, x.profileImage, null));
+        const result: User[] = [];
+
+        for (const user of users) {
+            const loadedUser: User = new User(
+                user.username,
+                user.emailAddress,
+                user.password,
+                user.verified,
+                user.enabled,
+                user.profileImage,
+                user.role ? new Role(user.role.name, new RoleGroup(user.role.roleGroup.name), null) : null,
+            );
+
+            if (loadedUser.role) {
+                const rolePermission: any[] = await BaseRepository.models.RolePermissions.findAll({
+                    include: [
+                        { model: BaseRepository.models.Permission, required: false },
+                    ],
+                    where: {
+                        roleId: user.role.id,
+                    },
+                });
+
+                loadedUser.role.permissions = rolePermission.map((x) => new Permission(x.permission.name));
+            }
+
+            result.push(loadedUser);
+        }
+
+        return result;
     }
 }

@@ -33,15 +33,32 @@ export class APIUsersRouter {
      * @apiSuccessExample {json} Success-Response:
      *      HTTP/1.1 200 OK
      *      [
-     *           {
-     *               "username": "user-1",
-     *               "emailAddress": "user-1@example.com",
-     *               "password": "123456",
-     *               "verified": false,
-     *               "enabled": true,
-     *               "profileImage": null
-     *           }
-     *       ]
+     *          {
+     *              "username": "TestUser",
+     *              "emailAddress": "testuser@example.com",
+     *              "password": "6df0e8bca3a739f89b866f42d218a081",
+     *              "verified": false,
+     *              "enabled": true,
+     *              "profileImage": null,
+     *              "role": {
+     *                  "name": "Standard User",
+     *                  "group": {
+     *                      "name": "Common"
+     *                  },
+     *                  "permissions": [
+     *                      {
+     *                          "name": "View"
+     *                      },
+     *                      {
+     *                          "name": "Create"
+     *                      },
+     *                      {
+     *                          "name": "Update"
+     *                      }
+     *                  ]
+     *              }
+     *          }
+     *      ]
      */
     public static async get(req: express.Request, res: express.Response) {
 

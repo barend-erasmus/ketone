@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import 'mocha';
 import * as moment from 'moment';
 
-import { EventRepository } from './../repositories/memory/event';
 import { ClientRepository } from './../repositories/memory/client';
+import { EventRepository } from './../repositories/memory/event';
 import { EventService } from './event';
 
-import { Event } from './../entities/event';
 import { Client } from './../entities/client';
+import { Event } from './../entities/event';
 import { Statistic } from './../models/statistic';
 
 describe('EventService', () => {
@@ -63,7 +63,7 @@ describe('EventService', () => {
             await eventRepository.create(new Event('client-id', 'username', 'validateCredentials', '127.0.0.1', moment().toDate()));
 
             const result: Statistic = await eventService.numberOfLoginsStatistic('username');
-            
+
             expect(result.growth).to.be.eq(1);
         });
     });
@@ -79,7 +79,7 @@ describe('EventService', () => {
             await eventRepository.create(new Event('client-id', 'username', 'register', '127.0.0.1', moment().toDate()));
 
             const result: Statistic = await eventService.numberOfRegistersStatistic('username');
-            
+
             expect(result.growth).to.be.eq(1);
         });
     });
@@ -95,7 +95,7 @@ describe('EventService', () => {
             await eventRepository.create(new Event('client-id', 'username', 'resetPassword', '127.0.0.1', moment().toDate()));
 
             const result: Statistic = await eventService.numberOfResetPasswordsStatistic('username');
-            
+
             expect(result.growth).to.be.eq(1);
         });
     });
@@ -111,7 +111,7 @@ describe('EventService', () => {
             await eventRepository.create(new Event('client-id', 'username', 'verify', '127.0.0.1', moment().toDate()));
 
             const result: Statistic = await eventService.numberOfVerifiesStatistic('username');
-            
+
             expect(result.growth).to.be.eq(1);
         });
     });
