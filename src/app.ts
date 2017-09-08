@@ -68,18 +68,18 @@ app.engine('handlebars', exphbs({
         },
         ifEqualRole: (a, b, options) => {
 
-                        let result: boolean = false;
+            let result: boolean = false;
 
-                        if (a && b) {
-                            if (a.name === b.name && a.group.name === b.group.name) {
-                                result = true;
-                            }
-                        }
+            if (a && b) {
+                if (a.name === b.name && a.group.name === b.group.name) {
+                    result = true;
+                }
+            }
 
-                        if (result) {
-                            return options.fn(this);
-                        }
-                    },
+            if (result) {
+                return options.fn(this);
+            }
+        },
         ifNotEqual: (a, b, options) => {
             if (a !== b) {
                 return options.fn(this);
