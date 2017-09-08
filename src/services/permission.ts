@@ -57,7 +57,7 @@ export class PermissionService {
         return this.permissionRepository.find(name, clientId);
     }
 
-    public async listByClientId(username: string, clientId: string): Promise<Permission[]> {
+    public async list(username: string, clientId: string): Promise<Permission[]> {
         const client: Client = await this.clientRepository.find(clientId);
 
         if (!client) {

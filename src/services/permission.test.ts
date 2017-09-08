@@ -70,4 +70,92 @@ describe('PermissionService', () => {
             }
         });
     });
+
+    describe('list', () => {
+        it('should return list of permissions', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            await permissionService.create('user', 'permission', 'client-id');
+
+            const result: Permission[] = await permissionService.list('user', 'client-id');
+
+            expect(result.length).to.be.eq(1);
+        });
+
+        it('should throw error given client id does not exist', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            try {
+                await permissionService.list('user', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Client Id');
+            }
+        });
+
+        it('should throw error given user does not own client', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            try {
+                await permissionService.list('other-user', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('You are not the owner of this Client Id');
+            }
+        });
+    });
+
+    describe('find', () => {
+        it('should return permission', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            await permissionService.create('user', 'permission', 'client-id');
+
+            const result: Permission = await permissionService.find('user', 'permission', 'client-id');
+
+            expect(result).to.be.not.null;
+        });
+
+        it('should throw error given client id does not exist', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            try {
+                await permissionService.find('user', 'permission', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Client Id');
+            }
+        });
+
+        it('should throw error given user does not own client', async () => {
+            const permissionRepository: PermissionRepository = new PermissionRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            permissionService = new PermissionService(permissionRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            try {
+                await permissionService.find('other-user', 'permission', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('You are not the owner of this Client Id');
+            }
+        });
+    });
 });

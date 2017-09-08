@@ -30,7 +30,7 @@ export class PermissionsRouter {
 
         const client: Client = await PermissionsRouter.getClientService().find(req.user, req.query.clientId);
 
-        const permissions: Permission[] = await PermissionsRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+        const permissions: Permission[] = await PermissionsRouter.getRoleService().list(req.user, req.query.clientId);
 
         res.render('permissions/index', {
             baseModel: BaseRouter.getBaseModel(),

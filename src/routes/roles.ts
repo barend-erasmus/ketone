@@ -74,7 +74,7 @@ export class RolesRouter {
 
         const role: Role = await RolesRouter.getRoleService().find(req.user, req.query.name, req.query.group, req.query.clientId);
 
-        const permissions: Permission[] = await RolesRouter.getPermissionService().listByClientId(req.user, req.query.clientId);
+        const permissions: Permission[] = await RolesRouter.getPermissionService().list(req.user, req.query.clientId);
 
         res.render('roles/edit', {
             baseModel: BaseRouter.getBaseModel(),
