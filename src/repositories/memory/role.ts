@@ -2,8 +2,8 @@
 import { IRoleRepository } from './../role';
 
 // Imports models
-import { Role } from './../../entities/role';
 import { Permission } from './../../entities/permission';
+import { Role } from './../../entities/role';
 
 export class RoleRepository implements IRoleRepository {
 

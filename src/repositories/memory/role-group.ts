@@ -2,7 +2,7 @@
 import { RoleGroup } from './../../entities/role-group';
 
 export class RoleGroupRepository {
-    
+
     private roleGroups: {} = {};
 
     public async create(roleGroup: RoleGroup, clientId: string): Promise<boolean> {
