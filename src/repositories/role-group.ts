@@ -8,4 +8,6 @@ export interface IRoleGroupRepository {
     list(clientId: string): Promise<RoleGroup[]>;
 
     update(roleGroup: RoleGroup, clientId: string): Promise<boolean>;
+
+    find(name: string, clientId: string): Promise<RoleGroup>;
 }

@@ -160,6 +160,10 @@ export class RoleRepository extends BaseRepository implements IRoleRepository {
             },
         });
 
+        if (!role) {
+            return null;
+        }
+
         const loadedRole: Role = await this.loadPermissions(new Role(role.name, new RoleGroup(role.roleGroup.name), null), clientId);
 
         return loadedRole;

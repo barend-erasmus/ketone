@@ -42,6 +42,24 @@ export class RoleGroupRepository extends BaseRepository implements IRoleGroupRep
         return roleGroups.map((x) => new RoleGroup(x.name));
     }
 
+    public async find(name: string, clientId: string): Promise<RoleGroup> {
+        const roleGroup: any = await BaseRepository.models.RoleGroup.find({
+            include: [
+                { model: BaseRepository.models.Client, required: false },
+            ],
+            where: {
+                '$roleGroup.client.key$': clientId,
+                'name': name,
+            },
+        });
+
+        if (!roleGroup) {
+            return null;
+        }
+
+        return new RoleGroup(roleGroup.name);
+    }
+
     public async update(roleGroup: RoleGroup, clientId: string): Promise<boolean> {
         return null;
     }

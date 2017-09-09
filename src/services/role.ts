@@ -17,12 +17,29 @@ import { RoleGroup } from './../entities/role-group';
 export class RoleService {
 
     constructor(private roleRepository: IRoleRepository,
-                private roleGroupRepository: IRoleGroupRepository,
-                private clientRepository: IClientRepository) {
+        private roleGroupRepository: IRoleGroupRepository,
+        private clientRepository: IClientRepository) {
 
     }
 
     public async create(username: string, name: string, group: string, clientId: string): Promise<Role> {
+
+        const client: Client = await this.clientRepository.find(clientId);
+
+        if (!client) {
+            throw new Error('Invalid Client Id');
+        }
+
+        if (!client.isOwner(username)) {
+            throw new Error('You are not the owner of this Client Id');
+        }
+
+        const existingRole: Role = await this.roleRepository.find(name, group, clientId);
+
+        if (existingRole) {
+            throw new Error('Role already exist');
+        }
+
         const role: Role = new Role(name, new RoleGroup(group), []);
 
         await this.roleRepository.create(role, clientId);
