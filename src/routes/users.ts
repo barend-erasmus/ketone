@@ -66,7 +66,7 @@ export class UsersRouter {
 
         const editUser: User = await UsersRouter.getUserService().find(req.user, req.query.username, req.query.clientId);
 
-        const roles: Role[] = await UsersRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+        const roles: Role[] = await UsersRouter.getRoleService().list(req.user, req.query.clientId);
 
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
@@ -88,7 +88,7 @@ export class UsersRouter {
 
         const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false, req.body.roleName, req.body.roleGroupName);
 
-        const roles: Role[] = await UsersRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+        const roles: Role[] = await UsersRouter.getRoleService().list(req.user, req.query.clientId);
 
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),

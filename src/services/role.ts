@@ -84,7 +84,7 @@ export class RoleService {
         return this.roleRepository.find(name, group, clientId);
     }
 
-    public async listByClientId(username: string, clientId: string): Promise<Role[]> {
+    public async list(username: string, clientId: string): Promise<Role[]> {
         const client: Client = await this.clientRepository.find(clientId);
 
         if (!client) {

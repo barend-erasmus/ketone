@@ -54,7 +54,7 @@ export class ClientsRouter {
                 return;
             }
 
-            const roles: Role[] = await ClientsRouter.getRoleService().listByClientId(req.user, req.query.id);
+            const roles: Role[] = await ClientsRouter.getRoleService().list(req.user, req.query.id);
 
             res.render('clients/edit', {
                 baseModel: BaseRouter.getBaseModel(),
@@ -83,7 +83,7 @@ export class ClientsRouter {
                 return;
             }
 
-            const roles: Role[] = await ClientsRouter.getRoleService().listByClientId(req.user, req.body.id);
+            const roles: Role[] = await ClientsRouter.getRoleService().list(req.user, req.body.id);
 
             res.render('clients/edit', {
                 baseModel: BaseRouter.getBaseModel(),

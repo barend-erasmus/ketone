@@ -35,7 +35,7 @@ export class RolesRouter {
 
         const client: Client = await RolesRouter.getClientService().find(req.user, req.query.clientId);
 
-        const roles: Role[] = await RolesRouter.getRoleService().listByClientId(req.user, req.query.clientId);
+        const roles: Role[] = await RolesRouter.getRoleService().list(req.user, req.query.clientId);
 
         const roleGroups: RoleGroup[] = await RolesRouter.getRoleService().listGroups(req.user, req.query.clientId);
 

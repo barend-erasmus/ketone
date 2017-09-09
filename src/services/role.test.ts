@@ -75,4 +75,51 @@ describe('RoleService', () => {
             }
         });
     });
+
+    describe('list', () => {
+        it('should return list of permissions', async () => {
+            const roleRepository: RoleRepository = new RoleRepository();
+            const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            roleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            await roleService.create('user', 'role', 'role-group', 'client-id');
+
+            const result: Role[] = await roleService.list('user', 'client-id');
+
+            expect(result.length).to.be.eq(1);
+        });
+
+        it('should throw error given client id does not exist', async () => {
+            const roleRepository: RoleRepository = new RoleRepository();
+            const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            roleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
+
+            try {
+                await roleService.list('user', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('Invalid Client Id');
+            }
+        });
+
+        it('should throw error given user does not own client', async () => {
+            const roleRepository: RoleRepository = new RoleRepository();
+            const roleGroupRepository: RoleGroupRepository = new RoleGroupRepository();
+            const clientRepository: ClientRepository = new ClientRepository();
+            roleService = new RoleService(roleRepository, roleGroupRepository, clientRepository);
+
+            await clientRepository.create(new Client('client-name', 'client-id', 'client-secret', [], [], true, true, 'user', null));
+
+            try {
+                await roleService.list('other-user', 'client-id');
+                throw new Error('Expected Error');
+            } catch (err) {
+                expect(err.message).to.be.eq('You are not the owner of this Client Id');
+            }
+        });
+    });
 });
