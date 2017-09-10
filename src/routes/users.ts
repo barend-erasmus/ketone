@@ -24,7 +24,7 @@ export class UsersRouter {
 
     public static async index(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -48,7 +48,7 @@ export class UsersRouter {
 
     public static async editGet(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -80,7 +80,7 @@ export class UsersRouter {
 
     public static async editPost(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -102,7 +102,7 @@ export class UsersRouter {
 
     public static async createGet(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -123,7 +123,7 @@ export class UsersRouter {
 
     public static async createPost(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 

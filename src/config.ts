@@ -10,6 +10,9 @@ export const config = {
         username: 'ketone',
     },
     domain: 'https://ketone.openservices.co.za',
+    paths: {
+        unauthorized: '/about',
+    },
     salt: '0dcCAi3TkCgyuYEfdq68',
     secrets: ['OIdowGt3f79dGaiAXJWq', 'j211gJtch7IFxl6mkI6i' ],
 };

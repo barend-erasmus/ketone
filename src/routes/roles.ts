@@ -24,7 +24,7 @@ export class RolesRouter {
 
     public static async index(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -51,7 +51,7 @@ export class RolesRouter {
 
     public static async edit(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -89,7 +89,7 @@ export class RolesRouter {
     public static async create(req: express.Request, res: express.Response) {
 
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 

@@ -21,7 +21,7 @@ export class ClientsRouter {
 
     public static async index(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -38,7 +38,7 @@ export class ClientsRouter {
     public static async editGet(req: express.Request, res: express.Response) {
         try {
             if (!req.user) {
-                res.redirect('/auth/login');
+                res.redirect(config.paths.unauthorized);
                 return;
             }
 
@@ -72,7 +72,7 @@ export class ClientsRouter {
     public static async editPost(req: express.Request, res: express.Response) {
         try {
             if (!req.user) {
-                res.redirect('/auth/login');
+                res.redirect(config.paths.unauthorized);
                 return;
             }
 
@@ -99,7 +99,7 @@ export class ClientsRouter {
 
     public static async addScope(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -110,7 +110,7 @@ export class ClientsRouter {
 
     public static async removeScope(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -121,7 +121,7 @@ export class ClientsRouter {
 
     public static async addRedirectUri(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -132,7 +132,7 @@ export class ClientsRouter {
 
     public static async removeRedirectUri(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -143,7 +143,7 @@ export class ClientsRouter {
 
     public static async createGet(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
@@ -156,7 +156,7 @@ export class ClientsRouter {
 
     public static async createPost(req: express.Request, res: express.Response) {
         if (!req.user) {
-            res.redirect('/auth/login');
+            res.redirect(config.paths.unauthorized);
             return;
         }
 
