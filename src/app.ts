@@ -28,6 +28,7 @@ import { Model } from './model';
 import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
+import { AboutRouter } from './routes/about';
 import { PermissionsRouter } from './routes/permission';
 import { ProfileRouter } from './routes/profile';
 import { RoleGroupRouter } from './routes/role-group';
@@ -171,6 +172,8 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
     });
 
 app.get('/', HomeRouter.index);
+
+app.get('/about', AboutRouter.index);
 
 app.get('/clients', ClientsRouter.index);
 app.get('/clients/edit', ClientsRouter.editGet);
