@@ -25,10 +25,10 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 import { Model } from './model';
 
 // Imports routes
+import { AboutRouter } from './routes/about';
 import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
 import { HomeRouter } from './routes/home';
-import { AboutRouter } from './routes/about';
 import { PermissionsRouter } from './routes/permission';
 import { ProfileRouter } from './routes/profile';
 import { RoleGroupRouter } from './routes/role-group';
