@@ -25,6 +25,7 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 import { Model } from './model';
 
 // Imports routes
+import { ContactRouter } from './routes/contact';
 import { AboutRouter } from './routes/about';
 import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
@@ -174,6 +175,8 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
 app.get('/', HomeRouter.index);
 
 app.get('/about', AboutRouter.index);
+
+app.post('/contact', ContactRouter.send);
 
 app.get('/clients', ClientsRouter.index);
 app.get('/clients/edit', ClientsRouter.editGet);
