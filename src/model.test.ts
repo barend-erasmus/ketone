@@ -25,7 +25,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -51,7 +51,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -75,7 +75,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -101,7 +101,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -132,7 +132,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -156,7 +156,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -182,7 +182,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -213,7 +213,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -239,7 +239,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -267,7 +267,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -296,7 +296,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -322,7 +322,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -350,7 +350,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -379,7 +379,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -403,7 +403,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -431,7 +431,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -457,7 +457,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -485,7 +485,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 'client-name',
@@ -511,7 +511,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -537,7 +537,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,
@@ -565,7 +565,7 @@ describe('Model', () => {
             const userRepository: UserRepository = new UserRepository();
             const ketoneUserRepository: KetoneUserRepository = new KetoneUserRepository();
             const eventRepository: EventRepository = new EventRepository();
-            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository);
+            model = new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, 'secret');
 
             await clientRepository.create(new Client(
                 config.client.name,

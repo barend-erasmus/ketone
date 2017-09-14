@@ -1,7 +1,8 @@
 // Imports
 import * as crypto from 'crypto';
+import * as jsonwebtoken from 'jsonwebtoken';
 import * as express from 'express';
-import { Client as OAuth2FrameworkClient } from 'oauth2-framework';
+import { Client as OAuth2FrameworkClient, Token } from 'oauth2-framework';
 import * as uuid from 'uuid';
 import * as yargs from 'yargs';
 import { config } from './config';
@@ -33,6 +34,7 @@ export class Model {
         private ketoneUserRepository: IKetoneUserRepository,
         private userRepository: IUserRepository,
         private eventRepository: IEventRepository,
+        private secret: string,
     ) {
         this.emailService = new EmailService();
     }
@@ -262,6 +264,70 @@ export class Model {
         await this.eventRepository.create(new Event(clientId, username, 'verify', request ? request.get('X-Real-IP') || request.ip : null));
 
         return result;
+    }
+
+    public async generateCode(client_id: string, username: string, scopes: string[]): Promise<string> {
+        return jsonwebtoken.sign({
+            client_id,
+            scopes,
+            type: 'code',
+            username,
+        }, this.secret, {
+                expiresIn: '10m',
+            });
+    }
+
+    public async validateCode(code: string): Promise<Token> {
+        const decodedCode: any = await this.decodeJWT(code);
+
+        if (!decodedCode) {
+            return null;
+        }
+
+        if (decodedCode.type !== 'code') {
+            return null;
+        }
+
+        return new Token(decodedCode.client_id, decodedCode.username, decodedCode.scopes);
+    }
+
+    public async generateAccessToken(client_id: string, username: string, scopes: string[]): Promise<string> {
+        return jsonwebtoken.sign({
+            client_id,
+            scopes,
+            type: 'access-token',
+            username,
+        }, this.secret, {
+                expiresIn: '60m',
+            });
+    }
+
+    public async validateAccessToken(code: string): Promise<Token> {
+        const decodedCode: any = await this.decodeJWT(code);
+
+        if (!decodedCode) {
+            return null;
+        }
+
+        if (decodedCode.type !== 'access-token') {
+            return null;
+        }
+
+        return new Token(decodedCode.client_id, decodedCode.username, decodedCode.scopes);
+    }
+
+    private decodeJWT(jwt: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            jsonwebtoken.verify(jwt, this.secret, (err: Error, decodedCode: any) => {
+
+                if (err) {
+                    resolve(null);
+                    return;
+                }
+
+                resolve(decodedCode);
+            });
+        });
     }
 
     private generateApiKey(): string {

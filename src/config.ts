@@ -14,5 +14,5 @@ export const config = {
         unauthorized: '/about',
     },
     salt: '0dcCAi3TkCgyuYEfdq68',
-    secrets: ['OIdowGt3f79dGaiAXJWq', 'j211gJtch7IFxl6mkI6i' ],
+    secrets: ['OIdowGt3f79dGaiAXJWq', 'j211gJtch7IFxl6mkI6i', 'BYaCwyLXHRsgSxtcPti4'],
 };

@@ -135,6 +135,7 @@ passport.use(new OAuth2Strategy({
         json: true,
         uri: argv.prod ? `${config.domain}/auth/user` : 'http://localhost:3000/auth/user',
     }).then((result: any) => {
+
         if (result.client_id === config.client.id) {
             return cb(null, result);
         } else {
@@ -151,7 +152,7 @@ const userRepository = new UserRepository(config.database.host, config.database.
 const eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
 
 app.use('/auth', OAuth2FrameworkRouter(
-    new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository),
+    new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, config.secrets[2]),
     path.join(__dirname, 'views/login.handlebars'),
     path.join(__dirname, 'views/forgot-password.handlebars'),
     path.join(__dirname, 'views/forgot-password-success.handlebars'),
