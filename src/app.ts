@@ -11,6 +11,7 @@ import { ClientRepository } from './repositories/sequelize/client';
 import { EventRepository } from './repositories/sequelize/event';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
 import { UserRepository } from './repositories/sequelize/user';
+import { TokenRepository } from './repositories/sequelize/token';
 
 // Imports middleware
 import * as bodyParser from 'body-parser';
@@ -150,9 +151,10 @@ const clientRepository = new ClientRepository(config.database.host, config.datab
 const ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
 const userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
 const eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
+const tokenRepository = new TokenRepository(config.database.host, config.database.username, config.database.password);
 
 app.use('/auth', OAuth2FrameworkRouter(
-    new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, config.secrets[2]),
+    new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, tokenRepository, config.secrets[2]),
     path.join(__dirname, 'views/login.handlebars'),
     path.join(__dirname, 'views/forgot-password.handlebars'),
     path.join(__dirname, 'views/forgot-password-success.handlebars'),

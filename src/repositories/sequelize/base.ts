@@ -14,6 +14,7 @@ export class BaseRepository {
         Permission: Sequelize.Model<{}, {}>,
         RoleGroup: Sequelize.Model<{}, {}>,
         RolePermissions: Sequelize.Model<{}, {}>,
+        Token: Sequelize.Model<{}, {}>,
     } = null;
 
     private static defineModels(): void {
@@ -156,6 +157,29 @@ export class BaseRepository {
             },
         });
 
+        const Token = BaseRepository.sequelize.define('token', {
+            value: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            clientId: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            username: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            scopes: {
+                allowNull: true,
+                type: Sequelize.STRING,
+            },
+            type: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+        });
+
         Client.hasMany(AllowedScope, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
         AllowedScope.belongsTo(Client, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
@@ -220,6 +244,7 @@ export class BaseRepository {
             Role,
             RoleGroup,
             RolePermissions,
+            Token,
             User,
         };
     }

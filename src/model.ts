@@ -1,8 +1,7 @@
 // Imports
 import * as crypto from 'crypto';
-import * as jsonwebtoken from 'jsonwebtoken';
 import * as express from 'express';
-import { Client as OAuth2FrameworkClient, Token } from 'oauth2-framework';
+import { Client as OAuth2FrameworkClient, Token as OAuth2FrameworkToken } from 'oauth2-framework';
 import * as uuid from 'uuid';
 import * as yargs from 'yargs';
 import { config } from './config';
@@ -12,6 +11,7 @@ import { IClientRepository } from './repositories/client';
 import { IEventRepository } from './repositories/event';
 import { IKetoneUserRepository } from './repositories/ketone-user';
 import { IUserRepository } from './repositories/user';
+import { ITokenRepository } from './repositories/token';
 
 // Imports services
 import { EmailService } from './services/email';
@@ -19,6 +19,7 @@ import { EmailService } from './services/email';
 // Imports models
 import { Client } from './entities/client';
 import { Event } from './entities/event';
+import { Token } from './entities/token';
 
 import { KetoneUser } from './entities/ketone-user';
 import { User } from './entities/user';
@@ -34,6 +35,7 @@ export class Model {
         private ketoneUserRepository: IKetoneUserRepository,
         private userRepository: IUserRepository,
         private eventRepository: IEventRepository,
+        private tokenRepository: ITokenRepository,
         private secret: string,
     ) {
         this.emailService = new EmailService();
@@ -267,68 +269,80 @@ export class Model {
     }
 
     public async generateCode(client_id: string, username: string, scopes: string[]): Promise<string> {
-        return jsonwebtoken.sign({
-            client_id,
-            scopes,
-            type: 'code',
-            username,
-        }, this.secret, {
-                expiresIn: '10m',
-            });
+        // return jsonwebtoken.sign({
+        //     client_id,
+        //     scopes,
+        //     type: 'code',
+        //     username,
+        // }, this.secret, {
+        //         expiresIn: '10m',
+        // });
+
+        const token = uuid.v4();
+
+        await this.tokenRepository.create(new Token(token, client_id, username, scopes, 'code', null));
+
+        return token;
     }
 
-    public async validateCode(code: string): Promise<Token> {
-        const decodedCode: any = await this.decodeJWT(code);
+    public async validateCode(code: string): Promise<OAuth2FrameworkToken> {
+        const token: Token = await this.tokenRepository.find(code)
 
-        if (!decodedCode) {
+        if (!token) {
             return null;
         }
 
-        if (decodedCode.type !== 'code') {
+        if (token.type !== 'code') {
             return null;
         }
 
-        return new Token(decodedCode.client_id, decodedCode.username, decodedCode.scopes);
+        return new OAuth2FrameworkToken(token.clientId, token.username, token.scopes);
     }
 
     public async generateAccessToken(client_id: string, username: string, scopes: string[]): Promise<string> {
-        return jsonwebtoken.sign({
-            client_id,
-            scopes,
-            type: 'access-token',
-            username,
-        }, this.secret, {
-                expiresIn: '60m',
-            });
+        // return jsonwebtoken.sign({
+        //     client_id,
+        //     scopes,
+        //     type: 'access-token',
+        //     username,
+        // }, this.secret, {
+        //         expiresIn: '60m',
+        //     });
+
+        const token = uuid.v4();
+
+        await this.tokenRepository.create(new Token(token, client_id, username, scopes, 'access-token', null));
+
+        return token;
     }
 
-    public async validateAccessToken(code: string): Promise<Token> {
-        const decodedCode: any = await this.decodeJWT(code);
+    public async validateAccessToken(code: string): Promise<OAuth2FrameworkToken> {
+        const token: Token = await this.tokenRepository.find(code)
 
-        if (!decodedCode) {
+        if (!token) {
             return null;
         }
 
-        if (decodedCode.type !== 'access-token') {
+        if (token.type !== 'access-token') {
             return null;
         }
 
-        return new Token(decodedCode.client_id, decodedCode.username, decodedCode.scopes);
+        return new OAuth2FrameworkToken(token.clientId, token.username, token.scopes);
     }
 
-    private decodeJWT(jwt: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            jsonwebtoken.verify(jwt, this.secret, (err: Error, decodedCode: any) => {
+    // private decodeJWT(jwt: string): Promise<string> {
+    //     return new Promise((resolve, reject) => {
+    //         jsonwebtoken.verify(jwt, this.secret, (err: Error, decodedCode: any) => {
 
-                if (err) {
-                    resolve(null);
-                    return;
-                }
+    //             if (err) {
+    //                 resolve(null);
+    //                 return;
+    //             }
 
-                resolve(decodedCode);
-            });
-        });
-    }
+    //             resolve(decodedCode);
+    //         });
+    //     });
+    // }
 
     private generateApiKey(): string {
         return uuid.v4();
