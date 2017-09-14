@@ -268,7 +268,7 @@ export class Model {
         return result;
     }
 
-    public async generateCode(client_id: string, username: string, scopes: string[]): Promise<string> {
+    public async generateCode(client_id: string, username: string, scopes: string[], request: express.Request): Promise<string> {
         // return jsonwebtoken.sign({
         //     client_id,
         //     scopes,
@@ -285,7 +285,7 @@ export class Model {
         return token;
     }
 
-    public async validateCode(code: string): Promise<OAuth2FrameworkToken> {
+    public async validateCode(code: string, request: express.Request): Promise<OAuth2FrameworkToken> {
         const token: Token = await this.tokenRepository.find(code)
 
         if (!token) {
@@ -299,7 +299,7 @@ export class Model {
         return new OAuth2FrameworkToken(token.clientId, token.username, token.scopes);
     }
 
-    public async generateAccessToken(client_id: string, username: string, scopes: string[]): Promise<string> {
+    public async generateAccessToken(client_id: string, username: string, scopes: string[], request: express.Request): Promise<string> {
         // return jsonwebtoken.sign({
         //     client_id,
         //     scopes,
@@ -316,7 +316,7 @@ export class Model {
         return token;
     }
 
-    public async validateAccessToken(code: string): Promise<OAuth2FrameworkToken> {
+    public async validateAccessToken(code: string, request: express.Request): Promise<OAuth2FrameworkToken> {
         const token: Token = await this.tokenRepository.find(code)
 
         if (!token) {
