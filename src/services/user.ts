@@ -126,7 +126,8 @@ export class UserService {
             }
 
             user.enabled = enabled;
-
+            user.role = roleName? new Role(roleName, new RoleGroup(roleGroupName), []) : null;
+            
             await this.ketoneUserRepository.update(user);
 
             return new User(user.username, user.emailAddress, user.password, user.verified, user.enabled, user.profileImage, user.role);
@@ -140,7 +141,7 @@ export class UserService {
             }
 
             user.enabled = enabled;
-            user.role = new Role(roleName, new RoleGroup(roleGroupName), []);
+            user.role = roleName? new Role(roleName, new RoleGroup(roleGroupName), []) : null;
 
             await this.userRepository.update(user, clientId);
 

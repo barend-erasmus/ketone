@@ -23,19 +23,15 @@ import { User } from './../entities/user';
 export class UsersRouter {
 
     public static async index(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.clientId) {
             res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
-        const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await UsersRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const users: User[] = await UsersRouter.getUserService().list(req.user, req.query.clientId);
+        const users: User[] = await UsersRouter.getUserService().list(req.user.username, req.query.clientId);
 
         res.render('users/index', {
             baseModel: BaseRouter.getBaseModel(),
@@ -47,10 +43,6 @@ export class UsersRouter {
     }
 
     public static async editGet(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.username) {
             res.status(404).render('error/NotFound', { layout: false });
@@ -62,11 +54,11 @@ export class UsersRouter {
             return;
         }
 
-        const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await UsersRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const editUser: User = await UsersRouter.getUserService().find(req.user, req.query.username, req.query.clientId);
+        const editUser: User = await UsersRouter.getUserService().find(req.user.username, req.query.username, req.query.clientId);
 
-        const roles: Role[] = await UsersRouter.getRoleService().list(req.user, req.query.clientId);
+        const roles: Role[] = await UsersRouter.getRoleService().list(req.user.username, req.query.clientId);
 
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
@@ -79,16 +71,12 @@ export class UsersRouter {
     }
 
     public static async editPost(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
-        const client: Client = await UsersRouter.getClientService().find(req.user, req.body.clientId);
+        const client: Client = await UsersRouter.getClientService().find(req.user.username, req.body.clientId);
 
-        const editUser: User = await UsersRouter.getUserService().update(req.user, req.body.username, req.body.clientId, req.body.enabled ? true : false, req.body.roleName, req.body.roleGroupName);
+        const editUser: User = await UsersRouter.getUserService().update(req.user.username, req.body.username, req.body.clientId, req.body.enabled ? true : false, req.body.roleName? req.body.roleName.split('|')[1] : null, req.body.roleName? req.body.roleName.split('|')[0] : null);
 
-        const roles: Role[] = await UsersRouter.getRoleService().list(req.user, req.query.clientId);
+        const roles: Role[] = await UsersRouter.getRoleService().list(req.user.username, req.query.clientId);
 
         res.render('users/edit', {
             baseModel: BaseRouter.getBaseModel(),
@@ -101,17 +89,13 @@ export class UsersRouter {
     }
 
     public static async createGet(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.clientId) {
             res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
-        const client: Client = await UsersRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await UsersRouter.getClientService().find(req.user.username, req.query.clientId);
 
         res.render('users/create', {
             baseModel: BaseRouter.getBaseModel(),
@@ -122,12 +106,8 @@ export class UsersRouter {
     }
 
     public static async createPost(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
-        const user: User = await UsersRouter.getUserService().create(req.user, req.body.clientId, req.body.username, req.body.emailAddress, req.body.password, req.body.enabled);
+        const user: User = await UsersRouter.getUserService().create(req.user.username, req.body.clientId, req.body.username, req.body.emailAddress, req.body.password, req.body.enabled);
 
         if (!user) {
             res.status(500).render('error/InternalServerError', { layout: false });

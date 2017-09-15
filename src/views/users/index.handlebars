@@ -19,38 +19,42 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="/users/create?clientId={{client.id}}" class="btn btn-w-md btn-primary pull-right">New User</a>
+                {{#hasPermission user 'Create Client User'}}
+                    <a href="/users/create?clientId={{@root.client.id}}" class="btn btn-w-md btn-primary pull-right">New User</a>
+                {{/hasPermission}}
                 <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Email Address</th>
-                                <th>Verified</th>
-                                <th>Enabled</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each users as |value key|}}
-                            <tr>
-                                <td>{{value.username}}</td>
-                                <td>{{value.emailAddress}}</td>
-                                <td>{{value.verified}}</td>
-                                <td>{{value.enabled}}</td>
-                                <td>
-                                    <a href="/users/edit?username={{value.username}}&clientId={{@root.client.id}}" class="btn btn-w-md btn-info">Edit</a>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                {{#hasPermission user 'View Client User'}}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email Address</th>
+                                    <th>Verified</th>
+                                    <th>Enabled</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each @root.users as |value key|}}
+                                <tr>
+                                    <td>{{value.username}}</td>
+                                    <td>{{value.emailAddress}}</td>
+                                    <td>{{value.verified}}</td>
+                                    <td>{{value.enabled}}</td>
+                                    <td>
+                                        <a href="/users/edit?username={{value.username}}&clientId={{@root.client.id}}" class="btn btn-w-md btn-info">Edit</a>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/hasPermission}}
             </div>
         </div>
     </div>

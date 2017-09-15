@@ -18,17 +18,13 @@ export class HomeRouter {
 
     public static async index(req: express.Request, res: express.Response) {
         try {
-            if (!req.user) {
-                res.redirect(config.paths.unauthorized);
-                return;
-            }
+                        
+            const numberOfLoginsStatistic: Statistic = await HomeRouter.getEventService().numberOfLoginsStatistic(req.user.username);
+            const numberOfRegistersStatistic: Statistic = await HomeRouter.getEventService().numberOfRegistersStatistic(req.user.username);
+            const numberOfResetPasswordsStatistic: Statistic = await HomeRouter.getEventService().numberOfResetPasswordsStatistic(req.user.username);
+            const numberOfVerifiesStatistic: Statistic = await HomeRouter.getEventService().numberOfVerifiesStatistic(req.user.username);
 
-            const numberOfLoginsStatistic: Statistic = await HomeRouter.getEventService().numberOfLoginsStatistic(req.user);
-            const numberOfRegistersStatistic: Statistic = await HomeRouter.getEventService().numberOfRegistersStatistic(req.user);
-            const numberOfResetPasswordsStatistic: Statistic = await HomeRouter.getEventService().numberOfResetPasswordsStatistic(req.user);
-            const numberOfVerifiesStatistic: Statistic = await HomeRouter.getEventService().numberOfVerifiesStatistic(req.user);
-
-            const events: Event[] = await HomeRouter.getEventService().list(req.user);
+            const events: Event[] = await HomeRouter.getEventService().list(req.user.username);
 
             res.render('home/index', {
                 baseModel: BaseRouter.getBaseModel(),

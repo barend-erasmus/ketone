@@ -19,51 +19,56 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newPermissionModal">New Permission</button>
+                {{#hasPermission user 'Create Client Permission'}}
+                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#newPermissionModal">New Permission</button>
+                {{/hasPermission}}
                 <a href="/clients/edit?id={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client</a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each permissions as |value key|}}
-                            <tr>
-                                <td>{{value.name}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                {{#hasPermission user 'View Client Permission'}}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each @root.permissions as |value key|}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/hasPermission}}
             </div>
         </div>
     </div>
 </section>
 
-
-<div class="modal fade" id="newPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="post" action="/permissions/create" class="modal-content">
-            <div class="modal-header text-center">
-                <h4 class="modal-title">New Permission</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+{{#hasPermission user 'Create Client Permission'}}
+    <div class="modal fade" id="newPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="/permissions/create" class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">New Permission</h4>
                 </div>
-                <input type="hidden" name="clientId" value="{{client.id}}" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-accent">Create</button>
-            </div>
-        </form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+                    </div>
+                    <input type="hidden" name="clientId" value="{{@root.client.id}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-accent">Create</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+{{/hasPermission}}

@@ -18,19 +18,15 @@ import { Permission } from './../entities/permission';
 export class PermissionsRouter {
 
     public static async index(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.clientId) {
             res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
-        const client: Client = await PermissionsRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await PermissionsRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const permissions: Permission[] = await PermissionsRouter.getRoleService().list(req.user, req.query.clientId);
+        const permissions: Permission[] = await PermissionsRouter.getRoleService().list(req.user.username, req.query.clientId);
 
         res.render('permissions/index', {
             baseModel: BaseRouter.getBaseModel(),
@@ -42,10 +38,6 @@ export class PermissionsRouter {
     }
 
     public static async edit(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.name) {
             res.status(404).render('error/NotFound', { layout: false });
@@ -62,9 +54,9 @@ export class PermissionsRouter {
             return;
         }
 
-        const client: Client = await PermissionsRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await PermissionsRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const role: Permission = await PermissionsRouter.getRoleService().find(req.user, req.query.name, req.query.clientId);
+        const role: Permission = await PermissionsRouter.getRoleService().find(req.user.username, req.query.name, req.query.clientId);
 
         res.render('permissions/edit', {
             baseModel: BaseRouter.getBaseModel(),
@@ -77,12 +69,7 @@ export class PermissionsRouter {
 
     public static async create(req: express.Request, res: express.Response) {
 
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
-
-        await PermissionsRouter.getRoleService().create(req.user, req.body.name, req.body.clientId);
+        await PermissionsRouter.getRoleService().create(req.user.username, req.body.name, req.body.clientId);
 
         res.redirect(`/permissions?clientId=${req.body.clientId}`);
     }

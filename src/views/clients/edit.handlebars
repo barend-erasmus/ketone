@@ -20,136 +20,160 @@
         <div class="row">
             <div class="col-md-6">
                 <h4>Actions</h4>
-                <a href="/users?clientId={{client.id}}" class="btn btn-primary">Manage Users</a>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addScopeModal"> Add Scope</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRedirectUriModal"> Add Redirect Uri</button>
-                <a href="/roles?clientId={{client.id}}" class="btn btn-primary">Manage Roles</a>
-                <a href="/permissions?clientId={{client.id}}" class="btn btn-primary">Manage Permissions</a>
+                {{#hasPermission user 'View Client User'}}
+                    <a href="/users?clientId={{@root.client.id}}" class="btn btn-primary">Manage Users</a>
+                {{/hasPermission}}
+                {{#hasPermission user 'Create Client Scope'}}
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addScopeModal"> Add Scope</button>
+                {{/hasPermission}}
+                {{#hasPermission user 'Create Client Redirect Uri'}}
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRedirectUriModal"> Add Redirect Uri</button>
+                {{/hasPermission}}
+                {{#hasPermission user 'View Client Role'}}
+                    <a href="/roles?clientId={{@root.client.id}}" class="btn btn-primary">Manage Roles</a>
+                {{/hasPermission}}
+                {{#hasPermission user 'View Client Permission'}}
+                    <a href="/permissions?clientId={{@root.client.id}}" class="btn btn-primary">Manage Permissions</a>
+                {{/hasPermission}}
                 <br />
                 <br />
-                <h4>Allowed Scopes</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each client.allowedScopes as |value key|}}
-                        <tr>
-                            <td>{{value}}</td>
-                            <td>{{value.id}}</td>
-                            <td>{{value.allowForgotPassword}}</td>
-                            <td>{{value.allowRegister}}</td>
-                            <td>
-                                <a href="/clients/removeScope?id={{@root.client.id}}&name={{value}}" class="btn btn-w-md btn-danger">Remove</a>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-                <h4>Redirect Uris</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each client.redirectUris as |value key|}}
-                        <tr>
-                            <td>{{value}}</td>
-                            <td>{{value.id}}</td>
-                            <td>{{value.allowForgotPassword}}</td>
-                            <td>{{value.allowRegister}}</td>
-                            <td>
-                                <a href="/clients/removeRedirectUri?id={{@root.client.id}}&uri={{value}}" class="btn btn-w-md btn-danger">Remove</a>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
+                {{#hasPermission user 'View Client Scope'}}
+                    <h4>Allowed Scopes</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each @root.client.allowedScopes as |value key|}}
+                            <tr>
+                                <td>{{value}}</td>
+                                <td>{{value.id}}</td>
+                                <td>{{value.allowForgotPassword}}</td>
+                                <td>{{value.allowRegister}}</td>
+                                <td>
+                                    {{#hasPermission @root.user 'Update Client Scope'}}
+                                        <a href="/clients/removeScope?id={{@root.client.id}}&name={{value}}" class="btn btn-w-md btn-danger">Remove</a>
+                                    {{/hasPermission}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                {{/hasPermission}}
+                {{#hasPermission user 'View Client Redirect Uri'}}
+                    <h4>Redirect Uris</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each @root.client.redirectUris as |value key|}}
+                            <tr>
+                                <td>{{value}}</td>
+                                <td>{{value.id}}</td>
+                                <td>{{value.allowForgotPassword}}</td>
+                                <td>{{value.allowRegister}}</td>
+                                <td>
+                                    {{#hasPermission @root.user 'Update Client Redirect Uri'}}
+                                        <a href="/clients/removeRedirectUri?id={{@root.client.id}}&uri={{value}}" class="btn btn-w-md btn-danger">Remove</a>
+                                    {{/hasPermission}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                {{/hasPermission}}
             </div>
             <div class="col-md-6">
-                <h4>Details</h4>
-                <form method="post">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{client.name}}" />
-                    </div>
-                    <div class="form-group">
-                        <label for="id">Id</label>
-                        <input type="text" class="form-control" disabled name="id" id="id" placeholder="id" value="{{client.id}}" />
-                    </div>
-                    <div class="form-group">
-                        <label for="secret">Secret</label>
-                        <input type="text" class="form-control" name="secret" disabled id="secret" placeholder="secret" value="{{client.secret}}"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="roleName">Default Role</label>
-                        <select class="form-control" id="roleName" name="roleName">
-                            <option value="">None</option>
-                            {{#each roles as |value key|}}
-                                {{#ifEqualRole value @root.client.role}}
-                                    <option selected value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
-                                {{/ifEqualRole}}
-                                {{#ifNotEqualRole value @root.client.role}}
-                                    <option value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
-                                {{/ifNotEqualRole}}
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div>
-                        <label>
-                            {{#if client.allowForgotPassword}}
-                            <input name="allowForgotPassword" type="checkbox" checked value="true" /> Allow Forgot Password
-                            {{else}}
-                            <input name="allowForgotPassword" type="checkbox" value="true" /> Allow Forgot Password
-                            {{/if}}
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            {{#if client.allowRegister}}
-                            <input name="allowRegister" type="checkbox" checked value="true" /> Allow Register
-                            {{else}}
-                            <input name="allowRegister" type="checkbox" value="true" /> Allow Register
-                            {{/if}}
-                        </label>
-                    </div>
-                    <input type="hidden" name="id" value="{{client.id}}" />
-                    <br />
-                    <a href="/clients" class="btn btn-default">Cancel</a>
-                    <button type="submit" class="btn btn-accent">Save</button>
-                </form>
+                {{#hasPermission user 'View Client'}}
+                    <h4>Details</h4>
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{@root.client.name}}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="id">Id</label>
+                            <input type="text" class="form-control" disabled name="id" id="id" placeholder="id" value="{{@root.client.id}}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="secret">Secret</label>
+                            <input type="text" class="form-control" name="secret" disabled id="secret" placeholder="secret" value="{{@root.client.secret}}"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="roleName">Default Role</label>
+                            <select class="form-control" id="roleName" name="roleName">
+                                <option value="">None</option>
+                                {{#each @root.roles as |value key|}}
+                                    {{#ifEqualRole value @root.client.role}}
+                                        <option selected value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                    {{/ifEqualRole}}
+                                    {{#ifNotEqualRole value @root.client.role}}
+                                        <option value="{{value.group.name}}|{{value.name}}">{{value.group.name}} - {{value.name}}</option>
+                                    {{/ifNotEqualRole}}
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div>
+                            <label>
+                                {{#if @root.client.allowForgotPassword}}
+                                <input name="allowForgotPassword" type="checkbox" checked value="true" /> Allow Forgot Password
+                                {{else}}
+                                <input name="allowForgotPassword" type="checkbox" value="true" /> Allow Forgot Password
+                                {{/if}}
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                {{#if @root.client.allowRegister}}
+                                <input name="allowRegister" type="checkbox" checked value="true" /> Allow Register
+                                {{else}}
+                                <input name="allowRegister" type="checkbox" value="true" /> Allow Register
+                                {{/if}}
+                            </label>
+                        </div>
+                        <input type="hidden" name="id" value="{{@root.client.id}}" />
+                        <br />
+                        <a href="/clients" class="btn btn-default">Cancel</a>
+                        {{#hasPermission @root.user 'Update Client'}}
+                            <button type="submit" class="btn btn-accent">Save</button>
+                        {{/hasPermission}}
+                    </form>
+                {{/hasPermission}}
             </div>
         </div>
     </div>
 </section>
 
-<div class="modal fade" id="addScopeModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="post" action="/clients/addScope" class="modal-content">
-            <div class="modal-header text-center">
-                <h4 class="modal-title">Add Scope</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+{{#hasPermission user 'Create Client Scope'}}
+    <div class="modal fade" id="addScopeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="/clients/addScope" class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">Add Scope</h4>
                 </div>
-                <input type="hidden" name="id" value="{{client.id}}" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-accent">Create</button>
-            </div>
-        </form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" />
+                    </div>
+                    <input type="hidden" name="id" value="{{client.id}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-accent">Create</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+{{/hasPermission}}
 
 <div class="modal fade" id="addRedirectUriModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">

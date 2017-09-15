@@ -37,6 +37,10 @@ export class PermissionRepository extends BaseRepository implements IPermissionR
             },
         });
 
+        if (!permission) {
+            return null;
+        }
+
         return new Permission(permission.name);
     }
 

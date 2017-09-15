@@ -25,6 +25,9 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 
 import { Model } from './model';
 
+// Imports models
+import { KetoneUser } from './entities/ketone-user';
+
 // Imports routes
 import { AboutRouter } from './routes/about';
 import { APIUsersRouter } from './routes/api/users';
@@ -36,6 +39,12 @@ import { ProfileRouter } from './routes/profile';
 import { RoleGroupRouter } from './routes/role-group';
 import { RolesRouter } from './routes/roles';
 import { UsersRouter } from './routes/users';
+
+const clientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
+const ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
+const userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
+const eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
+const tokenRepository = new TokenRepository(config.database.host, config.database.username, config.database.password);
 
 const argv = yargs.argv;
 const app = express();
@@ -61,8 +70,10 @@ app.use(cookieSession({
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     helpers: {
-        hasPermission: (user, permission, options) => {
-            return options.fn(this);
+        hasPermission: (user: KetoneUser, permissions: string, options: any) => {
+            if (user.role && permissions.split(',').filter((x) => user.role.permissions.filter((y) => y.name === x).length === 0).length == 0) {
+                return options.fn(this);
+            }
         },
         ifEqual: (a, b, options) => {
             if (a === b) {
@@ -116,8 +127,10 @@ passport.serializeUser((user: any, done: (err: Error, obj: any) => void) => {
     done(null, user.username);
 });
 
-passport.deserializeUser((id: Error, done: (err: Error, obj: any) => void) => {
-    done(null, id);
+passport.deserializeUser((id: string, done: (err: Error, obj: any) => void) => {
+    ketoneUserRepository.find(id).then((user: KetoneUser) => {
+        done(null, user);
+    });
 });
 
 app.use(passport.session());
@@ -147,12 +160,6 @@ passport.use(new OAuth2Strategy({
     });
 }));
 
-const clientRepository = new ClientRepository(config.database.host, config.database.username, config.database.password);
-const ketoneUserRepository = new KetoneUserRepository(config.database.host, config.database.username, config.database.password);
-const userRepository = new UserRepository(config.database.host, config.database.username, config.database.password);
-const eventRepository = new EventRepository(config.database.host, config.database.username, config.database.password);
-const tokenRepository = new TokenRepository(config.database.host, config.database.username, config.database.password);
-
 app.use('/auth', OAuth2FrameworkRouter(
     new Model(clientRepository, ketoneUserRepository, userRepository, eventRepository, tokenRepository, config.secrets[2]),
     path.join(__dirname, 'views/login.handlebars'),
@@ -168,6 +175,15 @@ app.use('/auth', OAuth2FrameworkRouter(
     config.secrets[1],
 ));
 
+function requireUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    if (!req.user) {
+        res.redirect(config.paths.unauthorized);
+        return;
+    }
+
+    next();
+}
+
 app.get('/auth/login', passport.authenticate('oauth2'));
 
 app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/auth/login' }),
@@ -175,43 +191,43 @@ app.get('/auth/callback', passport.authenticate('oauth2', { failureRedirect: '/a
         res.redirect('/');
     });
 
-app.get('/', HomeRouter.index);
+app.get('/', requireUser, HomeRouter.index);
 
 app.get('/about', AboutRouter.index);
 
 app.post('/contact', ContactRouter.send);
 
-app.get('/clients', ClientsRouter.index);
-app.get('/clients/edit', ClientsRouter.editGet);
-app.post('/clients/edit', ClientsRouter.editPost);
-app.post('/clients/addScope', ClientsRouter.addScope);
-app.get('/clients/removeScope', ClientsRouter.removeScope);
-app.post('/clients/addRedirectUri', ClientsRouter.addRedirectUri);
-app.get('/clients/removeRedirectUri', ClientsRouter.removeRedirectUri);
-app.get('/clients/create', ClientsRouter.createGet);
-app.post('/clients/create', ClientsRouter.createPost);
+app.get('/clients', requireUser, ClientsRouter.index);
+app.get('/clients/edit', requireUser, ClientsRouter.editGet);
+app.post('/clients/edit', requireUser, ClientsRouter.editPost);
+app.post('/clients/addScope', requireUser, ClientsRouter.addScope);
+app.get('/clients/removeScope', requireUser, ClientsRouter.removeScope);
+app.post('/clients/addRedirectUri', requireUser, ClientsRouter.addRedirectUri);
+app.get('/clients/removeRedirectUri', requireUser, ClientsRouter.removeRedirectUri);
+app.get('/clients/create', requireUser, ClientsRouter.createGet);
+app.post('/clients/create', requireUser, ClientsRouter.createPost);
 
-app.get('/users', UsersRouter.index);
-app.get('/users/edit', UsersRouter.editGet);
-app.post('/users/edit', UsersRouter.editPost);
-app.get('/users/create', UsersRouter.createGet);
-app.post('/users/create', UsersRouter.createPost);
+app.get('/users', requireUser, UsersRouter.index);
+app.get('/users/edit', requireUser, UsersRouter.editGet);
+app.post('/users/edit', requireUser, UsersRouter.editPost);
+app.get('/users/create', requireUser, UsersRouter.createGet);
+app.post('/users/create', requireUser, UsersRouter.createPost);
 
-app.get('/profile/edit', ProfileRouter.editGet);
+app.get('/profile/edit', requireUser, ProfileRouter.editGet);
 
-app.get('/roles', RolesRouter.index);
-app.post('/roles/create', RolesRouter.create);
-app.get('/roles/edit', RolesRouter.edit);
+app.get('/roles', requireUser, RolesRouter.index);
+app.post('/roles/create', requireUser, RolesRouter.create);
+app.get('/roles/edit', requireUser, RolesRouter.edit);
 
-app.post('/roleGroups/create', RoleGroupRouter.create);
+app.post('/roleGroups/create', requireUser, RoleGroupRouter.create);
 
-app.get('/permissions', PermissionsRouter.index);
-app.post('/permissions/create', PermissionsRouter.create);
+app.get('/permissions', requireUser, PermissionsRouter.index);
+app.post('/permissions/create', requireUser, PermissionsRouter.create);
 
 app.get('/api/users/:clientId', APIUsersRouter.getUsers);
 app.get('/api/users/:clientId/:username', APIUsersRouter.getUser);
 
-app.get('/logout', (req: express.Request, res: express.Response) => {
+app.get('/logout', requireUser, (req: express.Request, res: express.Response) => {
     req.logout();
     res.redirect('/');
 });

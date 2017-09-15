@@ -47,7 +47,7 @@
                         </li>
                         <li class=" profil-link">
                             <a href="/">
-                                <span class="profile-address">{{user}}</span>
+                                <span class="profile-address">{{user.username}}</span>
                                 <img src="https://via.placeholder.com/50x50" class="img-circle" alt="">
                             </a>
                         </li>
@@ -61,12 +61,16 @@
                     <li>
                         <a href="/">Dashboard</a>
                     </li>
-                    <li>
-                        <a href="/profile/edit">Profile</a>
-                    </li>
-                    <li>
-                        <a href="/clients">Clients</a>
-                    </li>
+                    {{#hasPermission user 'View Profile'}}
+                        <li>
+                            <a href="/profile/edit">Profile</a>
+                        </li>
+                    {{/hasPermission}}
+                    {{#hasPermission user 'View Client'}}
+                        <li>
+                            <a href="/clients">Clients</a>
+                        </li>
+                    {{/hasPermission}}
                     <li class="disabled">
                         <a href="#">Alerts <span class="label label-success">Coming Soon</span></a>
                     </li>

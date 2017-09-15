@@ -15,12 +15,8 @@ import { KetoneUser } from './../entities/ketone-user';
 export class ProfileRouter {
 
     public static async editGet(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
-        const editUser: KetoneUser = await ProfileRouter.getUserService().find(req.user);
+        const editUser: KetoneUser = await ProfileRouter.getUserService().find(req.user.username);
 
         res.render('profile/edit', {
             baseModel: BaseRouter.getBaseModel(),

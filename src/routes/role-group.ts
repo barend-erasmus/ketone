@@ -17,12 +17,7 @@ export class RoleGroupRouter {
 
     public static async create(req: express.Request, res: express.Response) {
 
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
-
-        await RoleGroupRouter.getRoleService().createGroup(req.user, req.body.name, req.body.clientId);
+        await RoleGroupRouter.getRoleService().createGroup(req.user.username, req.body.name, req.body.clientId);
 
         res.redirect(`/roles?clientId=${req.body.clientId}`);
     }

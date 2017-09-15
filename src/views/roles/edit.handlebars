@@ -20,59 +20,66 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addPermissionModal">Add Permission</button>
+                {{#hasPermission @root.user 'Update Client Role'}}
+                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addPermissionModal">Add Permission</button>
+                {{/hasPermission}}
                 <a href="/roles?clientId={{client.id}}" class="btn btn-default pull-right" style="margin-right: 5px;">Back to Client Roles</a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each role.permissions as |value key|}}
-                            <tr>
-                                <td>{{value.name}}</td>
-                                <td>
-                                    <a href="#" disabled class="btn btn-w-md btn-danger">Remove <span class="label label-success">Coming Soon</span></a>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                {{#hasPermission user 'View Client Role'}}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each @root.role.permissions as |value key|}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                    <td>
+                                        {{#hasPermission @root.user 'Update Client Role'}}
+                                            <a href="#" disabled class="btn btn-w-md btn-danger">Remove <span class="label label-success">Coming Soon</span></a>
+                                        {{/hasPermission}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/hasPermission}}
             </div>
         </div>
     </div>
 </section>
 
-
-<div class="modal fade" id="addPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="post" action="/roles/addPermission" class="modal-content">
-            <div class="modal-header text-center">
-                <h4 class="modal-title">New Permission</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <select class="form-control" id="permissionName" name="permissionName">
-                        {{#each permissions as |value key|}}
-                            <option value="{{value.name}}">{{value.name}}</option>
-                        {{/each}}
-                    </select>
+{{#hasPermission @root.user 'Update Client Role'}}
+    <div class="modal fade" id="addPermissionModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="/roles/addPermission" class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">New Permission</h4>
                 </div>
-                <input type="hidden" name="clientId" value="{{client.id}}" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-accent">Add</button>
-            </div>
-        </form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <select class="form-control" id="permissionName" name="permissionName">
+                            {{#each @root.permissions as |value key|}}
+                                <option value="{{value.name}}">{{value.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <input type="hidden" name="clientId" value="{{@root.client.id}}" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-accent">Add</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+{{/hasPermission}}

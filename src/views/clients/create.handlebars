@@ -27,7 +27,9 @@
                     </div>
                     <br />
                     <a href="/clients" class="btn btn-default">Cancel</a>
-                    <button type="submit" class="btn btn-accent">Save</button>
+                    {{#hasPermission user 'Create Client'}}
+                        <button type="submit" class="btn btn-accent">Save</button>
+                    {{/hasPermission}}
                 </form>
             </div>
         </div>

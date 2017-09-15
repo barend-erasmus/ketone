@@ -17,41 +17,45 @@
                 <hr>
             </div>
         </div>
-        {{#hasPermission user 'CreateClient'}}
-        <div class="row">
-            <div class="col-md-12">
-                <a href="/clients/create" class="btn btn-w-md btn-primary pull-right">New Client</a>
+        {{#hasPermission user 'Create Client'}}
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/clients/create" class="btn btn-w-md btn-primary pull-right">New Client</a>
+                </div>
             </div>
-        </div>
         {{/hasPermission}}
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Client Id</th>
-                                <th>Allow Forgot Password</th>
-                                <th>Allow Register</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each clients as |value key|}}
-                            <tr>
-                                <td>{{value.name}}</td>
-                                <td>{{value.id}}</td>
-                                <td>{{value.allowForgotPassword}}</td>
-                                <td>{{value.allowRegister}}</td>
-                                <td>
-                                    <a href="/clients/edit?id={{value.id}}" class="btn btn-w-md btn-info">Edit</a>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                {{#hasPermission user 'View Client'}}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Client Id</th>
+                                    <th>Allow Forgot Password</th>
+                                    <th>Allow Register</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each clients as |value key|}}
+                                <tr>
+                                    <td>{{value.name}}</td>
+                                    <td>{{value.id}}</td>
+                                    <td>{{value.allowForgotPassword}}</td>
+                                    <td>{{value.allowRegister}}</td>
+                                    <td>
+                                        {{#hasPermission @root.user 'View Client'}}
+                                            <a href="/clients/edit?id={{value.id}}" class="btn btn-w-md btn-info">Edit</a>
+                                        {{/hasPermission}}
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/hasPermission}}
             </div>
         </div>
     </div>

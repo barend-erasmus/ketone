@@ -23,21 +23,17 @@ import { RoleGroup } from './../entities/role-group';
 export class RolesRouter {
 
     public static async index(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.clientId) {
             res.status(404).render('error/NotFound', { layout: false });
             return;
         }
 
-        const client: Client = await RolesRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await RolesRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const roles: Role[] = await RolesRouter.getRoleService().list(req.user, req.query.clientId);
+        const roles: Role[] = await RolesRouter.getRoleService().list(req.user.username, req.query.clientId);
 
-        const roleGroups: RoleGroup[] = await RolesRouter.getRoleService().listGroups(req.user, req.query.clientId);
+        const roleGroups: RoleGroup[] = await RolesRouter.getRoleService().listGroups(req.user.username, req.query.clientId);
 
         res.render('roles/index', {
             baseModel: BaseRouter.getBaseModel(),
@@ -50,10 +46,6 @@ export class RolesRouter {
     }
 
     public static async edit(req: express.Request, res: express.Response) {
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
 
         if (!req.query.name) {
             res.status(404).render('error/NotFound', { layout: false });
@@ -70,11 +62,11 @@ export class RolesRouter {
             return;
         }
 
-        const client: Client = await RolesRouter.getClientService().find(req.user, req.query.clientId);
+        const client: Client = await RolesRouter.getClientService().find(req.user.username, req.query.clientId);
 
-        const role: Role = await RolesRouter.getRoleService().find(req.user, req.query.name, req.query.group, req.query.clientId);
+        const role: Role = await RolesRouter.getRoleService().find(req.user.username, req.query.name, req.query.group, req.query.clientId);
 
-        const permissions: Permission[] = await RolesRouter.getPermissionService().list(req.user, req.query.clientId);
+        const permissions: Permission[] = await RolesRouter.getPermissionService().list(req.user.username, req.query.clientId);
 
         res.render('roles/edit', {
             baseModel: BaseRouter.getBaseModel(),
@@ -87,13 +79,8 @@ export class RolesRouter {
     }
 
     public static async create(req: express.Request, res: express.Response) {
-
-        if (!req.user) {
-            res.redirect(config.paths.unauthorized);
-            return;
-        }
-
-        await RolesRouter.getRoleService().create(req.user, req.body.name, req.body.group, req.body.clientId);
+        
+        await RolesRouter.getRoleService().create(req.user.username, req.body.name, req.body.group, req.body.clientId);
 
         res.redirect(`/roles?clientId=${req.body.clientId}`);
     }
