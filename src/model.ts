@@ -11,8 +11,8 @@ import { config } from './config';
 import { IClientRepository } from './repositories/client';
 import { IEventRepository } from './repositories/event';
 import { IKetoneUserRepository } from './repositories/ketone-user';
-import { IUserRepository } from './repositories/user';
 import { ITokenRepository } from './repositories/token';
+import { IUserRepository } from './repositories/user';
 
 // Imports services
 import { EmailService } from './services/email';
@@ -269,7 +269,7 @@ export class Model {
         return result;
     }
 
-    public async generateCode(client_id: string, username: string, scopes: string[], request: express.Request): Promise<string> {
+    public async generateCode(clientId: string, username: string, scopes: string[], request: express.Request): Promise<string> {
         // return jsonwebtoken.sign({
         //     client_id,
         //     scopes,
@@ -281,13 +281,13 @@ export class Model {
 
         const token = uuid.v4();
 
-        await this.tokenRepository.create(new Token(token, client_id, username, scopes, 'code', null));
+        await this.tokenRepository.create(new Token(token, clientId, username, scopes, 'code', null));
 
         return token;
     }
 
     public async validateCode(code: string, request: express.Request): Promise<OAuth2FrameworkToken> {
-        const token: Token = await this.tokenRepository.find(code)
+        const token: Token = await this.tokenRepository.find(code);
 
         if (!token) {
             return null;
@@ -304,7 +304,7 @@ export class Model {
         return new OAuth2FrameworkToken(token.clientId, token.username, token.scopes);
     }
 
-    public async generateAccessToken(client_id: string, username: string, scopes: string[], request: express.Request): Promise<string> {
+    public async generateAccessToken(clientId: string, username: string, scopes: string[], request: express.Request): Promise<string> {
         // return jsonwebtoken.sign({
         //     client_id,
         //     scopes,
@@ -316,13 +316,13 @@ export class Model {
 
         const token = uuid.v4();
 
-        await this.tokenRepository.create(new Token(token, client_id, username, scopes, 'access-token', null));
+        await this.tokenRepository.create(new Token(token, clientId, username, scopes, 'access-token', null));
 
         return token;
     }
 
     public async validateAccessToken(code: string, request: express.Request): Promise<OAuth2FrameworkToken> {
-        const token: Token = await this.tokenRepository.find(code)
+        const token: Token = await this.tokenRepository.find(code);
 
         if (!token) {
             return null;

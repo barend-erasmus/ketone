@@ -158,15 +158,7 @@ export class BaseRepository {
         });
 
         const Token = BaseRepository.sequelize.define('token', {
-            value: {
-                allowNull: false,
-                type: Sequelize.STRING,
-            },
             clientId: {
-                allowNull: false,
-                type: Sequelize.STRING,
-            },
-            username: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
@@ -175,6 +167,14 @@ export class BaseRepository {
                 type: Sequelize.STRING,
             },
             type: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            username: {
+                allowNull: false,
+                type: Sequelize.STRING,
+            },
+            value: {
                 allowNull: false,
                 type: Sequelize.STRING,
             },

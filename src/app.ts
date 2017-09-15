@@ -10,8 +10,8 @@ import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';
 import { EventRepository } from './repositories/sequelize/event';
 import { KetoneUserRepository } from './repositories/sequelize/ketone-user';
-import { UserRepository } from './repositories/sequelize/user';
 import { TokenRepository } from './repositories/sequelize/token';
+import { UserRepository } from './repositories/sequelize/user';
 
 // Imports middleware
 import * as bodyParser from 'body-parser';
@@ -26,10 +26,10 @@ import { OAuth2FrameworkRouter } from 'oauth2-framework';
 import { Model } from './model';
 
 // Imports routes
-import { ContactRouter } from './routes/contact';
 import { AboutRouter } from './routes/about';
 import { APIUsersRouter } from './routes/api/users';
 import { ClientsRouter } from './routes/clients';
+import { ContactRouter } from './routes/contact';
 import { HomeRouter } from './routes/home';
 import { PermissionsRouter } from './routes/permission';
 import { ProfileRouter } from './routes/profile';
@@ -208,7 +208,8 @@ app.post('/roleGroups/create', RoleGroupRouter.create);
 app.get('/permissions', PermissionsRouter.index);
 app.post('/permissions/create', PermissionsRouter.create);
 
-app.get('/api/users', APIUsersRouter.get);
+app.get('/api/users/:clientId', APIUsersRouter.getUsers);
+app.get('/api/users/:clientId/:username', APIUsersRouter.getUser);
 
 app.get('/logout', (req: express.Request, res: express.Response) => {
     req.logout();
