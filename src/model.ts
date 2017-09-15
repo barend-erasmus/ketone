@@ -1,6 +1,7 @@
 // Imports
 import * as crypto from 'crypto';
 import * as express from 'express';
+import * as moment from 'moment';
 import { Client as OAuth2FrameworkClient, Token as OAuth2FrameworkToken } from 'oauth2-framework';
 import * as uuid from 'uuid';
 import * as yargs from 'yargs';
@@ -296,6 +297,10 @@ export class Model {
             return null;
         }
 
+        if (token.timestamp.getTime() > moment().add(1, 'hours').toDate().getTime()) {
+            return null;
+        }
+
         return new OAuth2FrameworkToken(token.clientId, token.username, token.scopes);
     }
 
@@ -324,6 +329,10 @@ export class Model {
         }
 
         if (token.type !== 'access-token') {
+            return null;
+        }
+
+        if (token.timestamp.getTime() > moment().add(1, 'hours').toDate().getTime()) {
             return null;
         }
 
