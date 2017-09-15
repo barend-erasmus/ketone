@@ -321,8 +321,8 @@ export class Model {
         return token;
     }
 
-    public async validateAccessToken(code: string, request: express.Request): Promise<OAuth2FrameworkToken> {
-        const token: Token = await this.tokenRepository.find(code);
+    public async validateAccessToken(accessToken: string, request: express.Request): Promise<OAuth2FrameworkToken> {
+        const token: Token = await this.tokenRepository.find(accessToken);
 
         if (!token) {
             return null;
