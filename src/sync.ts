@@ -1,4 +1,4 @@
-// Import Repositories
+// Import repositories
 import { config } from './config';
 import { BaseRepository } from './repositories/sequelize/base';
 import { ClientRepository } from './repositories/sequelize/client';

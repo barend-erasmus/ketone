@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import * as yargs from 'yargs';
 import { config } from './config';
 
-// Import Interfaces
+// Import interfaces
 import { IClientRepository } from './repositories/client';
 import { IEventRepository } from './repositories/event';
 import { IKetoneUserRepository } from './repositories/ketone-user';
