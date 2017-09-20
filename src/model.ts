@@ -185,7 +185,7 @@ export class Model {
 
         const domain = argv.prod ? `${config.domain}/auth` : 'http://localhost:3000/auth';
 
-        const subject = `${client} - Verification`;
+        const subject = `${client.name} - Verification`;
         const html = `<div> Thank you for registering on ${client}. <br><br><a href="${domain}${verificationUrl}" target="_blank">Verify Email</a> <br><br>If you don’t use this link within 3 hours, it will expire. <br><br>Thanks,<br>Your friends at ${client} <div class="yj6qo"></div><div class="adL"><br></div></div>`;
 
         await this.eventRepository.create(new Event(clientId, username, 'sendVerificationEmail', request ? request.get('X-Real-IP') || request.ip : null));
